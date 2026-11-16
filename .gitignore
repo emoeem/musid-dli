@@ -1,0 +1,8 @@
+/target/
+/rustypipe_cache.json
+/rustypipe_reports/
+*.tmp
+.env
+.env.*
+!.env.example
+*_qr.png

@@ -1,0 +1,98 @@
+[package]
+name = "musid-dli"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.89"
+license = "MIT"
+description = "Modular Rust music metadata, provider aggregation, stream resolution and local music library"
+repository = "https://github.com/emoeem/musid-dli"
+readme = "README.md"
+keywords = ["music", "streaming", "netease", "bilibili", "lyrics"]
+categories = ["multimedia::audio"]
+
+[lib]
+name = "musid_dli"
+path = "src/lib.rs"
+
+[features]
+default = ["local", "lyrics", "session-file"]
+local = ["dep:lofty", "dep:walkdir"]
+lyrics = ["dep:lyrics-helper"]
+lyrics-search = ["lyrics", "lyrics-helper/search"]
+session-file = ["dep:tempfile"]
+source-youtube-music = ["dep:rustypipe"]
+source-netease = ["dep:reqwest", "dep:aes", "dep:md-5", "dep:hex", "dep:tracing", "dep:urlencoding"]
+source-qqmusic = ["dep:reqwest", "dep:sha1", "dep:base64", "dep:hex", "dep:tracing", "dep:urlencoding"]
+source-kugou = ["dep:reqwest", "dep:md-5", "dep:base64", "dep:flate2", "dep:tracing", "dep:urlencoding"]
+source-kuwo = ["dep:reqwest", "dep:md-5", "dep:hex", "dep:base64", "dep:flate2", "dep:encoding_rs", "dep:tracing", "dep:urlencoding"]
+source-migu = ["dep:reqwest", "dep:md-5", "dep:base64", "dep:flate2", "dep:tracing", "dep:urlencoding"]
+source-bilibili = ["dep:reqwest", "dep:md-5", "dep:tracing", "dep:urlencoding"]
+source-jamendo = ["dep:reqwest", "dep:sha1", "dep:hex", "dep:tracing", "dep:urlencoding"]
+source-apple = ["dep:reqwest", "dep:tracing", "dep:urlencoding"]
+source-fivesing = ["dep:reqwest", "dep:tracing", "dep:urlencoding"]
+lx-js-bridge = []
+
+[dependencies]
+async-trait = "0.1"
+futures = "0.3"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+tokio = { version = "1", features = ["sync", "time", "rt"] }
+lofty = { version = "0.22", optional = true }
+walkdir = { version = "2", optional = true }
+lyrics-helper = { version = "0.5.1", default-features = false, optional = true }
+rustypipe = { version = "0.11.4", default-features = false, features = ["rustls-tls-webpki-roots"], optional = true }
+tempfile = { version = "3", optional = true }
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"], optional = true }
+aes = { version = "0.8", optional = true }
+md-5 = { version = "0.10", optional = true }
+sha1 = { version = "0.10", optional = true }
+base64 = { version = "0.22", optional = true }
+flate2 = { version = "1", default-features = false, features = ["rust_backend"], optional = true }
+encoding_rs = { version = "0.8", optional = true }
+hex = { version = "0.4", optional = true }
+tracing = { version = "0.1", optional = true }
+urlencoding = { version = "2", optional = true }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "time", "sync"] }
+qrcode = "0.14"
+image = { version = "0.25", default-features = false, features = ["png"] }
+rqrr = "0.7"
+
+[[example]]
+name = "netease_smoke"
+required-features = ["source-netease"]
+
+[[example]]
+name = "qqmusic_smoke"
+required-features = ["source-qqmusic"]
+
+[[example]]
+name = "kugou_smoke"
+required-features = ["source-kugou"]
+
+[[example]]
+name = "kuwo_smoke"
+required-features = ["source-kuwo"]
+
+[[example]]
+name = "migu_smoke"
+required-features = ["source-migu"]
+
+[[example]]
+name = "bilibili_smoke"
+required-features = ["source-bilibili"]
+
+[[example]]
+name = "jamendo_smoke"
+required-features = ["source-jamendo"]
+
+[[example]]
+name = "apple_smoke"
+required-features = ["source-apple"]
+
+[[example]]
+name = "fivesing_smoke"
+required-features = ["source-fivesing"]
