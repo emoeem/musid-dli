@@ -162,6 +162,7 @@ cargo build --no-default-features   # lib compiles without any provider
 | 2026-11-17 | 5sing anonymous smoke (search/stream-320k/lyrics-64-LRC/playlist-metadata/links; track-lists JS-rendered) |
 | 2026-11-17 | All four QR channels verified through first poll (Waiting); phone scan pending |
 | 2026-11-17 | QR renderer fixed: inverted colors on dark terminals blocked phone scans (bilibili scan attempt stuck on Waiting); explicit black-on-white ANSI + PNG fallback shipped, round-trip test added; phone rescan still pending |
+| 2026-11-17 | Bilibili QR phone scan confirmed working by the user; musid-dli v0.1.0 published to crates.io (docs.rs green), GitHub repo emoeem/musid-dli created and pushed |
 
 ## Gotchas for the next engineer
 
@@ -177,6 +178,6 @@ cargo build --no-default-features   # lib compiles without any provider
 10. **5sing track ids embed the song type** (`{id}|{yc|fc|bz}`) because the same numeric id can exist as three different songs.
 11. **Terminal QRs need explicit ANSI colors**: painting dark modules with the default foreground color inverts the code on dark-themed terminals; phone scanners (the Bilibili in-app scanner included) silently fail and the poll stays Waiting for the full 180s budget. `qr_terminal::render` now pins SGR 30/107 (black on bright white) and `render_png` writes a PNG fallback wired into the bilibili/kugou/qqmusic smokes; the decode round-trip regression test lives in `tests/qr_terminal_png.rs`.
 
-## No Git repository
+## Git and publishing
 
-The project has no Git initialization. When the user decides to initialize, `git init` plus a single commit capturing the current state is the natural first step. Do not push anywhere without explicit user instruction.
+The project is initialized on branch `main` and published. GitHub: https://github.com/emoeem/musid-dli (public). crates.io: `musid-dli` v0.1.0 (2026-11-17), docs.rs build green. Publishing metadata lives in the `[package]` section (repository/readme/keywords/categories). Registry tokens are never stored in the repo or docs; release commits need explicit user instruction.
