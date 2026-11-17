@@ -1,0 +1,155 @@
+# musid-dli CI.
+#
+# Design notes:
+# - Everything runs with --locked so a stale Cargo.lock fails loudly.
+# - The feature matrix is enumerated from cargo metadata (not hardcoded), so a
+#   new provider feature cannot silently miss its isolated check.
+# - Windows installs NASM: both TLS backends in the tree (ring, aws-lc-rs)
+#   need it to assemble; CMake is already on the runner image.
+# - No job touches real provider endpoints; smokes stay opt-in local tools.
+# - cache only speeds things up; correctness flags (--locked, -D warnings)
+#   are unaffected by cache state.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  fmt:
+    name: Format
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - run: cargo fmt --all -- --check
+
+  clippy:
+    name: Clippy (all features, all targets)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo clippy --locked --all-targets --all-features -- -D warnings
+
+  test:
+    name: Tests (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: default
+            flags: --locked
+          - name: all-features
+            flags: --locked --all-features
+          - name: no-default-features
+            flags: --locked --no-default-features
+    steps:
+      - uses: actions/checkout@v7
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo test ${{ matrix.flags }}
+
+  features:
+    name: Feature matrix (isolated check)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: Swatinem/rust-cache@v2
+      - name: Check every non-default feature on its own
+        run: |
+          features=$(cargo metadata --locked --no-deps --format-version 1 | python3 -c "import json,sys; data=json.load(sys.stdin); pkg=next(p for p in data['packages'] if p['name']=='musid-dli'); print('\n'.join(sorted(k for k in pkg['features'] if k!='default')))")
+          echo "Features under test:"
+          echo "$features"
+          for feature in $features; do
+            echo "::group::cargo check --locked --no-default-features --features $feature"
+            cargo check --locked --no-default-features --features "$feature"
+            echo "::endgroup::"
+          done
+
+  msrv:
+    name: MSRV 1.89.0 (all features)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: Swatinem/rust-cache@v2
+      - run: rustup toolchain install 1.89.0 --profile minimal --no-self-update
+      - run: rustup run 1.89.0 cargo check --locked --all-features
+      - run: rustup run 1.89.0 cargo test --locked --all-features
+
+  build:
+    name: Build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install NASM (ring / aws-lc-rs assembly requirement on Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install nasm -y --no-progress
+          Add-Content $env:GITHUB_PATH "C:\Program Files\NASM"
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo check --locked --all-features
+      - run: cargo check --locked --no-default-features
+
+  docs:
+    name: Docs (deny warnings)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      RUSTDOCFLAGS: -D warnings
+    steps:
+      - uses: actions/checkout@v7
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo doc --locked --all-features --no-deps
+
+  deps:
+    name: Dependency integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - name: Lockfile matches Cargo.toml
+        run: cargo metadata --locked --format-version 1 > /dev/null
+      - name: Duplicate dependency versions (informational report)
+        run: cargo tree --locked --duplicates
+      - name: Package layout is publishable
+        run: cargo package --locked --no-verify --list > /dev/null
+
+  gate:
+    name: CI gate
+    needs: [fmt, clippy, test, features, msrv, build, docs, deps]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: always()
+    steps:
+      - name: Fail the gate if any required job failed or was cancelled
+        run: |
+          if [ "${{ contains(needs.*.result, 'failure') }}" = "true" ] || [ "${{ contains(needs.*.result, 'cancelled') }}" = "true" ]; then
+            echo "One or more CI jobs did not pass:"
+            echo "${{ toJson(needs.*.result) }}"
+            exit 1
+          fi
+          echo "All CI jobs passed."

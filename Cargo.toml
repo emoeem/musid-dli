@@ -7,6 +7,7 @@ license = "MIT"
 description = "Modular Rust music metadata, provider aggregation, stream resolution and local music library"
 repository = "https://github.com/emoeem/musid-dli"
 readme = "README.md"
+exclude = [".github"]
 keywords = ["music", "streaming", "netease", "bilibili", "lyrics"]
 categories = ["multimedia::audio"]
 

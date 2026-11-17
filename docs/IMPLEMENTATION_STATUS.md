@@ -1,6 +1,6 @@
 # Implementation status and next phase
 
-Updated: 2026-11-16
+Updated: 2026-11-17
 
 ## Phase gate summary
 
@@ -47,6 +47,16 @@ Updated: 2026-11-16
 8. Integrate musid-dli into VoiceFox behind an opt-in feature/configuration flag; run the full workspace tests and playback hand-off regression.
 9. Remove lx-source paths only after all consumers have parity and the user explicitly approves the removal.
 
+## Continuous integration (2026-11-17)
+
+- Added `.github/workflows/ci.yml`, the first GitHub Actions workflow for this repository. Triggers: push to main, pull requests to main, manual workflow_dispatch; concurrency cancels superseded runs on the same ref; permissions are `contents: read` only.
+- Jobs: fmt; clippy (`--locked --all-targets --all-features -- -D warnings`); tests on default, all and no-default feature sets; an isolated `cargo check` of every non-default feature, enumerated live from cargo metadata so future features cannot miss the gate (15 features today); MSRV 1.89.0 (check plus test, all features, invoked via `rustup run` because a plain cargo binary ignores `+toolchain` directives); build checks on ubuntu, windows and macos runners (the Windows step installs NASM because both TLS backends in the tree, ring and aws-lc-rs, require it and the runner image ships without it); docs build with `RUSTDOCFLAGS=-D warnings`; a dependency integrity job (lockfile sync via `cargo metadata --locked`, informational duplicate report via `cargo tree --duplicates`, package layout via `cargo package --locked --no-verify --list`); and a final gate job that fails if any required job failed.
+- All test/clippy/build work runs with `--locked`: a stale Cargo.lock fails the run instead of silently resolving newer versions.
+- Third-party actions pinned by major tag: actions/checkout@v7 and Swatinem/rust-cache@v2 (latest tags verified 2026-11-17: checkout v7.0.1, rust-cache v2.9.3).
+- No CI job touches real provider endpoints; the network smokes stay opt-in local tools (scripts/run_all_smokes.sh).
+- Cargo.toml gained `exclude = [".github"]` so workflow files do not ship inside published crates.
+- GitHub Actions has NOT been triggered yet: the workflow file exists locally and the branch is not pushed. Every result recorded below is from running the exact CI commands on the local machine; the first push to GitHub runs all nine jobs and the README badge will reflect them.
+
 ## Validation already run on musid-dli
 
 - cargo fmt --all -- --check: passed.
@@ -79,5 +89,8 @@ Updated: 2026-11-16
 - Kugou live smoke test (2026-11-17, anonymous session): search (38 tracks, total 401, full quality ladder with FileHash extras), lyrics (63 KRC lines with word-level timing, decrypted through the XOR plus zlib pipeline), stream honestly skipped (server-side anonymous gate), session status all passed.
 - QQ Music live smoke test (2026-11-17, anonymous session): search (30 tracks, total 829); track detail via song link (晴天, 叶惠美); lyrics (63 lines, real LRC via crypt:0); playlist categories (65, grouped) plus by-tag lists plus detail with 223 fetched tracks; charts (24 boards, 流行指数榜 top 100 with ranks); album 叶惠美 metadata plus 11 tracks; song, playlist and album link resolution plus invalid host rejection; QR login create (602-byte PNG data URL) plus first poll (Waiting); user playlists correctly skipped while logged out. Stream resolution is refused by QQ for anonymous sessions with module code 10006 (server-side gate recorded, not a parsing defect).
 - NetEase live smoke test (2026-11-16, anonymous session): 11/11 modules passed: search (20 tracks, total 251); track via song link (晴天, album 叶惠美); stream (High, Mp3, size and md5 present, no expiry param); lyrics (63 lines); playlist (71 categories, 5 hot lists, detail plus 145 tracks); chart (65 charts, 飙升榜 top 100 with ranks); album (叶惠美, 11 tracks); artist (50 top tracks, 5 albums page 1); link (song and playlist resolve, invalid host rejected with InvalidInput); auth (QR key generated, first poll returned Waiting); user (correctly skipped while logged out).
+- CI gate chain local run (2026-11-17, the exact commands the new workflow runs): `cargo fmt --all -- --check` clean; `cargo metadata --locked` OK; `cargo clippy --locked --all-targets --all-features -- -D warnings` passed; `cargo test --locked` (default features) 22 unit + 1 doctest passed; `cargo test --locked --all-features` 129 unit + 1 doctest passed; `cargo test --locked --no-default-features` 19 unit + 1 doctest passed; isolated `cargo check --locked --no-default-features --features X` passed for all 15 non-default features; `cargo doc --locked --all-features --no-deps` clean with `RUSTDOCFLAGS=-D warnings`; `cargo tree --locked --duplicates` report generated (informational); `cargo package --locked --no-verify --list` clean and the `.github` exclude keeps the package at the same 67 files v0.1.0 shipped.
+- MSRV 1.89.0 verification (2026-11-17): official standalone dist tarball (USTC mirror, xz integrity checked, install.sh into an isolated prefix, rustc version pinned to 1.89.0 before use) ran `cargo check --locked --all-features` and `cargo test --locked --all-features` with a fresh target dir: both passed, 130 tests, identical results to local rustc 1.99.0. A lockfile audit found no dependency declaring rust_version above 1.89. Windows and macOS build checks could not run locally (no cross toolchains); they compile the same code paths verified above and get their first runner evidence on push.
+- One masked failure worth recording: `cargo +1.89.0 ...` silently resolves to a non-rustup cargo on this machine (the `+toolchain` syntax is ignored and the pipeline hid the error); this is why the workflow invokes the MSRV toolchain as `rustup run 1.89.0 cargo ...`.
 
 No Git repository initialization, commit, push, reset, cleanup or history rewrite was performed.

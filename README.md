@@ -1,5 +1,7 @@
 # musid-dli
 
+[![CI](https://github.com/emoeem/musid-dli/actions/workflows/ci.yml/badge.svg)](https://github.com/emoeem/musid-dli/actions/workflows/ci.yml)
+
 Independent Rust music metadata and provider aggregation library.
 
 musid-dli is not an audio player or decoder. It returns stream metadata (URL, headers, quality, expiry and fallback URLs) to the host application. VoiceFox continues to use lx-player + libmpv2.

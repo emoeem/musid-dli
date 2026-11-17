@@ -2,6 +2,10 @@
 
 This document is the single entry point for everything remaining in the project. Automatable work is complete; what needs a phone is condensed into step 3. Every command runs from the repo root.
 
+## 0. Continuous integration (GitHub Actions)
+
+`.github/workflows/ci.yml` runs the same gates remotely: fmt, clippy (all features, all targets, warnings denied), tests on default / all / no default features, an isolated check of every non-default feature (enumerated live from cargo metadata, not hardcoded), MSRV 1.89.0 (check plus test, all features), build checks on ubuntu/windows/macos runners (the Windows job installs NASM because both TLS backends in the tree, ring and aws-lc-rs, need it), docs with warnings denied, a dependency integrity job (lockfile sync, duplicate report, package layout) and a final gate job for branch protection. Push to main or open a PR to trigger it; no job touches real provider endpoints.
+
 ## 1. Build and gates (no network)
 
 ```bash
