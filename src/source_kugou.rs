@@ -130,7 +130,7 @@ impl KugouProvider {
             },
         )
     }
-    /// Flag the current session as expired so [`Self::auth_state`] (and
+    /// Flag the current session as expired so `Self::auth_state` (and
     /// `login_status` through it) reports it, and return the classified
     /// [`Error::SessionExpired`] for the caller to propagate — the M2
     /// landing spot for the `retry` classifier's expired-table verdict
@@ -2193,7 +2193,7 @@ fn kg_parse_special_song(item: &Value) -> Option<Track> {
 #[async_trait]
 impl AuthenticationProvider for KugouProvider {
     /// Migrated onto the unified [`AuthState`] machine (§8 slice 3 wiring):
-    /// the state comes from [`Self::auth_state`] and the legacy three-state
+    /// the state comes from `Self::auth_state` and the legacy three-state
     /// shape is its documented fold ([`AuthState::to_login_status`]). The
     /// account identity keeps today's independent user_id/display_name
     /// plumbing in the `Authenticated` arm (the QR success path writes both

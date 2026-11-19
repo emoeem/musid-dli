@@ -33,7 +33,7 @@ use std::path::{Path, PathBuf};
 /// decides the plain-audio read.
 ///
 /// The policy only decides **which source wins a field**; normalization
-/// (trim plus whitespace collapse, [`normalize_text`]) applies to every
+/// (trim plus whitespace collapse, `normalize_text`) applies to every
 /// stored value either way, and case/fullwidth folding never reaches stored
 /// values: those folds live only in comparison keys
 /// (`local_scan::duplicate_normalize`).
@@ -69,7 +69,7 @@ pub(crate) fn normalize_text(value: Option<&str>) -> Option<String> {
     (!collapsed.is_empty()).then_some(collapsed)
 }
 
-/// Applies [`normalize_text`] to title/artist/album and backfills the
+/// Applies `normalize_text` to title/artist/album and backfills the
 /// fields the tags leave empty, upstream `read_metadata`
 /// (`metadata.rs:86-112`, parity L15). `format`, `duration_ms` and the
 /// measured [`AudioSpec`] pass through untouched. The landing point is

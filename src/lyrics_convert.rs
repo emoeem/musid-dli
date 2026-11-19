@@ -31,7 +31,7 @@
 //!   slot, as produced by `source/src/wy/lyric.rs:81` and
 //!   `source/src/kg/lyric.rs:184`). `LyricLine.end_ms` maps to the voicefox
 //!   next-line duration rule (`lyric.rs:26-27`) via
-//!   [`lyric_lines_from_document`]. Per-line `translations`/`romanization`
+//!   `lyric_lines_from_document`. Per-line `translations`/`romanization`
 //!   and `LyricFormat` have no voicefox document-level slot and are dropped
 //!   (M0 lossy register).
 
@@ -65,7 +65,7 @@ pub struct LyricData {
 
 /// voicefox `LyricLine` mirror (`core/src/model/lyric.rs:20-28`): one parsed
 /// LRC line; the duration is derived from the next line by
-/// [`lyric_lines_from_document`]. Distinct from [`crate::models::LyricLine`].
+/// `lyric_lines_from_document`. Distinct from [`crate::models::LyricLine`].
 #[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct LyricLine {
     /// 该行起始时间（毫秒）
@@ -238,7 +238,7 @@ pub fn lyric_data_to_document(data: &LyricData, format: LyricFormat) -> Result<L
 /// - `lxlyric` stays `None`: there is no YRC/QRC serializer in M3 core
 ///   (§4.2), and a synthesized word string would be a fake one. Word
 ///   timing lives in `lines[].words`; the host consumes it through
-///   [`lyric_lines_from_document`] or the [`YrcWord`] mapping.
+///   `lyric_lines_from_document` or the [`YrcWord`] mapping.
 /// - Per-line `translations`/`romanization` and `format` have no voicefox
 ///   document-level slot and are dropped (M0 lossy register, §4.2).
 pub fn document_to_lyric_data(document: &LyricDocument) -> LyricData {

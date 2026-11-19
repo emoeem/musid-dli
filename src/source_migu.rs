@@ -148,7 +148,7 @@ impl MiguProvider {
         request.header("user-agent", UA_MOBILE)
     }
     /// Lyric/chart GET family through the unified transport layer
-    /// (`send_raw` + [`RetryPolicy::standard()`]): migu was single-shot with
+    /// (`send_raw` + `RetryPolicy::standard()`): migu was single-shot with
     /// no retry anywhere, so this is a declared behavior upgrade
     /// (TRANSPORT_DESIGN.md §5.5 rows 1/3/4) — transport errors, 429/5xx and
     /// mid-body resets now retry with exponential backoff + jitter +
@@ -1480,7 +1480,7 @@ fn parse_search_page(json: &Value, page: u32, limit: u32) -> Result<SearchPage> 
 /// Declared behavior upgrades and the resolve-timeout reconciliation
 /// (TRANSPORT_DESIGN.md §5.4/§5.5, review P-1) for this slice:
 /// - the resource-info POST and the strategy GET join the
-///   [`RetryPolicy::standard()`] ladder (today single-shot): at most 5 sends
+///   `RetryPolicy::standard()` ladder (today single-shot): at most 5 sends
 ///   × 15s + 4 backoffs (0.5+1+2+4 + ≤1s jitter) ≈ 83.5s per call, ≈116s
 ///   when a server `Retry-After` rides every retry at the 10s cap;
 /// - `fetch_listen_url` and the served-size probe are `send_once` single

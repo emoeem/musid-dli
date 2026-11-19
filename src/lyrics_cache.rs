@@ -321,7 +321,7 @@ fn cached_error(provider: &str, category: ErrorCategory) -> Error {
 
 /// Provider-direct lyrics with cache support (RESOURCE_DESIGN.md §8.3):
 /// document-domain short-circuit, negative short-circuit (the hit rebuilds
-/// a category-faithful M2 error via [`cached_error`], so retryability and
+/// a category-faithful M2 error via `cached_error`, so retryability and
 /// health classification survive; the exact original payload text is not
 /// reconstructible from a category, hosts wanting it can
 /// `document_invalidate_negative` and retry), category-accurate recording
@@ -466,7 +466,7 @@ where
 
 /// Cached face of the lyrics search (RESOURCE_DESIGN.md §8.3, gated
 /// `lyrics-cache` + `lyrics-search`): the orchestration of
-/// [`search_cached_with`] over the live `search_many_typed` searcher face.
+/// `search_cached_with` over the live `search_many_typed` searcher face.
 #[cfg(feature = "lyrics-search")]
 pub async fn search_many_cached(
     sources: &[crate::lyrics::LyricsSearchSource],

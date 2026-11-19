@@ -611,7 +611,7 @@ pub fn scan_entries(
 
 /// One suspect-duplicate group (parity L12, voicefox `DuplicateLocalSongs`,
 /// `mod.rs:49-59` + `duplicate_groups` `mod.rs:495-512`): entries beyond the
-/// first that share one [`duplicate_key`] normalization of
+/// first that share one `duplicate_key` normalization of
 /// title/artist/album/duration.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DuplicateGroup {
@@ -646,7 +646,7 @@ pub struct MissingLocalEntry {
 
 /// Groups suspect duplicates (parity L12, voicefox `duplicate_groups`
 /// `mod.rs:495-512`): entries whose whitespace-folded, lowercased
-/// title/artist/album and EXACT duration match ([`duplicate_key`]; no
+/// title/artist/album and EXACT duration match (`duplicate_key`; no
 /// tolerance, upstream compares `duration.as_millis()` verbatim). Singleton
 /// groups are dropped. A pure function over any entry sequence (a
 /// `scan_entries` result, a `ScanState` via

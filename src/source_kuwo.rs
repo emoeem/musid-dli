@@ -2131,7 +2131,7 @@ fn lyric_document(word: Option<String>, plain: String) -> Option<LyricDocument> 
 #[async_trait]
 impl AuthenticationProvider for KuwoProvider {
     /// Migrated onto the unified [`AuthState`] machine (§8 slice 4 wiring):
-    /// the state comes from [`KuwoProvider::auth_state`] and the legacy
+    /// the state comes from `KuwoProvider::auth_state` and the legacy
     /// three-state shape is its documented fold
     /// ([`AuthState::to_login_status`]). The previous hardcoded `LoggedOut`
     /// contradicted the `web_token` the provider writes on every web-signed
@@ -3281,7 +3281,7 @@ mod tests {
         ));
     }
     /// The §8 slice 4 wiring: `login_status` derives from
-    /// [`KuwoProvider::auth_state`] — the anonymous `web_token` is the whole
+    /// `KuwoProvider::auth_state` — the anonymous `web_token` is the whole
     /// session shape — and the legacy three-state shape is its documented
     /// fold. The anonymous web identity is `LoggedIn { user_id: None, .. }`,
     /// not an account claim; [`Self::mark_session_expired`] discards the

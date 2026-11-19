@@ -178,7 +178,7 @@ impl QqMusicProvider {
             },
         )
     }
-    /// Flag the current session as expired so [`Self::auth_state`] (and
+    /// Flag the current session as expired so `Self::auth_state` (and
     /// `login_status` through it) reports it, and return the classified
     /// [`Error::SessionExpired`] for the caller to propagate — the M2 landing
     /// spot for the `retry` classifier's `expired=[1000, 301]` verdict
@@ -2081,7 +2081,7 @@ fn diss_detail(req: &Value, disstid: u64) -> Option<(Playlist, Vec<Track>)> {
     };
     Some((playlist, songs))
 }
-/// The login-cookie gate shared by [`QqMusicProvider::auth_state`] and the
+/// The login-cookie gate shared by `QqMusicProvider::auth_state` and the
 /// legacy checks: an identity cookie (uin/wxuin) and a key cookie
 /// (qqmusic_key/qm_keyst) must both be present.
 fn has_login_cookies(session: &ProviderSession) -> bool {
@@ -2095,7 +2095,7 @@ fn has_login_cookies(session: &ProviderSession) -> bool {
 #[async_trait]
 impl AuthenticationProvider for QqMusicProvider {
     /// Migrated onto the unified [`AuthState`] machine (§8 slice 2 wiring):
-    /// the state comes from [`QqMusicProvider::auth_state`] and the legacy
+    /// the state comes from `QqMusicProvider::auth_state` and the legacy
     /// three-state shape is its documented fold
     /// ([`AuthState::to_login_status`]). The account identity keeps today's
     /// independent user_id/display_name plumbing in the `Authenticated` arm

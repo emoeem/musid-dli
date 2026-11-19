@@ -1255,7 +1255,7 @@ impl QrAuthenticationProvider for NeteaseProvider {
 #[async_trait]
 impl AuthenticationProvider for NeteaseProvider {
     /// Migrated onto the unified [`AuthState`] machine (§8 slice 1 wiring):
-    /// the state comes from [`Self::auth_state`] and the legacy three-state
+    /// the state comes from `Self::auth_state` and the legacy three-state
     /// shape is its documented fold ([`AuthState::to_login_status`]). The
     /// account identity keeps today's independent user_id/display_name
     /// plumbing in the `Authenticated` arm (the QR success path writes both
