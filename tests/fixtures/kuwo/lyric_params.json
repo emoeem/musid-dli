@@ -1,0 +1,11 @@
+{
+  "source": "Formula-derived (upstream kw/lyric.rs and kw/crypto.rs ship no tests and no golden ciphertext): params XORed with the cyclic 'yeelion' key then base64-encoded; recomputed and round-trip verified with Python (2026-11-18 slice re-verification: both cases MATCH). The plain case pins the plain lyric request; the lrcx case pins the word-lyric request (params + '&lrcx=1') sent by fetch_raw_lyric(_, true).",
+  "plain": {
+    "params": "user=12345,web,web,web&requester=localhost&req=1&rid=MUSIC_228908",
+    "base64": "DBYAHlReXEpRUEAeCgxVEgAORRgLG0MXCRgaCwoRAB5UAwEaBAkEBhwaXxcAHVReSAsMAVEkOj0wJjpeW1dXSV0="
+  },
+  "lrcx": {
+    "params": "user=12345,web,web,web&requester=localhost&req=1&rid=MUSIC_228908&lrcx=1",
+    "base64": "DBYAHlReXEpRUEAeCgxVEgAORRgLG0MXCRgaCwoRAB5UAwEaBAkEBhwaXxcAHVReSAsMAVEkOj0wJjpeW1dXSV1DABsMFkRU"
+  }
+}

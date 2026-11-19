@@ -1,0 +1,35 @@
+{
+  "_provenance": "RECONSTRUCTED from the upstream parser reads (voicefox source/src/bili/leaderboard.rs:161-188, 220-248); no raw popular capture exists in either repository. Shape mirrors exactly what parse_popular_song reads: bvid required, owner.name author, pic-or-cover, duration as \"mm:ss\" string or numeric seconds, cid numeric.",
+  "code": 0,
+  "message": "0",
+  "ttl": 1,
+  "data": {
+    "no_more": true,
+    "list": [
+      {
+        "bvid": "BV1xx411c7mD",
+        "title": "全网热门甲",
+        "owner": { "mid": 101, "name": "UP主甲", "face": "//i0.hdslb.com/face1.jpg" },
+        "pic": "//i0.hdslb.com/x.jpg",
+        "duration": "3:45",
+        "cid": 111
+      },
+      {
+        "bvid": "BV1xx411c7mE",
+        "title": "全网热门乙",
+        "owner": { "mid": 102, "name": "UP主乙" },
+        "cover": "https://i0.hdslb.com/y.jpg",
+        "duration": 223,
+        "cid": 112
+      },
+      {
+        "bvid": "",
+        "title": "无bvid占位",
+        "owner": { "mid": 109, "name": "占位用户" },
+        "pic": "//i0.hdslb.com/z.jpg",
+        "duration": 30,
+        "cid": 113
+      }
+    ]
+  }
+}

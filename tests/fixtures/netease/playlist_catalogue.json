@@ -1,0 +1,29 @@
+{
+  "code": 200,
+  "categories": {
+    "0": "语种",
+    "1": "风格"
+  },
+  "all": {
+    "resourceCount": 100,
+    "hot": true
+  },
+  "sub": [
+    {
+      "name": "华语",
+      "category": 0,
+      "resourceCount": 5,
+      "hot": false
+    },
+    {
+      "name": "  ",
+      "category": 1
+    },
+    {
+      "name": "摇滚",
+      "category": 1,
+      "resourceCount": 7,
+      "hot": true
+    }
+  ]
+}

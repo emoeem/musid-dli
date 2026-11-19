@@ -1,0 +1,46 @@
+{
+  "code": 200,
+  "more": true,
+  "playlists": [
+    {
+      "id": 123,
+      "name": "精选歌单",
+      "trackCount": 42,
+      "coverImgUrl": "https://p1.music.126.net/sample/hot-1.jpg",
+      "description": "按热度整理的示例歌单"
+    },
+    {
+      "id": 124,
+      "name": "深夜骑行",
+      "trackCount": 88,
+      "coverImgUrl": "https://p1.music.126.net/sample/hot-2.jpg",
+      "description": null
+    },
+    {
+      "id": 125,
+      "name": "华语流行速递",
+      "trackCount": 30,
+      "coverImgUrl": "https://p1.music.126.net/sample/hot-3.jpg"
+    },
+    {
+      "id": 126,
+      "name": "电音脉搏",
+      "trackCount": 55,
+      "coverImgUrl": "https://p1.music.126.net/sample/hot-4.jpg",
+      "description": "电子舞曲每周更新"
+    },
+    {
+      "id": 127,
+      "name": "经典摇滚",
+      "trackCount": 61,
+      "coverImgUrl": "https://p1.music.126.net/sample/hot-5.jpg",
+      "description": "摇滚年代精选"
+    },
+    {
+      "id": 128,
+      "name": "   ",
+      "trackCount": 7,
+      "coverImgUrl": "https://p1.music.126.net/sample/hot-6.jpg"
+    }
+  ]
+}

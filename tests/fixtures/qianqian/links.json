@@ -1,0 +1,88 @@
+{
+ "cases": [
+  {
+   "link": "https://music.91q.com/song/T10045678",
+   "kind": "song",
+   "id": "T10045678",
+   "source": "upstream parse.rs:140-144"
+  },
+  {
+   "link": "https://music.91q.com/songlist/123456",
+   "kind": "playlist",
+   "id": "123456",
+   "source": "upstream parse.rs:145-149"
+  },
+  {
+   "link": "https://music.91q.com/album/A1234",
+   "kind": "album",
+   "id": "A1234",
+   "source": "upstream parse.rs:150-154"
+  },
+  {
+   "link": "https://music.91q.com/?albumAssetCode=A9876",
+   "kind": "album",
+   "id": "A9876",
+   "source": "upstream parse.rs:155-159"
+  },
+  {
+   "link": "abc123",
+   "kind": "playlist",
+   "id": "abc123",
+   "source": "upstream parse.rs:166-170 bare share id"
+  },
+  {
+   "link": "https://music.91q.com/player",
+   "kind": null,
+   "id": null,
+   "source": "upstream parse.rs:177 rejection"
+  },
+  {
+   "link": "周杰伦 晴天",
+   "kind": null,
+   "id": null,
+   "source": "upstream parse.rs:178 rejection"
+  },
+  {
+   "link": "https://music.91q.com/tracklist/98765",
+   "kind": "playlist",
+   "id": "98765",
+   "source": "derived: tracklist path shape (parse.rs:28-34)"
+  },
+  {
+   "link": "https://music.91q.com/playlist/555",
+   "kind": "playlist",
+   "id": "555",
+   "source": "derived: playlist path shape (parse.rs:28-34)"
+  },
+  {
+   "link": "https://e.example/path?tracklistid=77",
+   "kind": "playlist",
+   "id": "77",
+   "source": "derived: unanchored *id= capture (parse.rs:45-49)"
+  },
+  {
+   "link": "https://e.example/?albumid=123456",
+   "kind": "album",
+   "id": "123456",
+   "source": "derived: albumid numeric capture (parse.rs:42-44)"
+  },
+  {
+   "link": "",
+   "kind": null,
+   "id": null,
+   "source": "derived: empty"
+  },
+  {
+   "link": "song-abc",
+   "kind": null,
+   "id": null,
+   "source": "derived: dash fails the bare alnum rule"
+  },
+  {
+   "link": "a/b",
+   "kind": null,
+   "id": null,
+   "source": "derived: slash fails the bare rule"
+  }
+ ]
+}

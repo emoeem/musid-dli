@@ -1,0 +1,187 @@
+{
+ "state": true,
+ "errno": 22000,
+ "errmsg": "",
+ "elapsed_time": "0.0598",
+ "ip": "10.16.15.15",
+ "data": {
+  "albumAssetCode": "P10003660422",
+  "artist": [
+   {
+    "artistCode": "A11810891",
+    "gender": "未知",
+    "name": "叶勇威",
+    "artistType": 38,
+    "artistTypeName": "歌手",
+    "pic": "",
+    "region": ""
+   },
+   {
+    "artistCode": "A11810893",
+    "gender": "未知",
+    "name": "叶勇泉",
+    "artistType": 38,
+    "artistTypeName": "歌手",
+    "pic": "",
+    "region": ""
+   },
+   {
+    "artistCode": "A11810897",
+    "gender": "未知",
+    "name": "吴端麟",
+    "artistType": 38,
+    "artistTypeName": "歌手",
+    "pic": "",
+    "region": ""
+   },
+   {
+    "artistCode": "A11810892",
+    "gender": "未知",
+    "name": "李培勤",
+    "artistType": 38,
+    "artistTypeName": "歌手",
+    "pic": "",
+    "region": ""
+   },
+   {
+    "artistCode": "A11810896",
+    "gender": "未知",
+    "name": "陈嘉惠",
+    "artistType": 38,
+    "artistTypeName": "歌手",
+    "pic": "",
+    "region": ""
+   },
+   {
+    "artistCode": "A11810895",
+    "gender": "未知",
+    "name": "冯沩玮",
+    "artistType": 38,
+    "artistTypeName": "歌手",
+    "pic": "",
+    "region": ""
+   },
+   {
+    "artistCode": "A11810894",
+    "gender": "未知",
+    "name": "陈嘉翔",
+    "artistType": 38,
+    "artistTypeName": "歌手",
+    "pic": "",
+    "region": ""
+   }
+  ],
+  "releaseDate": "2021-03-12T00:00:00.000Z",
+  "cpId": 23,
+  "introduce": "在疫情爆发时，地球好像要停止运转了，人于人之间隔离了，经济商业交易缓慢停顿了，人们在困境\n里。\n\n【逆流而上】这首歌来鼓励大家对抗疫情，振作起来，把这个正能量转递，不止是对疫情，也能包括\n所有的不幸，也针对天灾，气候变暖。地裂，干旱，北极冰融，水灾，我们人类都在面对这些困境，\n但不要放弃希望，找回失去的勇敢和毅力，点燃生命和火花，一起努力加油，共度难关。\n",
+  "genre": "流行",
+  "upc": "9555150727730",
+  "pic": "https://img01.dmhmusic.com/0105/M00/35/CC/ChR45WBCBaeARZ3wAAfOS9rCPDw885.jpg",
+  "type": 2,
+  "title": "逆流而上",
+  "lang": "中文",
+  "_score": 1.0000373,
+  "pushTime": "2021-03-12T10:00:00+08:00",
+  "downTime": "2037-01-01T00:00:00+08:00",
+  "available": true,
+  "availableErrMsg": "",
+  "trackList": [
+   {
+    "duration": 236,
+    "artist": [
+     {
+      "artistCode": "A11810891",
+      "gender": "未知",
+      "name": "叶勇威",
+      "artistType": 38,
+      "artistTypeName": "歌手",
+      "pic": "",
+      "region": ""
+     },
+     {
+      "artistCode": "A11810893",
+      "gender": "未知",
+      "name": "叶勇泉",
+      "artistType": 38,
+      "artistTypeName": "歌手",
+      "pic": "",
+      "region": ""
+     },
+     {
+      "artistCode": "A11810897",
+      "gender": "未知",
+      "name": "吴端麟",
+      "artistType": 38,
+      "artistTypeName": "歌手",
+      "pic": "",
+      "region": ""
+     },
+     {
+      "artistCode": "A11810892",
+      "gender": "未知",
+      "name": "李培勤",
+      "artistType": 38,
+      "artistTypeName": "歌手",
+      "pic": "",
+      "region": ""
+     },
+     {
+      "artistCode": "A11810896",
+      "gender": "未知",
+      "name": "陈嘉惠",
+      "artistType": 38,
+      "artistTypeName": "歌手",
+      "pic": "",
+      "region": ""
+     },
+     {
+      "artistCode": "A11810895",
+      "gender": "未知",
+      "name": "冯沩玮",
+      "artistType": 38,
+      "artistTypeName": "歌手",
+      "pic": "",
+      "region": ""
+     },
+     {
+      "artistCode": "A11810894",
+      "gender": "未知",
+      "name": "陈嘉翔",
+      "artistType": 38,
+      "artistTypeName": "歌手",
+      "pic": "",
+      "region": ""
+     }
+    ],
+    "assetId": "T10059185827",
+    "isrc": "MYDM32010002",
+    "sort": 1,
+    "title": "逆流而上",
+    "rateFileInfo": {
+     "64": {
+      "size": 1889417,
+      "format": "aac"
+     },
+     "320": {
+      "size": 9443565,
+      "format": "mp3"
+     },
+     "3000": {
+      "size": 48886890,
+      "format": "flac"
+     },
+     "128": {
+      "size": 3777453,
+      "format": "mp3"
+     }
+    },
+    "isFavorite": 0,
+    "isVip": 0,
+    "isPaid": 0
+   }
+  ],
+  "isFavorite": 0,
+  "favoriteCount": 6,
+  "isPaid": 0
+ }
+}

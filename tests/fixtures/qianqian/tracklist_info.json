@@ -1,0 +1,258 @@
+{
+ "state": true,
+ "errno": 22000,
+ "errmsg": "",
+ "elapsed_time": "0.0614",
+ "ip": "10.16.15.12",
+ "data": {
+  "tagList": [
+   "流行",
+   "经典",
+   "国语",
+   "国语流行"
+  ],
+  "trackList": [
+   {
+    "artist": [
+     {
+      "artistCode": "A10047922",
+      "birthday": "1966-07-06",
+      "gender": "男",
+      "name": "林志炫",
+      "artistType": 38,
+      "artistTypeName": "歌手",
+      "pic": "https://img01.dmhmusic.com/0206/M00/70/D6/ChR47FtM62iAdG-WAALnN-x9WQg671.jpg",
+      "region": "港台"
+     }
+    ],
+    "cpId": 23,
+    "pic": "https://img01.dmhmusic.com/0207/M00/54/61/ChR461xRaQaAHwrlACslYZyD0wU993.jpg",
+    "title": "凤凰花开的路口",
+    "duration": 242,
+    "assetId": "T10049727031",
+    "genre": "流行",
+    "albumTitle": "熟情歌",
+    "id": "T10049727031",
+    "lang": "中文",
+    "afReplayGain": 0,
+    "albumAssetCode": "P10002734491",
+    "releaseDate": "2005-05-01T00:00:00.000Z",
+    "isrc": "TWB650500110",
+    "sort": 1,
+    "meanVolume": 0,
+    "maxVolume": 0,
+    "eq_rate_128": {
+     "path": "/0513/M00/6F/FA/ChAKB2rRooqACe23ADpCF74aKv0238.mp3",
+     "size": 3729,
+     "rate": 128,
+     "hashcode": "b53ad5c63ffc4f52138fa4c2f76d287798a12913",
+     "format": 1,
+     "filemd5": "75a4c87e4bf17a1c99c51dd06411128b"
+    },
+    "lyric": "https://static-qianqian.taihe.com/0101/M00/10/D1/ChR45F8ieYqATcIiAAAFwSXh2GI034.lrc",
+    "pay_model": 2,
+    "_trackId": 15545469,
+    "TSID": "T10049727031",
+    "allRate": [
+     "320",
+     "128",
+     "3000",
+     "64"
+    ],
+    "pushTime": "2019-08-28T00:00:00+08:00",
+    "downTime": "2037-01-01T00:00:00+08:00",
+    "bizList": [
+     "sdk_cpm"
+    ],
+    "rateFileInfo": {
+     "320": {
+      "size": 9682111,
+      "format": "mp3"
+     },
+     "128": {
+      "size": 3872896,
+      "format": "mp3"
+     },
+     "3000": {
+      "size": 21923108,
+      "format": "flac"
+     },
+     "64": {
+      "size": 1937271,
+      "format": "aac"
+     }
+    },
+    "backing": [],
+    "isFavorite": 0,
+    "isVip": 0,
+    "isPaid": 0
+   },
+   {
+    "artist": [
+     {
+      "artistCode": "A10047922",
+      "birthday": "1966-07-06",
+      "gender": "男",
+      "name": "林志炫",
+      "artistType": 38,
+      "artistTypeName": "歌手",
+      "pic": "https://img01.dmhmusic.com/0206/M00/70/D6/ChR47FtM62iAdG-WAALnN-x9WQg671.jpg",
+      "region": "港台"
+     }
+    ],
+    "cpId": 23,
+    "pic": "https://img01.dmhmusic.com/0208/M00/53/D6/ChR461xRX2yAbIZyAGtp8AlJpmw952.jpg",
+    "title": "秋意浓",
+    "duration": 274,
+    "assetId": "T10049726992",
+    "genre": "流行",
+    "albumTitle": "至情志炫",
+    "id": "T10049726992",
+    "lang": "中文",
+    "afReplayGain": 0,
+    "albumAssetCode": "P10002734490",
+    "releaseDate": "2004-06-01T00:00:00.000Z",
+    "isrc": "TWB650400705",
+    "sort": 2,
+    "meanVolume": 0,
+    "maxVolume": 0,
+    "eq_rate_128": {
+     "path": "/0513/M00/E1/B7/ChAKCGisNoSAQOORAEEqbApqyao150.mp3",
+     "size": 4171,
+     "rate": 128,
+     "hashcode": "1bbc3e805c21a6041b4308a6fe025299a6f0fb8c",
+     "format": 1,
+     "filemd5": "e0d8b9a0c3e8611ea6c93b758474a9a2"
+    },
+    "lyric": "https://static-qianqian.taihe.com/0101/M00/10/E1/ChR45F8ieaSAYPuHAAADRtJ4oWc415.lrc",
+    "pay_model": 2,
+    "_trackId": 15545434,
+    "TSID": "T10049726992",
+    "allRate": [
+     "3000",
+     "64",
+     "128",
+     "320"
+    ],
+    "pushTime": "2021-04-23T00:00:00+08:00",
+    "downTime": "2037-01-01T00:00:00+08:00",
+    "bizList": [
+     "sdk_cpm"
+    ],
+    "rateFileInfo": {
+     "3000": {
+      "size": 26522374,
+      "format": "flac"
+     },
+     "64": {
+      "size": 2195308,
+      "format": "aac"
+     },
+     "128": {
+      "size": 4390705,
+      "format": "mp3"
+     },
+     "320": {
+      "size": 10976697,
+      "format": "mp3"
+     }
+    },
+    "backing": [],
+    "isFavorite": 0,
+    "isVip": 0,
+    "isPaid": 0
+   },
+   {
+    "artist": [
+     {
+      "artistCode": "A10047859",
+      "birthday": "1973-11-08",
+      "gender": "男",
+      "name": "朴树",
+      "artistType": 38,
+      "artistTypeName": "歌手",
+      "pic": "https://img01.dmhmusic.com/0206/M00/70/D5/ChR47FtM61yAfsDrAAIMe8GA30g779.jpg",
+      "region": "内地"
+     }
+    ],
+    "cpId": 23,
+    "pic": "https://img01.dmhmusic.com/0105/M00/F0/CE/ChR45F6mlQCADhi0ABAKs0YIUtk510.jpg",
+    "title": "NEW BOY",
+    "duration": 224,
+    "assetId": "T10038818736",
+    "genre": "摇滚",
+    "albumTitle": "我去2000年",
+    "id": "T10038818736",
+    "lang": "中文",
+    "afReplayGain": 0,
+    "albumAssetCode": "P10001629402",
+    "releaseDate": "1999-01-01T00:00:00.000Z",
+    "isrc": "CN-Z17-15-00587",
+    "sort": 3,
+    "meanVolume": 0,
+    "maxVolume": 0,
+    "eq_rate_128": {
+     "path": "/0104/M00/E7/30/ChR45Wiln56AadN4ADVtOyoLfo0528.mp3",
+     "size": 3419,
+     "rate": 128,
+     "hashcode": "87e4e7652e43bf7acdc52c2b5cd8b261138907c0",
+     "format": 1,
+     "filemd5": "cdac55675705103df7a79d0c6e1f6b16"
+    },
+    "lyric": "https://static-qianqian.taihe.com/0210/M00/27/3D/ChR461pUoBKAGe31AAAE5KVaB7g874.lrc",
+    "pay_model": 3,
+    "_trackId": 11502281,
+    "TSID": "T10038818736",
+    "allRate": [
+     "3000",
+     "64",
+     "320",
+     "128"
+    ],
+    "pushTime": "2018-03-14T21:12:18+08:00",
+    "downTime": "2037-01-01T00:00:00+08:00",
+    "bizList": [
+     "sdk_cpm"
+    ],
+    "rateFileInfo": {
+     "3000": {
+      "size": 28105499,
+      "format": "flac"
+     },
+     "64": {
+      "size": 1795739,
+      "format": "aac"
+     },
+     "320": {
+      "size": 8979059,
+      "format": "mp3"
+     },
+     "128": {
+      "size": 3591774,
+      "format": "mp3"
+     }
+    },
+    "backing": [],
+    "isFavorite": 0,
+    "isVip": 1,
+    "isPaid": 0
+   }
+  ],
+  "pic": "https://img01.dmhmusic.com/0105/M00/FD/DD/ChR45F77BHuAectSABK0Uj1ttmY162.jpg",
+  "id": 309558,
+  "cateList": [
+   2368,
+   2438,
+   2376
+  ],
+  "title": "怀旧经典 | 华语至醇金曲",
+  "menu": [],
+  "addDate": "2025-09-09T00:20:48.000Z",
+  "desc": "",
+  "resourceType": 1,
+  "_score": 1.0000987,
+  "trackCount": 26,
+  "isFavorite": 0,
+  "haveMore": 1
+ }
+}

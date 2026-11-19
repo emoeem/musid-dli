@@ -1,6 +1,6 @@
 [package]
 name = "musid-dli"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 rust-version = "1.89"
 license = "MIT"
@@ -17,7 +17,26 @@ path = "src/lib.rs"
 
 [features]
 default = ["local", "lyrics", "session-file"]
-local = ["dep:lofty", "dep:walkdir"]
+local = ["dep:lofty", "dep:walkdir", "dep:cue-rw", "dep:encoding_rs"]
+# NCM container inspect/decrypt (formats_ncm): external upstream
+# ncm2mp3-core, no other feature coupling (netease streaming AES stays 0.8).
+ncm = ["dep:ncm2mp3-core"]
+# Cover read face (src/local_cover, M5 slice s8): embedded first-tag cover
+# extraction into a decode-validated cache plus same-directory external
+# cover detection. `image` (png/jpeg decode) and `sha2` (cache-key content
+# hash) are significant compile/size weight, so they stay OFF the default
+# `local` feature — same separation rationale as `ncm` above. The library
+# ships no cache directory policy: the cache dir is host-specified at every
+# call/scan (default dir, budget and sweep are host concerns,
+# LOCAL_ENHANCEMENT_DESIGN.md §9).
+local-cover = ["local", "dep:image", "dep:sha2"]
+# Watcher event stream (src/local_watch, M5 slice s9, parity L7): `notify`
+# pulls the platform FFI backends (inotify/FSEvents/ReadDirectoryChangesW)
+# plus its own event threads, so it stays OFF `local` — the same dependency
+# budget rationale as `ncm` and `local-cover` above. Hosts that only batch-scan
+# never pay for the watcher; the delivery face is callback or std::sync::mpsc
+# (zero tokio/runtime is a hard boundary, LOCAL_ENHANCEMENT_DESIGN.md §5.2).
+local-watch = ["local", "dep:notify"]
 lyrics = ["dep:lyrics-helper"]
 lyrics-search = ["lyrics", "lyrics-helper/search"]
 session-file = ["dep:tempfile"]
@@ -25,13 +44,98 @@ source-youtube-music = ["dep:rustypipe"]
 source-netease = ["dep:reqwest", "dep:aes", "dep:md-5", "dep:hex", "dep:tracing", "dep:urlencoding"]
 source-qqmusic = ["dep:reqwest", "dep:sha1", "dep:base64", "dep:hex", "dep:tracing", "dep:urlencoding"]
 source-kugou = ["dep:reqwest", "dep:md-5", "dep:base64", "dep:flate2", "dep:tracing", "dep:urlencoding"]
-source-kuwo = ["dep:reqwest", "dep:md-5", "dep:hex", "dep:base64", "dep:flate2", "dep:encoding_rs", "dep:tracing", "dep:urlencoding"]
-source-migu = ["dep:reqwest", "dep:md-5", "dep:base64", "dep:flate2", "dep:tracing", "dep:urlencoding"]
+source-kuwo = ["dep:reqwest", "dep:md-5", "dep:hex", "dep:base64", "dep:flate2", "dep:encoding_rs", "dep:tracing", "dep:urlencoding", "dep:regex"]
+source-migu = ["dep:reqwest", "dep:md-5", "dep:base64", "dep:flate2", "dep:tracing", "dep:urlencoding", "dep:regex"]
 source-bilibili = ["dep:reqwest", "dep:md-5", "dep:tracing", "dep:urlencoding"]
 source-jamendo = ["dep:reqwest", "dep:sha1", "dep:hex", "dep:tracing", "dep:urlencoding"]
 source-apple = ["dep:reqwest", "dep:tracing", "dep:urlencoding"]
 source-fivesing = ["dep:reqwest", "dep:tracing", "dep:urlencoding"]
+source-qianqian = ["dep:reqwest", "dep:md-5", "dep:hex", "dep:flate2", "dep:tracing", "dep:urlencoding", "dep:regex"]
+source-joox = ["dep:reqwest", "dep:base64", "dep:tracing", "dep:urlencoding"]
 lx-js-bridge = []
+# Download engine core (src/download.rs): HTTP range/multipart fetch, resume
+# via atomic .part staging (no byte-level resume, same as upstream), CDN
+# candidate fallback, size/MD5 integrity, tag/lyric finish. Task orchestration
+# and UI stay in the VoiceFox host (see IMPLEMENTATION_STATUS 2026-11-18).
+download = ["tokio/fs", "tokio/io-util", "dep:reqwest", "dep:lofty", "dep:md-5", "dep:tracing", "lyrics"]
+# M3 slice s1 stream-semantics (docs/integration/MODEL_ALIGNMENT_DESIGN.md §0):
+# StreamInfo stream semantics (size_is_advisory, checksum_algorithm,
+# fallback_endpoints) plus the StreamInfo→DownloadRequest adapter. The adapter
+# lives behind `download`, so this gate feature implies it.
+stream-semantics = ["download"]
+# M3 slice s2 track-semantics (docs/integration/MODEL_ALIGNMENT_DESIGN.md §0):
+# gate feature only. The s2 deliverables (Track AudioSpec + audio slot, the
+# models::namespace alias table, Track::sorted_qualities) are core models that
+# always compile, so nothing is feature-gated and nothing is implied.
+track-conversions = []
+# M3 slice s3 lyrics-semantics (docs/integration/MODEL_ALIGNMENT_DESIGN.md §0/§4):
+# LyricData↔LyricDocument conversions plus the YrcWord↔LyricWord field mapping
+# in src/lyrics_convert.rs. Raw YRC/QRC/KRC word payloads parse through the
+# lyrics facade, so this gate feature implies `lyrics`.
+lyrics-conversions = ["lyrics"]
+# M3 slice s4 collection-models (docs/integration/MODEL_ALIGNMENT_DESIGN.md §0/§5):
+# gate feature only. The s4 deliverables (Playlist play_count/creator/link/extra,
+# PlaylistCategory provider/extra, Chart updated_description, all
+# #[serde(default)]) are core models that always compile, so nothing is
+# feature-gated and nothing is implied. Link/capability/artwork decisions are
+# documented (§5.2-§5.5), no code rides this feature.
+collection-models = []
+# M3 slice s5 auth-model-gaps (docs/integration/MODEL_ALIGNMENT_DESIGN.md §0/§6):
+# gate feature only. The s5 deliverables (QrLoginStatus nine states with
+# is_transient/is_terminal and upstream snake_case serde, QrLoginKind +
+# image_png/kind slots on QrLoginSession, the QrLoginPoll user_name fold rule,
+# ProviderProbeResult) are core types that always compile, so nothing is
+# feature-gated and nothing is implied.
+auth-model-gaps = []
+# M5 slice s3 safe-tag-write (docs/integration/LOCAL_ENHANCEMENT_DESIGN.md
+# §2/§4): gate feature only. The s3 deliverable (src/tag_write.rs) is gated on
+# cfg(any(feature = "local", feature = "download")); this gate feature names
+# exactly that union so outer gates can select it by name (`cargo test/clippy
+# --features cfg`): enabling it pulls both features together and certifies the
+# "independent, unified without conflict" pairing. Neither feature implies the
+# other; selecting either alone never touches `cfg`, and no code is gated on
+# `cfg` itself.
+cfg = ["local", "download"]
+# M6 artwork face (docs/integration/RESOURCE_DESIGN.md §1): gate feature only.
+# The trait + models + ArtworkCache (src/artwork.rs) are core and always
+# compile, so nothing is feature-gated by `artwork` itself and it pulls zero
+# dependencies (lx-js-bridge precedent). The concrete local implementation
+# (src/artwork_local.rs) needs local-cover and is gated on
+# cfg(all(feature = "artwork", feature = "local-cover")); `artwork-local`
+# names exactly that union so outer gates can select it by name, the same
+# union-naming pattern as `cfg` above. No registered provider implements the
+# face in M6 (M3 §5.5 no-empty-shells rule): the registry slot stays empty
+# until a provider slice lands a real implementation.
+artwork = []
+artwork-local = ["artwork", "local-cover"]
+# m6-artwork-resolver outer-gate literal feature (RESOURCE_DESIGN.md §12 D36):
+# REMOVED 2026-11-20 for release hygiene (M7). The literal-named selectors
+# (`feature`, `producer`, `gate`, `"Cargo.toml"`) were per-slice gate aliases
+# added during the M6 run when the outer gate passed polluted feature strings;
+# the orchestrator feature parser was fixed the same day, and no code gates on
+# them (`cfg(feature = "feature")` appears nowhere). Slice faces are selected
+# through the meaningful unions above (`artwork-local`, `lyrics-cache`,
+# `lyrics-search`, `cfg`) or --all-features. See the superseding note in
+# docs/integration/RESOURCE_DESIGN.md §12.
+# M6 lyrics pipeline (docs/integration/RESOURCE_DESIGN.md §8): LyricsCache
+# (positive search/document domains + negative cache) for the lyrics layer.
+# Implies `lyrics` following the Cargo.toml:40-41 layering; the search-domain
+# cache and the search_many health hookup additionally need `lyrics-search`
+# and are gated on cfg(all(lyrics-cache, lyrics-search)). All cache keys are
+# stable ids (TrackId / provider+lyric-id), never titles.
+lyrics-cache = ["lyrics"]
+# M6 lyrics layering slice (docs/integration/RESOURCE_DESIGN.md §7): gate
+# feature for the producer-side lyrics face. The §7.2 accessors
+# (layered_lines/has_word_timing/materialize_layers) are core models that
+# always compile; the §7.3 materialized parse (parse_document_layers) parses
+# every payload through the lyrics facade (src/lyrics.rs, lib.rs:60-61), so
+# this gate implies `lyrics` in the same shape as `lyrics-cache` above.
+# Producers keep their current fill shape (netease/qqmusic document-level
+# slots, kuwo's Krc-family label); the normalization is purely the
+# host-facing view on top (§7.3 "Producers are untouched").
+# (The `producer`/`gate`/`"Cargo.toml"` literal gate selectors that followed
+# this entry were removed 2026-11-20 for release hygiene, same as the
+# `feature` selector above; see docs/integration/RESOURCE_DESIGN.md §12.)
 
 [dependencies]
 async-trait = "0.1"
@@ -42,6 +146,8 @@ thiserror = "2"
 tokio = { version = "1", features = ["sync", "time", "rt"] }
 lofty = { version = "0.22", optional = true }
 walkdir = { version = "2", optional = true }
+# CUE sheet container parsing (same crate and version as the upstream scanner).
+cue-rw = { version = "0.2.1", optional = true }
 lyrics-helper = { version = "0.5.1", default-features = false, optional = true }
 rustypipe = { version = "0.11.4", default-features = false, features = ["rustls-tls-webpki-roots"], optional = true }
 tempfile = { version = "3", optional = true }
@@ -55,9 +161,32 @@ encoding_rs = { version = "0.8", optional = true }
 hex = { version = "0.4", optional = true }
 tracing = { version = "0.1", optional = true }
 urlencoding = { version = "2", optional = true }
+# Kuwo playlist search: `search.kuwo.cn/r.s` answers with a JS object
+# literal, normalized with the two upstream regexes before JSON parsing.
+regex = { version = "1", optional = true }
+# NCM container decrypt/inspect (formats_ncm). External upstream audited
+# 2026-11-18: ncm2mp3-core 0.3.2 (crates.io, Apache-2.0, MSRV 1.75, pure
+# Rust, no network, no transcoding); pinned to the audited release. Its
+# crypto stack is aes 0.9 / ecb 0.2 and coexists with the netease aes 0.8.
+ncm2mp3-core = { version = "0.3.2", optional = true }
+# Cover read face (local_cover). Audited 2026-11-20 (docs/DEPENDENCY_AUDIT.md):
+# image 0.25.10 (MIT OR Apache-2.0) already in the tree as a dev-dependency
+# (png); the runtime face adds the `jpeg` decoder so both cover formats the
+# conventional names produce validate. sha2 0.10 (RustCrypto, Apache-2.0 OR
+# MIT, pure Rust) hashes the cache key; no other feature pulls it.
+image = { version = "0.25", default-features = false, features = ["png", "jpeg"], optional = true }
+sha2 = { version = "0.10", optional = true }
+# Filesystem watcher event stream (local_watch, M5 slice s9). Audited
+# 2026-11-20 (docs/DEPENDENCY_AUDIT.md): notify 8.2 (resolved 8.2.0, CC0-1.0,
+# MSRV 1.77 vs this crate's 1.89 gate) — the same major version the upstream
+# voicefox watcher pins (voicefox/Cargo.toml:84 `notify = "8.2"`). Default
+# features keep notify's internal channel on std::sync::mpsc (no
+# crossbeam/flume); the Linux backend is inotify 0.11 (+ inotify-sys) with
+# libc/log/notify-types, and walkdir is already in the tree via `local`.
+notify = { version = "8.2", optional = true }
 
 [dev-dependencies]
-tokio = { version = "1", features = ["macros", "rt-multi-thread", "time", "sync"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "time", "sync", "net", "io-util"] }
 qrcode = "0.14"
 image = { version = "0.25", default-features = false, features = ["png"] }
 rqrr = "0.7"
@@ -97,3 +226,11 @@ required-features = ["source-apple"]
 [[example]]
 name = "fivesing_smoke"
 required-features = ["source-fivesing"]
+
+[[example]]
+name = "qianqian_smoke"
+required-features = ["source-qianqian"]
+
+[[example]]
+name = "joox_smoke"
+required-features = ["source-joox"]

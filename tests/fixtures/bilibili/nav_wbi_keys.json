@@ -1,0 +1,11 @@
+{
+  "code": -101,
+  "message": "账号未登录",
+  "data": {
+    "isLogin": false,
+    "wbi_img": {
+      "img_url": "https://i0.hdslb.com/bfs/wbi/0a1b2c3d4e5f60718293a4b5c6d7e8f1.png",
+      "sub_url": "https://i1.hdslb.com/bfs/wbi/99887766554433221100ffeeddccbbaa.jpg"
+    }
+  }
+}

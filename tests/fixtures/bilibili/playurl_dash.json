@@ -1,0 +1,24 @@
+{
+  "code": 0,
+  "data": {
+    "dash": {
+      "audio": [
+        {
+          "bandwidth": 64000,
+          "baseUrl": "https://example.com/64",
+          "backupUrl": ["https://example.com/64-b1", "https://example.com/64-b2"]
+        },
+        {
+          "bandwidth": 128000,
+          "baseUrl": "https://example.com/128",
+          "backupUrl": ["https://example.com/128-b1"]
+        },
+        {
+          "bandwidth": 192000,
+          "baseUrl": "https://example.com/192",
+          "backupUrl": ["https://example.com/192-b1"]
+        }
+      ]
+    }
+  }
+}

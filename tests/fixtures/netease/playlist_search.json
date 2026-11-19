@@ -1,0 +1,28 @@
+{
+  "code": 200,
+  "result": {
+    "playlistCount": 50,
+    "playlists": [
+      {
+        "id": 201,
+        "name": "华语经典合集",
+        "trackCount": 120,
+        "coverImgUrl": "https://p1.music.126.net/sample/search-1.jpg",
+        "description": "搜索结果示例一"
+      },
+      {
+        "id": 202,
+        "name": "粤语金曲",
+        "trackCount": 75,
+        "coverImgUrl": "https://p1.music.126.net/sample/search-2.jpg"
+      },
+      {
+        "id": 203,
+        "name": "民谣地图",
+        "trackCount": 46,
+        "coverImgUrl": "https://p1.music.126.net/sample/search-3.jpg",
+        "description": "民谣精选"
+      }
+    ]
+  }
+}

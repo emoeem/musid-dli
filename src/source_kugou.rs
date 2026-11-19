@@ -7,26 +7,27 @@
 //! albums, artists, charts and link parsing remain pending
 //! (see docs/SOURCE_QQ_MUSIC_AUDIT.md).
 use crate::{
-    Error, Result,
+    Error, ErrorDetail, Result,
     lrc::parse_lrc,
     models::{
         Album, Artist, AudioFormat, Chart, ChartEntry, LyricDocument, LyricFormat, LyricLine,
         LyricWord, Playlist, PlaylistCategory, StreamInfo, StreamQuality, Track, TrackId,
     },
     provider::{
-        AlbumProvider, ArtistProvider, AuthenticationProvider, ChartProvider, CollectionProvider,
-        LinkResolver, LoginStatus, LyricsProvider, MusicProvider, PlaylistProvider,
-        QrAuthenticationProvider, QrLoginPoll, QrLoginSession, QrLoginStatus, ResolveOptions,
-        ResolvedLink, SearchPage, SearchQuery, StreamResolver, TrackSearch,
+        AlbumProvider, ArtistProvider, AuthState, AuthenticationProvider, ChartProvider,
+        CollectionProvider, LinkResolver, LoginStatus, LyricsProvider, MusicProvider,
+        PlaylistProvider, QrAuthenticationProvider, QrLoginKind, QrLoginPoll, QrLoginSession,
+        QrLoginStatus, ResolveOptions, ResolvedLink, SearchPage, SearchQuery, StreamResolver,
+        TrackSearch,
     },
-    retry::{KUGOU_CODES, StepOutcome, classify_api, classify_http},
+    retry::KUGOU_CODES,
     session::{ProviderSession, SessionStore},
+    transport::{ClientProfile, Http, RetryPolicy, TransportError, TransportRequest},
 };
 use async_trait::async_trait;
 use base64::{Engine as _, engine::general_purpose::STANDARD};
 use flate2::read::ZlibDecoder;
 use md5::{Digest, Md5};
-use reqwest::{Client, RequestBuilder, header};
 use serde_json::{Value, json};
 use std::{collections::BTreeMap, io::Read, time::Duration};
 
@@ -52,7 +53,7 @@ const KRC_XOR_KEY: [u8; 16] = [
 
 #[derive(Clone)]
 pub struct KugouProvider {
-    client: Client,
+    http: Http,
     sessions: SessionStore,
 }
 impl std::fmt::Debug for KugouProvider {
@@ -69,12 +70,24 @@ impl Default for KugouProvider {
 }
 impl KugouProvider {
     pub fn new() -> Self {
-        let client = Client::builder()
-            .timeout(Duration::from_secs(15))
-            .build()
-            .unwrap_or_else(|_| Client::new());
+        // Client construction moved onto the unified transport layer: the old
+        // builder set exactly a 15s total timeout, which is what
+        // `provider_default()` carries (TRANSPORT_DESIGN.md §4.3); the build
+        // fallback shape lives in `build_client`.
+        let http = Http::from_profile(&ClientProfile::provider_default());
         Self {
-            client,
+            http,
+            sessions: SessionStore::default(),
+        }
+    }
+
+    /// Test seam: inject a transport handle (a mock in unit tests). The
+    /// production constructor is [`KugouProvider::new`]. Test-only so
+    /// non-test builds see no dead constructor.
+    #[cfg(test)]
+    pub(crate) fn with_transport(http: Http) -> Self {
+        Self {
+            http,
             sessions: SessionStore::default(),
         }
     }
@@ -113,17 +126,63 @@ impl KugouProvider {
                 tokens: BTreeMap::new(),
                 user_id,
                 display_name,
+                ..Default::default()
             },
         )
     }
-    fn mark_session_expired(&self) {
+    /// Flag the current session as expired so [`Self::auth_state`] (and
+    /// `login_status` through it) reports it, and return the classified
+    /// [`Error::SessionExpired`] for the caller to propagate — the M2
+    /// landing spot for the `retry` classifier's expired-table verdict
+    /// (AUTH_REGISTRY_DESIGN.md §1.1, §8 slice 3). The kugou table itself is
+    /// empty (`retry::KUGOU_CODES`: no discernible fixture-backed expiry
+    /// code, session expiry rides this marker), so the
+    /// `TransportError::SessionExpired` arm in `get_json` stays defensive
+    /// rather than reachable. The legacy free-form "login required or
+    /// session expired" string is replaced by the variant, whose Display
+    /// body is that exact text; `detail` carries the call-site label, the
+    /// only underlying information [`TransportError::SessionExpired`]
+    /// preserves.
+    fn mark_session_expired(&self, detail: Option<ErrorDetail>) -> Error {
         if let Some(mut session) = self.sessions.get(ID) {
             session.tokens.insert("login_expired".into(), "1".into());
             let _ = self.sessions.set(ID, session);
         }
+        Error::SessionExpired {
+            provider: Some(ID.into()),
+            detail,
+        }
     }
-    fn request(&self, request: RequestBuilder) -> RequestBuilder {
-        let mut request = request.header(header::USER_AGENT, UA_WEB);
+    /// Derive the unified [`AuthState`] from the stored session (no network
+    /// I/O). The `login_expired` token written by
+    /// [`Self::mark_session_expired`] is the Expired bit; kugou's login
+    /// predicate stays the upstream session shape — a `token` cookie plus
+    /// an account id, mirroring `voicefox/source/src/kg/session.rs::is_logged_in`
+    /// and pinned by `login_status_requires_token_and_user_id`; a session
+    /// missing either is `LoggedOut`. This is the AuthState wiring for the
+    /// M2 auth state machine (AUTH_REGISTRY_DESIGN.md §2, §8 slice 3):
+    /// `login_status` reports through this state instead of
+    /// hand-classifying the session.
+    fn auth_state(&self) -> AuthState {
+        match self.sessions.get(ID) {
+            None => AuthState::LoggedOut,
+            Some(session)
+                if !session.cookies.contains_key("token") || session.user_id.is_none() =>
+            {
+                AuthState::LoggedOut
+            }
+            Some(session) if session.tokens.contains_key("login_expired") => AuthState::Expired,
+            Some(_) => AuthState::Authenticated,
+        }
+    }
+    /// Adds the request-level web UA and the session cookies to a
+    /// [`TransportRequest`]. Kugou sends every session cookie (no whitelist)
+    /// and the web UA stays request-level because several faces append their
+    /// own client UA after this helper — reqwest's `RequestBuilder::header`
+    /// and the transport adapter both append, so today's two-UA wire shape is
+    /// preserved verbatim.
+    fn request(&self, request: TransportRequest) -> TransportRequest {
+        let mut request = request.header("user-agent", UA_WEB);
         if let Some(session) = self.sessions.get(ID) {
             let cookie = session
                 .cookies
@@ -132,68 +191,47 @@ impl KugouProvider {
                 .collect::<Vec<_>>()
                 .join("; ");
             if !cookie.is_empty() {
-                request = request.header(header::COOKIE, cookie);
+                request = request.header("cookie", cookie);
             }
         }
         request
     }
-    /// GET with the shared retry policy; returns the final 2xx response.
-    async fn raw_get(&self, url: &str, label: &str) -> Result<reqwest::Response> {
-        const BACKOFF_MS: [u64; 4] = [600, 1_200, 2_400, 4_000];
-        for (attempt, delay) in BACKOFF_MS
-            .iter()
-            .copied()
-            .chain(std::iter::once(0))
-            .enumerate()
-        {
-            let response = self.request(self.client.get(url)).send().await;
-            let response = match response {
-                Ok(response) => response,
-                Err(error) if attempt < BACKOFF_MS.len() => {
-                    tracing::debug!("Kugou {label} transport retry {}: {error}", attempt + 1);
-                    tokio::time::sleep(Duration::from_millis(delay)).await;
-                    continue;
-                }
-                Err(error) => return Err(perr(format!("{label}: {error}"))),
-            };
-            match classify_http(response.status().as_u16(), attempt, BACKOFF_MS.len()) {
-                StepOutcome::Retry => {
-                    tokio::time::sleep(Duration::from_millis(delay)).await;
-                    continue;
-                }
-                StepOutcome::Fatal(message) => return Err(perr(format!("{label}: {message}"))),
-                StepOutcome::SessionExpired | StepOutcome::Ok => {}
-            }
-            return Ok(response);
-        }
-        Err(perr(format!("{label}: retry budget exhausted")))
-    }
+    /// GET one JSON API endpoint through the unified transport layer
+    /// (`send_api_json`): transport errors and 429/5xx retry under
+    /// `RetryPolicy::standard()` with the engine's exponential backoff +
+    /// jitter + `Retry-After`, replacing the fixed `[600,1200,2400,4000]`
+    /// table. The send budget is unchanged (at most 5 sends); the backoff
+    /// shape change is declared in TRANSPORT_DESIGN.md §5.5 row 1.
+    ///
+    /// `api_retries: 0` keeps today's body-code semantics (§5.3/§5.5 row 6):
+    /// kugou's `classify_api` ran with budget 0, so `error_code` values never
+    /// retried. Classification stays in `retry` (`classify_http` /
+    /// `classify_api` via the engine); error texts keep today's
+    /// `{label}: {error}` / `{label}: HTTP {status}` shapes.
     async fn get_json(&self, url: &str, label: &str) -> Result<Value> {
-        let response = self.raw_get(url, label).await?;
-        let value: Value = response
-            .json()
+        let request = self.request(TransportRequest::get(url));
+        let policy = RetryPolicy {
+            api_retries: 0,
+            ..RetryPolicy::standard()
+        };
+        match self
+            .http
+            .send_api_json(&request, &policy, &KUGOU_CODES, kugou_code_of)
             .await
-            .map_err(|e| perr(format!("{label}: {e}")))?;
-        let message = value["error"]
-            .as_str()
-            .or_else(|| value["message"].as_str())
-            .or_else(|| value["msg"].as_str())
-            .unwrap_or("unknown error");
-        let budget = 0;
-        match classify_api(
-            value["error_code"].as_i64().unwrap_or(KUGOU_CODES.ok),
-            message,
-            budget,
-            budget,
-            &KUGOU_CODES,
-        ) {
-            StepOutcome::Ok => Ok(value),
-            StepOutcome::Retry => Err(perr(format!("{label}: throttled"))),
-            StepOutcome::SessionExpired => {
-                self.mark_session_expired();
-                Err(perr(format!("{label}: login required or session expired")))
+        {
+            Ok(value) => Ok(value),
+            Err(TransportError::SessionExpired) => {
+                // Defensive arm: the kugou expired table is empty today
+                // (retry::KUGOU_CODES inventory), so the engine cannot
+                // produce this verdict yet — the classified error and the
+                // marker write keep the M2 landing spot identical to the
+                // netease/qq migrations should a fixture ever pin a code.
+                Err(self.mark_session_expired(Some(ErrorDetail::new(label))))
             }
-            StepOutcome::Fatal(m) => Err(perr(format!("{label}: {m}"))),
+            Err(error) => {
+                tracing::debug!("Kugou {label} failed: {error}");
+                Err(perr(format!("{label}: {error}")))
+            }
         }
     }
     /// A logged-in session for stream resolution: Kugou needs `token`,
@@ -269,6 +307,21 @@ fn perr(message: impl Into<String>) -> Error {
         provider: ID.into(),
         message: message.into(),
     }
+}
+/// `(code, message)` extractor handed to `Http::send_api_json`; extraction
+/// stays provider-side, classification lives in `retry` (TRANSPORT_DESIGN.md
+/// §4.1). A body without an `error_code` field falls back to the OK code,
+/// exactly like the previous `unwrap_or(KUGOU_CODES.ok)` loop (review P-7).
+fn kugou_code_of(value: &Value) -> (i64, String) {
+    (
+        value["error_code"].as_i64().unwrap_or(KUGOU_CODES.ok),
+        value["error"]
+            .as_str()
+            .or_else(|| value["message"].as_str())
+            .or_else(|| value["msg"].as_str())
+            .unwrap_or("unknown error")
+            .to_owned(),
+    )
 }
 /// KRC decryption: strip the `krc1` magic, XOR with the fixed 16-byte key,
 /// then zlib-inflate the remainder.
@@ -562,6 +615,7 @@ fn parse_kg_song(item: &Value) -> Option<Track> {
         artwork_url: None,
         isrc: None,
         available_qualities: qualities,
+        audio: None,
         extra,
     })
 }
@@ -601,7 +655,10 @@ impl MusicProvider for KugouProvider {
             charts: true,
             link_resolve: true,
             albums: true,
-            // Artist lookup is a search-based fallback (no dedicated endpoint).
+            // Artist lookup is a search-based fallback (no dedicated
+            // endpoint): the `id` is the artist name and `artist_top_tracks`
+            // filters search results by it (verified AUTH_REGISTRY_DESIGN.md
+            // §5.4/§9.2).
             artists: true,
             ..Default::default()
         }
@@ -661,13 +718,16 @@ impl StreamResolver for KugouProvider {
         let (token, user_id, mid) = self.login_parts()?;
         // v5 first; the legacy v3 gateway is the documented fallback when the
         // lite endpoint rejects the session (e.g. stale token edge cases).
-        let url = match self
+        // Advisory split mirrors voicefox kg/url.rs: the logged-in v5
+        // endpoint declares its sizes advisory (`kg/url.rs:308`), the
+        // anonymous v3 gateway does not (`kg/url.rs:147`).
+        let (url, size_is_advisory) = match self
             .v5_url(track, &hash, actual_quality, &token, &user_id, &mid)
             .await
         {
-            Ok(url) => url,
+            Ok(url) => (url, true),
             Err(v5_error) => match self.v3_url(&hash, &token, &user_id, &mid).await {
-                Ok(url) => url,
+                Ok(url) => (url, false),
                 Err(_) => return Err(v5_error),
             },
         };
@@ -688,6 +748,9 @@ impl StreamResolver for KugouProvider {
             index_range: None,
             init_range: None,
             max_chunk_size: None,
+            checksum_algorithm: None,
+            fallback_endpoints: vec![],
+            size_is_advisory,
         })
     }
 }
@@ -709,35 +772,45 @@ impl KugouProvider {
             "dfid": "-",
             "clienttime": now
         });
-        let response = self
-            .request(
-                self.client
-                    .post(V3_URL)
-                    .header("KG-THash", "13a3164")
-                    .header("KG-RC", "1")
-                    .header("KG-Fake", "0")
-                    .header("KG-RF", "00869891")
-                    .header(
-                        header::USER_AGENT,
-                        "Android712-AndroidPhone-11451-376-0-FeeCacheUpdate-wifi",
-                    )
-                    .header("x-router", "kmr.service.kugou.com")
-                    .header(
-                        header::COOKIE,
-                        format!("token={token}; userid={user_id}; KUGOU_API_MID={mid}"),
-                    )
-                    .header(header::CONTENT_TYPE, "application/json")
-                    .body(serde_json::to_vec(&body).map_err(|e| perr(e.to_string()))?),
+        // v3 gateway POST through the unified transport layer
+        // (`send_raw` + method-default `idempotent: false`): single-shot
+        // today and still single-shot — the engine refuses to resend a
+        // non-idempotent body at all three sites, so no retry ladder appears
+        // here (review P-6, TRANSPORT_DESIGN.md §7.3: do NOT add
+        // `.idempotent(true)` without declaring the resend change). The
+        // 2xx/non-2xx split moves from the manual status check into the
+        // engine's `classify_http`, keeping the `HTTP {status}` text.
+        let request = self
+            .request(TransportRequest::post(V3_URL))
+            .header("KG-THash", "13a3164")
+            .header("KG-RC", "1")
+            .header("KG-Fake", "0")
+            .header("KG-RF", "00869891")
+            .header(
+                "user-agent",
+                "Android712-AndroidPhone-11451-376-0-FeeCacheUpdate-wifi",
             )
-            .send()
-            .await
-            .map_err(|e| perr(format!("v3 gateway request failed: {e}")))?;
-        if !response.status().is_success() {
-            return Err(perr(format!("v3 gateway: HTTP {}", response.status())));
-        }
+            .header("x-router", "kmr.service.kugou.com")
+            .header(
+                "cookie",
+                format!("token={token}; userid={user_id}; KUGOU_API_MID={mid}"),
+            )
+            .header("content-type", "application/json")
+            .body(serde_json::to_vec(&body).map_err(|e| perr(e.to_string()))?);
+        let response = match self.http.send_raw(&request, &RetryPolicy::standard()).await {
+            Ok(response) => response,
+            // Today's two error texts: the send failure and the status check
+            // carried different prefixes, so the variants are mapped
+            // separately instead of via one `{error}` format.
+            Err(TransportError::Status(message)) => {
+                return Err(perr(format!("v3 gateway: {message}")));
+            }
+            Err(error) => return Err(perr(format!("v3 gateway request failed: {error}"))),
+        };
+        // The body was buffered by the transport, so today's separate
+        // read-then-parse chain collapses into one decode step.
         let value: Value = response
             .json()
-            .await
             .map_err(|e| perr(format!("v3 response parse failed: {e}")))?;
         // `data` is nested `[[{...}]]`; early shape `[{...}]`; both supported.
         let data = match &value["data"] {
@@ -794,10 +867,7 @@ impl KugouProvider {
             .get("album_id")
             .cloned()
             .unwrap_or_else(|| "0".into());
-        let access_key = format!(
-            "{:x}",
-            Md5::digest(format!("{hash}{LITE_KEY}{LITE_APP_ID}{mid}{user_id}").as_bytes())
-        );
+        let access_key = v5_access_key(hash, mid, user_id);
         let params: Vec<(&str, String)> = vec![
             ("dfid", dfid.clone()),
             ("mid", mid.to_string()),
@@ -826,16 +896,7 @@ impl KugouProvider {
             ("module", String::new()),
             ("key", access_key),
         ];
-        let mut sorted = params.clone();
-        sorted.sort_by(|left, right| left.0.cmp(right.0));
-        let joined: String = sorted
-            .iter()
-            .map(|(key, value)| format!("{key}={value}"))
-            .collect();
-        let signature = format!(
-            "{:x}",
-            Md5::digest(format!("{LITE_SIGN}{joined}{LITE_SIGN}").as_bytes())
-        );
+        let signature = v5_signature(&params);
         let query = params
             .iter()
             .map(|(key, value)| {
@@ -849,10 +910,13 @@ impl KugouProvider {
             .collect::<Vec<_>>()
             .join("&");
         let url = format!("{V5_URL}?{query}");
-        let response = self
-            .request(self.client.get(&url))
+        // Single-shot GET through `send_once`: exactly one attempt today and
+        // one attempt after migration — the face reads the status itself and
+        // has no retry ladder to preserve, so `send_raw` must not add one.
+        let request = self
+            .request(TransportRequest::get(&url))
             .header(
-                header::USER_AGENT,
+                "user-agent",
                 "Android15-1070-11083-46-0-DiscoveryDRADProtocol-wifi",
             )
             .header("x-router", "trackercdn.kugou.com")
@@ -860,24 +924,51 @@ impl KugouProvider {
             .header("clienttime", &clienttime)
             .header("mid", mid)
             .header("kg-rc", "1")
-            .header("kg-thash", "5d816a0")
-            .send()
+            .header("kg-thash", "5d816a0");
+        let response = self
+            .http
+            .send_once(&request)
             .await
             .map_err(|e| perr(format!("stream url request failed: {e}")))?;
-        if !response.status().is_success() {
+        if !response.is_success() {
             return Err(perr(format!(
                 "stream url request failed: HTTP {}",
-                response.status()
+                response.status
             )));
         }
         let value: Value = response
             .json()
-            .await
             .map_err(|e| perr(format!("stream url response parse failed: {e}")))?;
         pick_response_url(&value).ok_or_else(|| {
             perr("no playable stream URL returned by Kugou (the session may have expired)")
         })
     }
+}
+/// `key` parameter of the v5 request:
+/// md5(hash + LITE_KEY + appid + mid + userid).
+fn v5_access_key(hash: &str, mid: &str, user_id: &str) -> String {
+    format!(
+        "{:x}",
+        Md5::digest(format!("{hash}{LITE_KEY}{LITE_APP_ID}{mid}{user_id}").as_bytes())
+    )
+}
+/// v5 signature preimage: parameters sorted by key, joined as `k=v` with no
+/// separator.
+fn v5_canonical_params(params: &[(&str, String)]) -> String {
+    let mut sorted = params.to_vec();
+    sorted.sort_by(|left, right| left.0.cmp(right.0));
+    sorted
+        .iter()
+        .map(|(key, value)| format!("{key}={value}"))
+        .collect()
+}
+/// v5 signature: the canonical parameter string sandwiched between LITE_SIGN
+/// keys and MD5'd.
+fn v5_signature(params: &[(&str, String)]) -> String {
+    format!(
+        "{:x}",
+        Md5::digest(format!("{LITE_SIGN}{}{LITE_SIGN}", v5_canonical_params(params)).as_bytes())
+    )
 }
 #[async_trait]
 impl LyricsProvider for KugouProvider {
@@ -948,6 +1039,7 @@ impl ChartProvider for KugouProvider {
                     id: TrackId::new(ID, id),
                     title,
                     description,
+                    updated_description: None,
                 })
             })
             .collect::<Vec<_>>();
@@ -989,7 +1081,10 @@ impl ChartProvider for KugouProvider {
     }
 }
 /// Link shapes: `hash=` query (song), special single page (playlist), album
-/// page or `albumid=` query (album).
+/// page or `albumid=` query (album). Mirrors the upstream regex order
+/// (`hash` first, then specific path markers, then the bare `album/` page);
+/// a captured `.html` suffix is stripped so `special_detail` can rebuild the
+/// `{id}-5-9999.html` URL.
 fn kg_link_target(link: &str) -> Result<(String, String)> {
     let lower = link.to_ascii_lowercase();
     if let Some(pos) = lower.find("hash=") {
@@ -1001,22 +1096,26 @@ fn kg_link_target(link: &str) -> Result<(String, String)> {
             return Ok(("song".into(), hash));
         }
     }
-    for (marker, kind) in [
-        ("special/single/", "playlist"),
-        ("songlist/gcid_", "playlist"),
-        ("album/single/", "album"),
-        ("yy/album/single/", "album"),
+    // The optional third field is a capture prefix the upstream regex keeps
+    // in the id (`songlist/(gcid_[a-zA-Z0-9]+)` captures `gcid_...` whole).
+    for (marker, kind, id_prefix) in [
+        ("special/single/", "playlist", ""),
+        ("songlist/gcid_", "playlist", "gcid_"),
+        ("album/single/", "album", ""),
+        ("yy/album/single/", "album", ""),
+        ("album/", "album", ""),
     ] {
         if let Some(pos) = lower.find(marker) {
             let start = pos + marker.len();
-            let id = link[start..]
+            let raw = link[start..]
                 .split(['/', '?', '#', '&'])
                 .next()
-                .unwrap_or_default()
-                .to_owned();
-            if !id.is_empty() {
-                return Ok((kind.into(), id));
+                .unwrap_or_default();
+            let id = raw.strip_suffix(".html").unwrap_or(raw);
+            if id.is_empty() {
+                continue;
             }
+            return Ok((kind.into(), format!("{id_prefix}{id}")));
         }
     }
     if let Some(pos) = lower.find("albumid=") {
@@ -1074,6 +1173,7 @@ impl LinkResolver for KugouProvider {
                         .map(str::to_owned),
                     isrc: None,
                     available_qualities: vec![StreamQuality::Low],
+                    audio: None,
                     extra,
                 }))
             }
@@ -1087,6 +1187,10 @@ impl LinkResolver for KugouProvider {
                     artwork_url: None,
                     track_count: Some(tracks.len() as u32),
                     tracks: vec![],
+                    play_count: None,
+                    creator: None,
+                    link: None,
+                    extra: Default::default(),
                 }))
             }
             _ => Err(Error::Unsupported(
@@ -1383,9 +1487,14 @@ impl QrAuthenticationProvider for KugouProvider {
         self.store_kg_pending(&key, &device);
         Ok(QrLoginSession {
             key: key.clone(),
-            // The QR image is rendered by the host from this H5 login URL.
+            // The QR image is rendered by the host from this H5 login URL;
+            // the create API serves no image bytes, so image_png stays None
+            // per the actual return (M3 QR provider slice,
+            // MODEL_ALIGNMENT_DESIGN.md §6).
             url: format!("https://h5.kugou.com/apps/loginQRCode/html/index.html?qrcode={key}"),
             expires_in: 300,
+            image_png: None,
+            kind: QrLoginKind::Standard,
         })
     }
     async fn poll_qr_login(&self, key: &str) -> Result<QrLoginPoll> {
@@ -1434,6 +1543,13 @@ impl QrAuthenticationProvider for KugouProvider {
             session.cookies = device.clone();
             session.cookies.insert("token".into(), token);
             session.user_id = Some(account.clone());
+            // §2.2 Expired → Authenticated edge: a fresh scan is a successful
+            // re-login, so a stale `login_expired` marker left by the
+            // previous session must not keep the machine in Expired (the
+            // marker is kugou's only expiry signal — retry::KUGOU_CODES has
+            // no discernible body code — making the re-scan recovery path
+            // load-bearing).
+            session.tokens.remove("login_expired");
             session
                 .tokens
                 .remove(&format!("{KG_QR_PENDING_PREFIX}{key}"));
@@ -1496,20 +1612,22 @@ impl KugouProvider {
             .map(|(key, value)| format!("{key}={value}"))
             .collect::<Vec<_>>()
             .join("; ");
-        let response = self
-            .client
-            .get(&url)
-            .header(header::USER_AGENT, LOGIN_UA)
+        // Single-shot GET through `send_once`: today's face never checks the
+        // status and parses whatever body arrives, so the unclassified entry
+        // keeps that exactly (one attempt, no retry).
+        let request = TransportRequest::get(&url)
+            .header("user-agent", LOGIN_UA)
             .header("dfid", "-")
             .header("clienttime", &clienttime)
             .header("mid", &mid)
-            .header(header::COOKIE, cookie)
-            .send()
+            .header("cookie", cookie);
+        let response = self
+            .http
+            .send_once(&request)
             .await
             .map_err(|e| perr(format!("QR login request failed: {e}")))?;
         response
             .json()
-            .await
             .map_err(|e| perr(format!("QR login response parse failed: {e}")))
     }
     fn store_kg_pending(&self, key: &str, device: &BTreeMap<String, String>) {
@@ -1555,6 +1673,10 @@ impl CollectionProvider for KugouProvider {
             artwork_url: None,
             track_count: None,
             tracks: vec![],
+            play_count: None,
+            creator: None,
+            link: None,
+            extra: Default::default(),
         })
     }
     async fn playlist_tracks(&self, id: &str) -> Result<Vec<Track>> {
@@ -1565,25 +1687,27 @@ impl CollectionProvider for KugouProvider {
 #[async_trait]
 impl PlaylistProvider for KugouProvider {
     async fn categories(&self) -> Result<Vec<PlaylistCategory>> {
+        // Single-shot GET through `send_once` (one attempt today, one after
+        // migration; the face keeps its own status check).
+        let request = self
+            .request(TransportRequest::get(format!(
+                "{TAG_LIST_URL}?pid=0&apiver=2&plat=0"
+            )))
+            .header("user-agent", PLAYLIST_MOBILE_UA)
+            .header("referer", PLAYLIST_MOBILE_REFERER);
         let response = self
-            .request(
-                self.client
-                    .get(format!("{TAG_LIST_URL}?pid=0&apiver=2&plat=0")),
-            )
-            .header(header::USER_AGENT, PLAYLIST_MOBILE_UA)
-            .header(header::REFERER, PLAYLIST_MOBILE_REFERER)
-            .send()
+            .http
+            .send_once(&request)
             .await
             .map_err(|e| perr(format!("playlist categories: {e}")))?;
-        if !response.status().is_success() {
+        if !response.is_success() {
             return Err(perr(format!(
                 "playlist categories: HTTP {}",
-                response.status()
+                response.status
             )));
         }
         let value: Value = response
             .json()
-            .await
             .map_err(|e| perr(format!("playlist categories parse failed: {e}")))?;
         if value["status"].as_i64() != Some(1) || value["errcode"].as_i64().unwrap_or_default() != 0
         {
@@ -1600,15 +1724,18 @@ impl PlaylistProvider for KugouProvider {
                 "{HOT_SPECIAL_URL}?is_ajax=1&cdn=cdn&t=6&c=&p={page}&pagesize={}",
                 page_size.clamp(1, 100)
             );
+            // Single-shot GET through `send_once`; today's face parses the
+            // body without a status check, so no status check is added.
+            let request = self
+                .request(TransportRequest::get(&url))
+                .header("user-agent", PLAYLIST_MOBILE_UA)
+                .header("referer", PLAYLIST_MOBILE_REFERER);
             let value: Value = self
-                .request(self.client.get(&url))
-                .header(header::USER_AGENT, PLAYLIST_MOBILE_UA)
-                .header(header::REFERER, PLAYLIST_MOBILE_REFERER)
-                .send()
+                .http
+                .send_once(&request)
                 .await
                 .map_err(|e| perr(format!("hot playlists: {e}")))?
                 .json()
-                .await
                 .map_err(|e| perr(format!("hot playlists parse failed: {e}")))?;
             if value["status"].as_i64() != Some(1) {
                 return Err(perr("hot playlists request failed"));
@@ -1629,15 +1756,18 @@ impl PlaylistProvider for KugouProvider {
         let url = format!(
             "{TAG_SPECIAL_URL}?plat=0&page={page}&tagid={tag_id}&pagesize=30&ugc=1&id={id}&sort=2"
         );
+        // Single-shot GET through `send_once`; today's face parses the body
+        // without a status check, so no status check is added.
+        let request = self
+            .request(TransportRequest::get(&url))
+            .header("user-agent", PLAYLIST_MOBILE_UA)
+            .header("referer", PLAYLIST_MOBILE_REFERER);
         let value: Value = self
-            .request(self.client.get(&url))
-            .header(header::USER_AGENT, PLAYLIST_MOBILE_UA)
-            .header(header::REFERER, PLAYLIST_MOBILE_REFERER)
-            .send()
+            .http
+            .send_once(&request)
             .await
             .map_err(|e| perr(format!("category playlists: {e}")))?
             .json()
-            .await
             .map_err(|e| perr(format!("category playlists parse failed: {e}")))?;
         if value["status"].as_i64() != Some(1) || value["errcode"].as_i64().unwrap_or_default() != 0
         {
@@ -1661,19 +1791,22 @@ impl PlaylistProvider for KugouProvider {
             urlencoding::encode(keyword.trim()),
             page.max(1)
         );
+        // Single-shot GET through `send_once` (one attempt today, one after
+        // migration; the face keeps its own status check).
+        let request = self
+            .request(TransportRequest::get(&url))
+            .header("user-agent", PLAYLIST_MOBILE_UA)
+            .header("referer", PLAYLIST_MOBILE_REFERER);
         let response = self
-            .request(self.client.get(&url))
-            .header(header::USER_AGENT, PLAYLIST_MOBILE_UA)
-            .header(header::REFERER, PLAYLIST_MOBILE_REFERER)
-            .send()
+            .http
+            .send_once(&request)
             .await
             .map_err(|e| perr(format!("playlist search: {e}")))?;
-        if !response.status().is_success() {
-            return Err(perr(format!("playlist search: HTTP {}", response.status())));
+        if !response.is_success() {
+            return Err(perr(format!("playlist search: HTTP {}", response.status)));
         }
         let value: Value = response
             .json()
-            .await
             .map_err(|e| perr(format!("playlist search parse failed: {e}")))?;
         Ok(value["data"]["info"]
             .as_array()
@@ -1706,21 +1839,22 @@ impl PlaylistProvider for KugouProvider {
             page.max(1),
             page_size.clamp(1, 100)
         );
+        // Single-shot GET through `send_once` (one attempt today, one after
+        // migration; the face keeps its own status check).
+        let request = TransportRequest::get(&url)
+            .header("user-agent", PLAYLIST_MOBILE_UA)
+            .header("referer", PLAYLIST_MOBILE_REFERER)
+            .header("cookie", cookie);
         let response = self
-            .client
-            .get(&url)
-            .header(header::USER_AGENT, PLAYLIST_MOBILE_UA)
-            .header(header::REFERER, PLAYLIST_MOBILE_REFERER)
-            .header(header::COOKIE, cookie)
-            .send()
+            .http
+            .send_once(&request)
             .await
             .map_err(|e| perr(format!("user playlists: {e}")))?;
-        if !response.status().is_success() {
-            return Err(perr(format!("user playlists: HTTP {}", response.status())));
+        if !response.is_success() {
+            return Err(perr(format!("user playlists: HTTP {}", response.status)));
         }
         let value: Value = response
             .json()
-            .await
             .map_err(|e| perr(format!("user playlists parse failed: {e}")))?;
         // Two response shapes exist: old `data.info`, new `plist.list.info`.
         let items = value["data"]["info"]
@@ -1743,20 +1877,24 @@ impl KugouProvider {
             return Err(Error::InvalidInput("playlist id is empty".into()));
         }
         let url = format!("{SPECIAL_SINGLE_URL}/{id}{SPECIAL_SINGLE_SUFFIX}");
+        // Single-shot GET through `send_once` (one attempt today, one after
+        // migration; the face keeps its own status check).
+        let request = self
+            .request(TransportRequest::get(&url))
+            .header("user-agent", PLAYLIST_MOBILE_UA)
+            .header("referer", PLAYLIST_MOBILE_REFERER);
         let response = self
-            .request(self.client.get(&url))
-            .header(header::USER_AGENT, PLAYLIST_MOBILE_UA)
-            .header(header::REFERER, PLAYLIST_MOBILE_REFERER)
-            .send()
+            .http
+            .send_once(&request)
             .await
             .map_err(|e| perr(format!("playlist detail: {e}")))?;
-        if !response.status().is_success() {
-            return Err(perr(format!("playlist detail: HTTP {}", response.status())));
+        if !response.is_success() {
+            return Err(perr(format!("playlist detail: HTTP {}", response.status)));
         }
-        let html = response
-            .text()
-            .await
-            .map_err(|e| perr(format!("playlist detail read failed: {e}")))?;
+        // The body was buffered by the transport, so today's separate
+        // text-read failure is unreachable: a mid-body reset surfaces as a
+        // `send_once` transport error above.
+        let html = response.text().into_owned();
         let title = special_page_title(&html).unwrap_or_else(|| format!("Kugou playlist {id}"));
         let tracks = embedded_song_data(&html)?
             .iter()
@@ -1811,6 +1949,10 @@ fn kg_parse_special(item: &Value) -> Option<Playlist> {
             .or_else(|| kg_value_u64(&item["songcount"]))
             .map(|n| n as u32),
         tracks: vec![],
+        play_count: None,
+        creator: None,
+        link: None,
+        extra: Default::default(),
     })
 }
 fn kg_parse_listed_special(item: &Value) -> Option<Playlist> {
@@ -1834,6 +1976,10 @@ fn kg_parse_listed_special(item: &Value) -> Option<Playlist> {
             .pipe_kg(),
         track_count: kg_value_u64(&item["songcount"]).map(|n| n as u32),
         tracks: vec![],
+        play_count: None,
+        creator: None,
+        link: None,
+        extra: Default::default(),
     })
 }
 /// User playlist entries vary field names between old and new endpoints.
@@ -1864,6 +2010,10 @@ fn kg_parse_user_special(item: &Value) -> Option<Playlist> {
             .or_else(|| kg_value_u64(&item["count"]))
             .map(|n| n as u32),
         tracks: vec![],
+        play_count: None,
+        creator: None,
+        link: None,
+        extra: Default::default(),
     })
 }
 fn parse_categories(value: &Value) -> Vec<PlaylistCategory> {
@@ -1873,6 +2023,8 @@ fn parse_categories(value: &Value) -> Vec<PlaylistCategory> {
         group: Some("全部".into()),
         count: 0,
         hot: true,
+        provider: Some(ID.to_owned()),
+        extra: Default::default(),
     }];
     for group in value["data"]["info"].as_array().into_iter().flatten() {
         let group_name = group["name"].as_str().unwrap_or_default().trim().to_owned();
@@ -1884,6 +2036,8 @@ fn parse_categories(value: &Value) -> Vec<PlaylistCategory> {
                 group: Some(group_name.clone()),
                 count: 0,
                 hot: false,
+                provider: Some(ID.to_owned()),
+                extra: Default::default(),
             });
         }
         for child in group["children"].as_array().into_iter().flatten() {
@@ -1899,6 +2053,8 @@ fn parse_categories(value: &Value) -> Vec<PlaylistCategory> {
                 group: (!group_name.is_empty()).then(|| group_name.clone()),
                 count: 0,
                 hot: child["is_hot"].as_i64() == Some(1),
+                provider: Some(ID.to_owned()),
+                extra: Default::default(),
             });
         }
     }
@@ -2027,6 +2183,7 @@ fn kg_parse_special_song(item: &Value) -> Option<Track> {
             .map(|url| url.replace("{size}", "500")),
         isrc: None,
         available_qualities: qualities,
+        audio: None,
         extra,
     })
 }
@@ -2035,19 +2192,24 @@ fn kg_parse_special_song(item: &Value) -> Option<Track> {
 /// mirroring the upstream session predicate.
 #[async_trait]
 impl AuthenticationProvider for KugouProvider {
+    /// Migrated onto the unified [`AuthState`] machine (§8 slice 3 wiring):
+    /// the state comes from [`Self::auth_state`] and the legacy three-state
+    /// shape is its documented fold ([`AuthState::to_login_status`]). The
+    /// account identity keeps today's independent user_id/display_name
+    /// plumbing in the `Authenticated` arm (the QR success path writes both
+    /// together, but a partial profile still reports the field it has,
+    /// exactly like the pre-migration code and the netease/qq migrations).
     async fn login_status(&self) -> Result<LoginStatus> {
-        let Some(session) = self.sessions.get(ID) else {
-            return Ok(LoginStatus::LoggedOut);
-        };
-        if !session.cookies.contains_key("token") || session.user_id.is_none() {
-            return Ok(LoginStatus::LoggedOut);
-        }
-        if session.tokens.contains_key("login_expired") {
-            return Ok(LoginStatus::Expired);
-        }
-        Ok(LoginStatus::LoggedIn {
-            user_id: session.user_id.clone(),
-            display_name: session.display_name.clone(),
+        let state = self.auth_state();
+        Ok(match state {
+            AuthState::Authenticated => {
+                let session = self.sessions.get(ID);
+                LoginStatus::LoggedIn {
+                    user_id: session.as_ref().and_then(|s| s.user_id.clone()),
+                    display_name: session.as_ref().and_then(|s| s.display_name.clone()),
+                }
+            }
+            state => state.to_login_status(None),
         })
     }
     async fn logout(&self) -> Result<()> {
@@ -2058,7 +2220,17 @@ impl AuthenticationProvider for KugouProvider {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::transport::{HttpMethod, MockTransport, TransportResponse};
     use serde_json::json;
+    use std::sync::Arc;
+    /// Loads a reconstructed vector/response fixture from tests/fixtures/kugou
+    /// (see the README there for the derivation of these shapes and vectors).
+    macro_rules! fixture {
+        ($name:expr) => {
+            serde_json::from_str::<Value>(include_str!(concat!("../tests/fixtures/kugou/", $name)))
+                .expect("kugou fixture must be valid JSON")
+        };
+    }
 
     #[test]
     fn decrypts_krc_payload() {
@@ -2174,6 +2346,7 @@ mod tests {
             artwork_url: None,
             isrc: None,
             available_qualities: vec![],
+            audio: None,
             extra: BTreeMap::from([
                 ("SQFileHash".into(), "sq-hash".into()),
                 ("HQFileHash".into(), "hq-hash".into()),
@@ -2199,6 +2372,7 @@ mod tests {
             artwork_url: None,
             isrc: None,
             available_qualities: vec![],
+            audio: None,
             extra: BTreeMap::new(),
         };
         assert!(select_hash(&empty, StreamQuality::Low).is_none());
@@ -2257,13 +2431,124 @@ mod tests {
             provider.login_status().await.unwrap(),
             LoginStatus::LoggedIn { .. }
         ));
-        provider.mark_session_expired();
+        provider.mark_session_expired(None);
         assert_eq!(provider.login_status().await.unwrap(), LoginStatus::Expired);
         provider.logout().await.unwrap();
         assert_eq!(
             provider.login_status().await.unwrap(),
             LoginStatus::LoggedOut
         );
+    }
+    /// The §8 slice 3 wiring: `login_status` derives from
+    /// [`KugouProvider::auth_state`], the expiry marker is the Expired bit,
+    /// and [`Self::mark_session_expired`] returns the classified
+    /// [`Error::SessionExpired`] the caller propagates. The legacy
+    /// `login_status_requires_token_and_user_id` shape above keeps pinning
+    /// the `token` + user_id predicate; this test adds the state-machine
+    /// view so both stay in lockstep.
+    #[tokio::test]
+    async fn auth_state_derivation_drives_login_status() {
+        let provider = KugouProvider::new();
+        assert_eq!(provider.auth_state(), AuthState::LoggedOut);
+        assert_eq!(
+            provider.login_status().await.unwrap(),
+            LoginStatus::LoggedOut
+        );
+
+        // A session without the login predicate (token cookie + account id)
+        // stays LoggedOut — the device MID cookie alone is not login.
+        let mut cookies = BTreeMap::new();
+        cookies.insert("KUGOU_API_MID".into(), "mid".into());
+        provider
+            .set_cookies(cookies, Some("42".into()), None)
+            .unwrap();
+        assert_eq!(provider.auth_state(), AuthState::LoggedOut);
+        assert_eq!(
+            provider.login_status().await.unwrap(),
+            LoginStatus::LoggedOut
+        );
+
+        // Login predicate met: Authenticated, folded back through the state
+        // machine with the identity fields kept independent (legacy shape).
+        let mut cookies = BTreeMap::new();
+        cookies.insert("token".into(), "secret".into());
+        cookies.insert("KUGOU_API_MID".into(), "mid".into());
+        provider
+            .set_cookies(cookies, Some("42".into()), Some("tester".into()))
+            .unwrap();
+        assert_eq!(provider.auth_state(), AuthState::Authenticated);
+        assert_eq!(
+            provider.login_status().await.unwrap(),
+            LoginStatus::LoggedIn {
+                user_id: Some("42".into()),
+                display_name: Some("tester".into()),
+            }
+        );
+
+        // The expiry marker moves the state to Expired; both views agree and
+        // the returned error is the classified M2 variant carrying the
+        // provider id and the label detail (§1.2 detail slot).
+        let error = provider.mark_session_expired(Some(ErrorDetail::new("lyric search")));
+        assert_eq!(error.category(), crate::ErrorCategory::SessionExpired);
+        assert_eq!(error.provider_id(), Some("kugou"));
+        assert_eq!(error.detail(), Some("lyric search"));
+        assert!(
+            !error.is_retryable(),
+            "expiry recovers by re-login, not resend"
+        );
+        assert_eq!(
+            error.to_string(),
+            "login required or session expired: lyric search"
+        );
+        assert_eq!(provider.auth_state(), AuthState::Expired);
+        assert_eq!(provider.login_status().await.unwrap(), LoginStatus::Expired);
+
+        provider.logout().await.unwrap();
+        assert_eq!(provider.auth_state(), AuthState::LoggedOut);
+        assert_eq!(
+            provider.login_status().await.unwrap(),
+            LoginStatus::LoggedOut
+        );
+    }
+    /// §2.2 Expired → Authenticated edge: a successful QR re-login clears a
+    /// stale `login_expired` marker (kugou's only expiry signal), so a
+    /// re-scan after expiry lands on Authenticated instead of staying
+    /// Expired.
+    #[tokio::test]
+    async fn qr_success_after_expiry_re_arms_authenticated() {
+        let mock = Arc::new(MockTransport::script([Ok(mock_json(
+            200,
+            r#"{"data":{"status":4,"token":"tk1","userid":"42"}}"#,
+        ))]));
+        let provider = KugouProvider::with_transport(Http::from_shared_mock(mock.clone()));
+
+        // An expired previous session: marker present, login predicate met.
+        let mut cookies = BTreeMap::new();
+        cookies.insert("token".into(), "stale".into());
+        provider
+            .set_cookies(cookies, Some("42".into()), None)
+            .unwrap();
+        let error = provider.mark_session_expired(None);
+        assert_eq!(error.category(), crate::ErrorCategory::SessionExpired);
+        assert_eq!(provider.auth_state(), AuthState::Expired);
+
+        // A fresh scan succeeds: the poll writes the new token and the
+        // machine re-arms to Authenticated. The session display_name stays
+        // unset — the poll reports the account id in its own result struct
+        // but only user_id reaches the session (pre-migration shape, kept).
+        let poll = provider.poll_qr_login("KEY1").await.unwrap();
+        assert_eq!(poll.status, QrLoginStatus::Success);
+        assert_eq!(poll.user_id.as_deref(), Some("42"));
+        assert_eq!(poll.display_name.as_deref(), Some("42"));
+        assert_eq!(provider.auth_state(), AuthState::Authenticated);
+        assert_eq!(
+            provider.login_status().await.unwrap(),
+            LoginStatus::LoggedIn {
+                user_id: Some("42".into()),
+                display_name: None,
+            }
+        );
+        assert_eq!(mock.recorded().len(), 1, "poll stays single-shot");
     }
     #[test]
     fn stream_resolution_requires_a_logged_in_session() {
@@ -2335,5 +2620,513 @@ mod tests {
         assert!(registry.chart_provider(ID).is_some());
         assert!(registry.link_provider(ID).is_some());
         assert!(registry.qr_authentication_provider(ID).is_some());
+    }
+
+    #[test]
+    fn link_target_fixtures_follow_upstream_parse() {
+        let fixture = fixture!("link_targets.json");
+        for case in fixture["positive"].as_array().unwrap() {
+            let link = case["link"].as_str().unwrap();
+            let (kind, id) = kg_link_target(link).unwrap();
+            assert_eq!(
+                (kind.as_str(), id.as_str()),
+                (case["kind"].as_str().unwrap(), case["id"].as_str().unwrap()),
+                "link {link} should target {} / {}",
+                case["kind"].as_str().unwrap(),
+                case["id"].as_str().unwrap()
+            );
+        }
+        for link in fixture["rejected"].as_array().unwrap() {
+            let link = link.as_str().unwrap();
+            assert!(
+                matches!(kg_link_target(link), Err(Error::InvalidInput(_))),
+                "link {link} should be rejected"
+            );
+        }
+    }
+    #[test]
+    fn playlist_page_fixture_extracts_title_and_embedded_songs() {
+        let html = include_str!("../tests/fixtures/kugou/playlist_page.html");
+        assert_eq!(special_page_title(html).as_deref(), Some("华语流行精选"));
+        let data = embedded_song_data(html).unwrap();
+        assert_eq!(data.len(), 2);
+        // The upstream kg/playlist.rs:516-521 vector shape.
+        assert_eq!(data[0]["songname"].as_str(), Some("Song"));
+        let minimal = kg_parse_special_song(&data[0]).unwrap();
+        assert_eq!(minimal.id.id, "1");
+        assert_eq!(minimal.title, "Song");
+        let track = kg_parse_special_song(&data[1]).unwrap();
+        assert_eq!(track.id.id, "1001");
+        assert_eq!(track.title, "晴天");
+        assert_eq!(track.artists, vec!["周杰伦".to_string()]);
+        // Playlist-page durations are milliseconds (kg/playlist.rs:432-436).
+        assert_eq!(track.duration.map(|d| d.as_secs()), Some(269));
+        assert_eq!(
+            track.available_qualities,
+            vec![
+                StreamQuality::Low,
+                StreamQuality::High,
+                StreamQuality::Lossless
+            ]
+        );
+        assert_eq!(
+            track.extra.get("FileHash").map(String::as_str),
+            Some("0f1e2d3c4b5a69788796a5b4c3d2e1f0")
+        );
+        assert_eq!(
+            track.extra.get("HQFileHash").map(String::as_str),
+            Some("11111111111111111111111111111111")
+        );
+        assert_eq!(
+            track.extra.get("SQFileHash").map(String::as_str),
+            Some("22222222222222222222222222222222")
+        );
+        // Cover preference: trans_param.union_cover with {size} -> 500.
+        assert_eq!(
+            track.artwork_url.as_deref(),
+            Some("http://imge.kugou.com/kgsong/500/1.jpg")
+        );
+        // The `var data =` assignment variant is accepted too, and a page
+        // without a title yields None (kg/playlist.rs:523-528).
+        assert_eq!(
+            embedded_song_data(
+                "<script>var data = [{\"audio_id\":9,\"songname\":\"X\"}];</script>"
+            )
+            .unwrap()
+            .len(),
+            1
+        );
+        assert_eq!(special_page_title("<html></html>"), None);
+    }
+    #[test]
+    fn krc_fixture_parses_lines_words_and_language() {
+        let fixture = fixture!("krc_parse.json");
+        let document = parse_krc(fixture["krc"].as_str().unwrap().to_owned());
+        let expected = &fixture["expected"];
+        assert_eq!(document.format, LyricFormat::Krc);
+        assert_eq!(document.original, expected["original"].as_str().unwrap());
+        assert_eq!(
+            document.translation.as_deref(),
+            Some(expected["translation"].as_str().unwrap())
+        );
+        assert_eq!(
+            document.romanization.as_deref(),
+            Some(expected["romanization"].as_str().unwrap())
+        );
+        let expected_lines = expected["lines"].as_array().unwrap();
+        assert_eq!(document.lines.len(), expected_lines.len());
+        for (line, want) in document.lines.iter().zip(expected_lines) {
+            assert_eq!(line.start_ms, want["start_ms"].as_u64().unwrap());
+            assert_eq!(line.text, want["text"].as_str().unwrap());
+            let expected_words = want["words"].as_array().unwrap();
+            assert_eq!(line.words.len(), expected_words.len());
+            for (word, pair) in line.words.iter().zip(expected_words) {
+                assert_eq!(word.start_ms, pair[0].as_u64().unwrap());
+                assert_eq!(word.duration_ms, pair[1].as_u64().unwrap());
+            }
+        }
+    }
+    #[test]
+    fn krc_fixture_binary_decrypts_to_the_recorded_plaintext() {
+        // Deterministic krc1 payload from tests/fixtures/kugou (audit 2026-11,
+        // built with the kg/crypto.rs:7-26 algorithm and python3-verified).
+        const KRC_FIXTURE_BIN: &[u8] = include_bytes!("../tests/fixtures/kugou/krc_encrypted.bin");
+        let plaintext = decrypt_krc(KRC_FIXTURE_BIN).unwrap();
+        assert_eq!(plaintext, "[61234,1200]<0,600,0>你<600,600,0>好");
+        let document = parse_krc(plaintext);
+        assert_eq!(document.lines.len(), 1);
+        assert_eq!(document.lines[0].start_ms, 61_234);
+        assert_eq!(document.lines[0].text, "你好");
+        assert_eq!(document.lines[0].words.len(), 2);
+        assert_eq!(document.lines[0].words[1].start_ms, 61_834);
+    }
+    #[test]
+    fn login_sign_fixture_matches_the_upstream_golden() {
+        let fixture = fixture!("login_sign.json");
+        assert_eq!(LOGIN_SIGN_KEY, fixture["key"].as_str().unwrap());
+        let params: BTreeMap<String, String> = fixture["params"]
+            .as_object()
+            .unwrap()
+            .iter()
+            .map(|(key, value)| (key.clone(), value.as_str().unwrap().to_owned()))
+            .collect();
+        assert_eq!(
+            kugou_login_sign(&params),
+            fixture["signature"].as_str().unwrap()
+        );
+    }
+    #[test]
+    fn v5_signature_fixture_matches_the_formula_vector() {
+        let fixture = fixture!("v5_sign.json");
+        assert_eq!(LITE_KEY, fixture["lite_key"].as_str().unwrap());
+        assert_eq!(LITE_SIGN, fixture["lite_sign"].as_str().unwrap());
+        let input = &fixture["access_key_input"];
+        let access_key = v5_access_key(
+            input["hash"].as_str().unwrap(),
+            input["mid"].as_str().unwrap(),
+            input["userid"].as_str().unwrap(),
+        );
+        assert_eq!(access_key, fixture["access_key"].as_str().unwrap());
+        let params: Vec<(&str, String)> = fixture["params"]
+            .as_object()
+            .unwrap()
+            .iter()
+            .map(|(key, value)| (key.as_str(), value.as_str().unwrap().to_owned()))
+            .collect();
+        // The vector's `key` parameter is its own access key.
+        assert_eq!(
+            params
+                .iter()
+                .find(|(key, _)| *key == "key")
+                .map(|(_, value)| value.as_str()),
+            Some(fixture["access_key"].as_str().unwrap())
+        );
+        assert_eq!(
+            v5_canonical_params(&params),
+            fixture["canonical_preimage"].as_str().unwrap()
+        );
+        assert_eq!(
+            v5_signature(&params),
+            fixture["signature"].as_str().unwrap()
+        );
+    }
+    #[test]
+    fn category_id_fixtures_split_id_and_tag() {
+        let fixture = fixture!("category_ids.json");
+        for case in fixture["cases"].as_array().unwrap() {
+            let (id, tag) = parse_category_id(case["input"].as_str().unwrap());
+            assert_eq!(
+                (id.as_str(), tag.as_str()),
+                (case["id"].as_str().unwrap(), case["tag"].as_str().unwrap())
+            );
+        }
+    }
+
+    // --- unified transport migration tests (mock transport, no network):
+    // the provider runs against Http::from_shared_mock and the recorded
+    // request log pins the migrated request faces (TRANSPORT_DESIGN.md §7.3).
+
+    fn mock_json(status: u16, body: &str) -> TransportResponse {
+        TransportResponse {
+            status,
+            headers: Vec::new(),
+            url: None,
+            body: body.as_bytes().to_vec(),
+        }
+    }
+
+    fn v5_track() -> Track {
+        Track {
+            id: TrackId::new(ID, "1"),
+            title: "t".into(),
+            artists: vec![],
+            album: None,
+            album_id: None,
+            duration: None,
+            artwork_url: None,
+            isrc: None,
+            available_qualities: vec![StreamQuality::Low],
+            audio: None,
+            extra: BTreeMap::from([("FileHash".into(), "HASH".into())]),
+        }
+    }
+
+    #[tokio::test]
+    async fn get_json_runs_through_send_api_json_with_all_session_cookies() {
+        let mock = Arc::new(MockTransport::new(|request| {
+            assert_eq!(request.method, HttpMethod::Get);
+            assert_eq!(request.url, "https://songsearch.kugou.com/x");
+            assert!(
+                request
+                    .headers
+                    .iter()
+                    .any(|(k, v)| k == "user-agent" && v == UA_WEB)
+            );
+            Ok(mock_json(200, r#"{"data":{"total":1,"lists":[]}}"#))
+        }));
+        let provider = KugouProvider::with_transport(Http::from_shared_mock(mock.clone()));
+        let mut cookies = BTreeMap::new();
+        for (name, value) in [
+            ("token", "t1"),
+            ("KUGOU_API_MID", "m1"),
+            ("KUGOU_API_GUID", "g1"),
+        ] {
+            cookies.insert(name.into(), value.into());
+        }
+        provider.set_cookies(cookies, None, None).unwrap();
+        // The body carries no `error_code`: kugou_code_of falls back to
+        // KUGOU_CODES.ok, so a missing-code body counts as success (review
+        // P-7, same shape as today's `unwrap_or(KUGOU_CODES.ok)`).
+        let value = provider
+            .get_json("https://songsearch.kugou.com/x", "search")
+            .await
+            .unwrap();
+        assert_eq!(value["data"]["total"], 1);
+        let recorded = mock.recorded();
+        assert_eq!(recorded.len(), 1);
+        let cookie = recorded[0]
+            .headers
+            .iter()
+            .find(|(k, _)| k == "cookie")
+            .map(|(_, v)| v.as_str())
+            .expect("session cookies must ride along");
+        // Kugou sends every session cookie: no whitelist, unlike netease.
+        for pair in ["token=t1", "KUGOU_API_MID=m1", "KUGOU_API_GUID=g1"] {
+            assert!(
+                cookie.contains(pair),
+                "cookie must contain {pair}: {cookie}"
+            );
+        }
+    }
+
+    #[tokio::test]
+    async fn get_json_fatal_api_code_keeps_label_prefixed_text_and_never_retries() {
+        let mock = Arc::new(MockTransport::script([Ok(mock_json(
+            200,
+            r#"{"error_code":31100,"error":"参数异常"}"#,
+        ))]));
+        let provider = KugouProvider::with_transport(Http::from_shared_mock(mock.clone()));
+        let error = provider
+            .get_json("https://songsearch.kugou.com/x", "search")
+            .await
+            .unwrap_err();
+        assert_eq!(
+            error.to_string(),
+            "provider kugou failed: search: API code 31100: 参数异常"
+        );
+        assert_eq!(
+            mock.recorded().len(),
+            1,
+            "api_retries: 0 keeps body codes terminal (§5.5 row 6)"
+        );
+    }
+
+    #[tokio::test]
+    async fn get_json_retries_5xx_through_the_engine_then_succeeds() {
+        // Two 503 legs then success: the engine resends the idempotent GET
+        // under standard()'s backoff (the full 5-send ladder is pinned by the
+        // transport engine's own retry-matrix tests; this test stays at two
+        // legs to keep the suite fast under the real delays).
+        let mock = Arc::new(MockTransport::script([
+            Ok(mock_json(503, "")),
+            Ok(mock_json(503, "")),
+            Ok(mock_json(200, r#"{"data":{"total":0}}"#)),
+        ]));
+        let provider = KugouProvider::with_transport(Http::from_shared_mock(mock.clone()));
+        let value = provider
+            .get_json("https://songsearch.kugou.com/x", "search")
+            .await
+            .unwrap();
+        assert_eq!(value["data"]["total"], 0);
+        assert_eq!(mock.recorded().len(), 3, "both 503 legs were retried");
+        for request in mock.recorded() {
+            assert_eq!(request.method, HttpMethod::Get);
+            assert!(request.idempotent);
+        }
+    }
+
+    #[tokio::test]
+    async fn get_json_retries_transport_errors_then_succeeds() {
+        let mock = Arc::new(MockTransport::script([
+            Err(TransportError::Transport("connection reset".into())),
+            Ok(mock_json(200, r#"{"data":{"lists":[]}}"#)),
+        ]));
+        let provider = KugouProvider::with_transport(Http::from_shared_mock(mock.clone()));
+        let value = provider
+            .get_json("https://songsearch.kugou.com/x", "lyric search")
+            .await
+            .unwrap();
+        assert_eq!(value["data"]["lists"].as_array().map(Vec::len), Some(0));
+        assert_eq!(mock.recorded().len(), 2, "one transport retry then success");
+    }
+
+    #[tokio::test]
+    async fn v3_post_is_single_shot_and_non_idempotent() {
+        // 503 followed by a valid body: the non-idempotent POST must not be
+        // resent (review P-6), so the 503 is terminal and exactly one send is
+        // recorded even though the script holds a success response.
+        let mock = Arc::new(MockTransport::script([
+            Ok(mock_json(503, "")),
+            Ok(mock_json(
+                200,
+                r#"{"data":[[{"play_url":"http://cdn/v3.mp3"}]]}"#,
+            )),
+        ]));
+        let provider = KugouProvider::with_transport(Http::from_shared_mock(mock.clone()));
+        let error = provider
+            .v3_url("HASH", "tok", "42", "mid1")
+            .await
+            .unwrap_err();
+        assert_eq!(
+            error.to_string(),
+            "provider kugou failed: v3 gateway: HTTP 503"
+        );
+        let recorded = mock.recorded();
+        assert_eq!(
+            recorded.len(),
+            1,
+            "the v3 gateway POST stays single-shot; no .idempotent(true)"
+        );
+        let request = &recorded[0];
+        assert_eq!(request.method, HttpMethod::Post);
+        assert!(
+            !request.idempotent,
+            "method-default idempotency: the engine must never resend this body"
+        );
+        assert_eq!(request.url, V3_URL);
+        for (name, value) in [
+            ("KG-THash", "13a3164"),
+            ("KG-RC", "1"),
+            ("KG-Fake", "0"),
+            ("KG-RF", "00869891"),
+            ("x-router", "kmr.service.kugou.com"),
+            ("content-type", "application/json"),
+            ("cookie", "token=tok; userid=42; KUGOU_API_MID=mid1"),
+        ] {
+            assert!(
+                request.headers.iter().any(|(k, v)| k == name && v == value),
+                "header {name} must carry {value}"
+            );
+        }
+        // request() appends the web UA first, the face its Android UA; both
+        // ride on the wire exactly like the old RequestBuilder chain (reqwest
+        // appends same-name headers).
+        let agents: Vec<&str> = request
+            .headers
+            .iter()
+            .filter(|(k, _)| k == "user-agent")
+            .map(|(_, v)| v.as_str())
+            .collect();
+        assert_eq!(
+            agents,
+            vec![
+                UA_WEB,
+                "Android712-AndroidPhone-11451-376-0-FeeCacheUpdate-wifi"
+            ]
+        );
+        let body: Value = serde_json::from_slice(request.body.as_deref().unwrap()).unwrap();
+        assert_eq!(body["data"][0]["hash"], "HASH");
+    }
+
+    #[tokio::test]
+    async fn v3_post_parses_nested_and_early_data_shapes() {
+        for (body, expected) in [
+            (
+                r#"{"data":[[{"play_url":"http://cdn/nested.mp3"}]]}"#,
+                "http://cdn/nested.mp3",
+            ),
+            (
+                r#"{"data":[{"play_url":"http://cdn/early.mp3"}]}"#,
+                "http://cdn/early.mp3",
+            ),
+        ] {
+            let mock = Arc::new(MockTransport::single(mock_json(200, body)));
+            let provider = KugouProvider::with_transport(Http::from_shared_mock(mock));
+            let url = provider
+                .v3_url("HASH", "tok", "42", "mid1")
+                .await
+                .unwrap_or_else(|e| panic!("v3 shape {body} must parse: {e}"));
+            assert_eq!(url, expected);
+        }
+    }
+
+    #[tokio::test]
+    async fn v5_url_is_a_single_send_once_with_ladder_headers() {
+        let mock = Arc::new(MockTransport::new(|request| {
+            assert_eq!(request.method, HttpMethod::Get);
+            assert!(request.url.starts_with(V5_URL));
+            assert!(request.url.contains("signature="));
+            assert!(request.url.contains("hash=HASH"));
+            assert!(request.headers.iter().any(|(k, v)| {
+                k == "user-agent" && v == "Android15-1070-11083-46-0-DiscoveryDRADProtocol-wifi"
+            }));
+            assert!(
+                request
+                    .headers
+                    .iter()
+                    .any(|(k, v)| k == "x-router" && v == "trackercdn.kugou.com")
+            );
+            Ok(mock_json(200, r#"{"data":{"url":"http://cdn/v5.mp3"}}"#))
+        }));
+        let provider = KugouProvider::with_transport(Http::from_shared_mock(mock.clone()));
+        let url = provider
+            .v5_url(&v5_track(), "HASH", StreamQuality::Low, "tok", "42", "mid1")
+            .await
+            .unwrap();
+        assert_eq!(url, "http://cdn/v5.mp3");
+        assert_eq!(mock.recorded().len(), 1, "send_once: exactly one attempt");
+    }
+
+    #[tokio::test]
+    async fn v5_url_503_is_terminal_after_one_send() {
+        let mock = Arc::new(MockTransport::script([Ok(mock_json(503, ""))]));
+        let provider = KugouProvider::with_transport(Http::from_shared_mock(mock.clone()));
+        let error = provider
+            .v5_url(&v5_track(), "HASH", StreamQuality::Low, "tok", "42", "mid1")
+            .await
+            .unwrap_err();
+        assert_eq!(
+            error.to_string(),
+            "provider kugou failed: stream url request failed: HTTP 503"
+        );
+        assert_eq!(
+            mock.recorded().len(),
+            1,
+            "the v5 face has no retry ladder today and gains none"
+        );
+    }
+
+    #[tokio::test]
+    async fn create_qr_login_sends_one_signed_get_with_device_cookies() {
+        let mock = Arc::new(MockTransport::new(|request| {
+            assert_eq!(request.method, HttpMethod::Get);
+            assert!(request.url.starts_with(QR_CREATE_API));
+            assert!(request.url.contains("signature="));
+            assert!(
+                request
+                    .headers
+                    .iter()
+                    .any(|(k, v)| k == "user-agent" && v == LOGIN_UA)
+            );
+            assert!(
+                request
+                    .headers
+                    .iter()
+                    .any(|(k, v)| k == "cookie" && v.contains("KUGOU_API_MID="))
+            );
+            Ok(mock_json(200, r#"{"data":{"qrcode":"KEY123"}}"#))
+        }));
+        let provider = KugouProvider::with_transport(Http::from_shared_mock(mock.clone()));
+        let session = provider.create_qr_login().await.unwrap();
+        assert_eq!(session.key, "KEY123");
+        assert_eq!(mock.recorded().len(), 1, "send_once: one attempt, no retry");
+    }
+
+    #[tokio::test]
+    async fn playlist_detail_reads_html_through_send_once() {
+        let mock = Arc::new(MockTransport::new(|request| {
+            assert_eq!(request.method, HttpMethod::Get);
+            assert!(request.url.starts_with(SPECIAL_SINGLE_URL));
+            assert!(
+                request
+                    .headers
+                    .iter()
+                    .any(|(k, v)| k == "user-agent" && v == PLAYLIST_MOBILE_UA)
+            );
+            Ok(TransportResponse {
+                status: 200,
+                headers: Vec::new(),
+                url: None,
+                body: r#"<html><title>华语流行精选 - 酷狗音乐</title><script>var data = [{"audio_id":9,"songname":"X"}];</script></html>"#
+                    .as_bytes()
+                    .to_vec(),
+            })
+        }));
+        let provider = KugouProvider::with_transport(Http::from_shared_mock(mock.clone()));
+        let tracks = provider.playlist_tracks("id1").await.unwrap();
+        assert_eq!(tracks.len(), 1);
+        assert_eq!(tracks[0].id.id, "9");
+        assert_eq!(tracks[0].title, "X");
+        assert_eq!(mock.recorded().len(), 1, "send_once: one attempt");
     }
 }

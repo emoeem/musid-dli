@@ -1,0 +1,30 @@
+{
+ "_note": "Schema-derived (not a capture): item shapes follow the live search response key set, with one required field removed or emptied per item. Pins that fs_parse_search_song (source_fivesing.rs) drops items missing songId, typeEname or songName, exactly like upstream fivesing/api.rs:119-124.",
+ "list": [
+  {
+   "createTime": "2016-12-10 19:36:00",
+   "originSinger": "周杰伦",
+   "songName": "<em class=\"keyword\">晴天</em>",
+   "status": 1,
+   "singer": "Vk",
+   "songSize": 10462607,
+   "typeEname": "yc"
+  },
+  {
+   "createTime": "2016-04-10 19:17:00",
+   "originSinger": "周杰伦",
+   "songName": "<em class=\"keyword\">晴天</em>",
+   "songId": 15089953,
+   "singer": "盒纸",
+   "typeEname": ""
+  },
+  {
+   "createTime": "2016-04-10 19:17:00",
+   "originSinger": "周杰伦",
+   "songId": 15089954,
+   "singer": "盒纸",
+   "songName": "",
+   "typeEname": "fc"
+  }
+ ]
+}

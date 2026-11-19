@@ -1,0 +1,142 @@
+{
+  "_derivation": "Board-song vectors for GET https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do?columnId={rankId}&needAll=0 (upstream voicefox source/src/mg/leaderboard.rs:44-84, no upstream tests/fixtures exist). Entry 1 (relationSort 70) is a trimmed verbatim slice of the live capture taken anonymously on 2026-11-18 for columnId=83048887 (全网热歌榜; HTTP 200, code 000000, 341485 bytes, contentsCount 50 with 50 objectInfo dicts, no missing songId and no empty songName): songId is a string, duration is absent, length is hh:mm:ss text, audioFormats is absent so newRateFormats carries PQ/HQ/SQ/ZQ, img1/img2/img3 are absent so albumImgs[0].img is the cover, the lyric keys are lrcUrl/mrcUrl (capitalized) with an empty trcUrl, and the wrapper carries relationType/relationStatus/rankingChanges/relationSort which the parser ignores. Entries 2-6 are reconstructed around that shape: entry 3 pins the array-order-over-relationSort trap (the live board carries relationSort 70,69,68,... so entry 3 shows relationSort 68 at array position 3), entry 4 lacks songId (mg_parse_song drops it and later ranks shift forward like the upstream filter_map), entry 6 carries objectInfo as a JSON string which upstream silently drops (read-only serde_json indexing yields Null, no panic). The musid-dli ChartProvider trait returns the whole board, so upstream's client-side skip/take pagination and the total from columnInfo.contentsCount have no target here; the API delivers the full board per call (live: 50 == contentsCount).",
+  "ok": {
+    "code": "000000",
+    "info": "SUCCESS",
+    "columnInfo": {
+      "contentsCount": 50,
+      "contents": [
+        {
+          "contentId": "90155880",
+          "relationType": 4001,
+          "relationStatus": 1,
+          "rankingChanges": "0",
+          "relationSort": 70,
+          "objectInfo": {
+            "songId": "1142811892",
+            "songName": "甲乙丙丁 (你我怎么两清)",
+            "singer": "李佳薇",
+            "album": "甲乙丙丁",
+            "albumId": "1142811890",
+            "length": "00:03:30",
+            "copyrightId": "6005974L6ZL",
+            "contentId": "600929000008420331",
+            "newRateFormats": [
+              {
+                "resourceType": "2",
+                "formatType": "PQ",
+                "format": "020007",
+                "size": "3368544",
+                "fileType": "mp3",
+                "price": "200",
+                "showTagNew": []
+              },
+              {
+                "resourceType": "2",
+                "formatType": "HQ",
+                "format": "020010",
+                "size": "8421043",
+                "fileType": "mp3",
+                "price": "200",
+                "showTagNew": ["vip"]
+              },
+              {
+                "resourceType": "E",
+                "formatType": "SQ",
+                "format": "011002",
+                "size": "23072502",
+                "price": "200",
+                "androidFileType": "flac",
+                "iosFileType": "m4a",
+                "iosSize": "23775520",
+                "androidSize": "23072502",
+                "iosFormat": "011003",
+                "androidFormat": "011002",
+                "iosAccuracyLevel": "16bit",
+                "androidAccuracyLevel": "16bit",
+                "showTagNew": ["vip"]
+              },
+              {
+                "resourceType": "2",
+                "formatType": "ZQ",
+                "price": "200",
+                "androidFileType": "flac",
+                "iosFileType": "m4a",
+                "iosSize": "43980052",
+                "androidSize": "43276932",
+                "iosFormat": "011006",
+                "androidFormat": "011005",
+                "androidNewFormat": "011005",
+                "iosBit": 24,
+                "androidBit": 24,
+                "showTagNew": ["tl-vip"]
+              }
+            ],
+            "albumImgs": [
+              {
+                "imgSizeType": "01",
+                "img": "https://d.musicapp.migu.cn/data/oss/resource/00/5x/2z/42cb740d6ce443aaa6abaa570c864815.webp",
+                "webpImg": ""
+              }
+            ],
+            "lrcUrl": "https://d.musicapp.migu.cn/data/oss/resource/00/5x/9i/0849dd8352e043c9b01526991276cff9",
+            "mrcUrl": "https://d.musicapp.migu.cn/data/oss/resource/00/5x/9i/3d4ff21bce78416aa96864350dfb7f32",
+            "trcUrl": ""
+          }
+        },
+        {
+          "contentId": "90155881",
+          "relationSort": 69,
+          "objectInfo": {
+            "songId": "900000000002",
+            "songName": "示例曲目二",
+            "singer": "示例歌手",
+            "duration": 180
+          }
+        },
+        {
+          "contentId": "90155882",
+          "relationSort": 68,
+          "objectInfo": {
+            "songId": "900000000003",
+            "songName": "示例曲目三",
+            "singer": "示例歌手",
+            "duration": 200
+          }
+        },
+        {
+          "contentId": "90155883",
+          "relationSort": 67,
+          "objectInfo": {
+            "songName": "缺songId应被丢弃",
+            "singer": "示例歌手"
+          }
+        },
+        {
+          "contentId": "90155884",
+          "relationSort": 66,
+          "objectInfo": {
+            "songId": "900000000005",
+            "songName": "示例曲目五",
+            "singer": "示例歌手",
+            "duration": 240
+          }
+        },
+        {
+          "contentId": "90155885",
+          "relationSort": 65,
+          "objectInfo": "{\"songId\":\"900000000006\",\"songName\":\"字符串形态objectInfo被静默丢弃\"}"
+        }
+      ]
+    }
+  },
+  "error_gate": {
+    "code": "404",
+    "info": "找不到资源"
+  },
+  "missing_contents": {
+    "code": "000000",
+    "info": "SUCCESS",
+    "columnInfo": {}
+  }
+}

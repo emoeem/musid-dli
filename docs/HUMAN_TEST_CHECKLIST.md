@@ -40,10 +40,10 @@ cargo run --features source-kugou --example kugou_smoke stream
 cargo run --features source-bilibili --example bilibili_smoke auth
 ```
 
-Scan with the Bilibili app's in-app scanner (侧边栏「扫一扫」); a `bilibili_qr.png` fallback is written next to the terminal render. After Success, keyword search stops returning the v_voucher risk-control response and 320k DASH audio resolves for VIP content:
+Scan with the Bilibili app's in-app scanner (侧边栏「扫一扫」); a `bilibili_qr.png` fallback is written next to the terminal render. After Success, keyword search stops returning the v_voucher risk-control response, 320k DASH audio resolves for VIP content and the favorites folders list (login-gated) returns real data:
 
 ```bash
-cargo run --features source-bilibili --example bilibili_smoke search stream
+cargo run --features source-bilibili --example bilibili_smoke search stream favorites
 ```
 
 ## 5. NetEase user playlists (authenticated)
@@ -54,10 +54,21 @@ Requires a session cookie already stored via `NeteaseProvider::set_cookies` (QR 
 cargo run --features source-netease --example netease_smoke user
 ```
 
+## 6. Kuwo web-signed lossless tier (lossless-entitlement account required)
+
+Not a QR flow (first categorized 2026-11-18): Kuwo login is not implemented in the library (`capabilities.authentication` is false: the capabilities block at src/source_kuwo.rs:1560 leaves it at the false default, asserted at :2684), so this check needs a Kuwo account session with lossless entitlement attached through the SessionStore for provider id `kuwo`; cookies join every request (src/source_kuwo.rs:137). The stream module requests lossless with the web-signed playUrl first (`build_secret` Secret header, src/source_kuwo.rs:621) and falls back to the mobile ladder; anonymous runs only get placeholders for the lossless tiers, so the web tier itself stays unverified until this check runs:
+
+```bash
+cargo run --locked --features source-kuwo --example kuwo_smoke stream
+```
+
+Expected with a lossless-entitlement session: the stream module reports a real Lossless/HiRes tier resolved through the web-signed playUrl instead of the anonymous High/Mp3 fallback. Without the entitlement the web tier is expected to keep failing over to the mobile ladder, which does not count as a pass.
+
 ## Pass criteria per step
 
 - `poll_qr_login` reaches Success with non-empty user id/display name.
 - The poll status actually flipped Waiting → Scanned after the scan (a permanently-Waiting poll means the scan never registered, not a slow server).
 - Session store persists the cookies (Debug output redacts values).
 - The gated module that was SKIPPED/10006/v_voucher while anonymous now returns real data.
+- For the Kuwo lossless check (section 6): the web-signed tier actually serves lossless or HiRes; a resolve that lands on the mobile High/Mp3 ladder is the known anonymous behavior, not a pass.
 - Re-running the same module twice does not double-count or duplicate sessions.

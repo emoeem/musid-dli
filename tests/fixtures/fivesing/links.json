@@ -1,0 +1,38 @@
+[
+ {
+  "link": "http://5sing.kugou.com/yc/123456.html",
+  "kind": "yc",
+  "id": "123456",
+  "source": "upstream api.rs:494-499 inline test"
+ },
+ {
+  "link": "http://5sing.kugou.com/12345/dj/abc123.html",
+  "kind": "dj",
+  "id": "abc123",
+  "source": "upstream api.rs:500-505 inline test"
+ },
+ {
+  "link": "https://www.kugou.com/song/",
+  "kind": null,
+  "id": null,
+  "source": "upstream api.rs:506 inline test (non-5sing link rejected)"
+ },
+ {
+  "link": "http://5sing.kugou.com/fc/15622111.html",
+  "kind": "fc",
+  "id": "15622111",
+  "source": "live capture 2026-11-18 (search item songurl field)"
+ },
+ {
+  "link": "http://5sing.kugou.com/63056612/dj/5c198e848788ade7cbe97542.html",
+  "kind": "dj",
+  "id": "5c198e848788ade7cbe97542",
+  "source": "live capture 2026-11-18 (playlist search url field; matches upstream api.rs:332 link construction)"
+ },
+ {
+  "link": "https://5sing.kugou.com/yc/123456.html",
+  "kind": "yc",
+  "id": "123456",
+  "source": "musid-dli source_fivesing.rs:289-308 substring match is scheme-agnostic; upstream regex api.rs:412-429 is likewise unanchored (not upstream-test-covered)"
+ }
+]

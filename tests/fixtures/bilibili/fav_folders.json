@@ -1,0 +1,13 @@
+{
+  "code": 0,
+  "data": {
+    "list": [
+      {
+        "id": 123,
+        "title": "我的收藏",
+        "cover": "//i0.hdslb.com/bfs/fav/xx.jpg",
+        "media_count": 42
+      }
+    ]
+  }
+}

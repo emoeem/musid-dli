@@ -1,0 +1,58 @@
+{
+  "derivation_note": "Reconstructed, not captured. The envelope shape follows the parser read path (results.songs.data, voicefox apple/api.rs:257-269 and musid-dli source_apple.rs TrackSearch::search). Item values are placeholder samples; the two real-looking rows reuse the upstream inline test values (晴天/叶惠美, api.rs:520-536) so the parsed fields are upstream-cited.",
+  "request_note": "GET /v1/catalog/us/search?term=<keyword>&types=songs&limit=30 — page/limit from the query are ignored (limit hardcoded 30, has_more always false, total = parsed count; musid-dli source_apple.rs TrackSearch::search, upstream api.rs:257-269)",
+  "response": {
+    "results": {
+      "songs": {
+        "href": "/v1/catalog/us/search?term=x&types=songs&limit=30",
+        "data": [
+          {
+            "id": "1440833098",
+            "type": "songs",
+            "attributes": {
+              "name": "晴天",
+              "artistName": "周杰伦",
+              "albumName": "叶惠美",
+              "durationInMillis": 269000,
+              "artwork": { "url": "https://is1-ssl.mzstatic.com/{w}x{h}.jpg" }
+            }
+          },
+          {
+            "id": "1440833097",
+            "type": "songs",
+            "attributes": {
+              "name": "以父之名",
+              "artistName": "周杰伦",
+              "albumName": "叶惠美",
+              "durationInMillis": 342000,
+              "artwork": { "url": "https://is1-ssl.mzstatic.com/{w}x{h}.jpg" }
+            }
+          },
+          {
+            "id": "3",
+            "type": "songs",
+            "attributes": {
+              "artistName": "no-name-row",
+              "durationInMillis": 1000
+            }
+          },
+          {
+            "id": "   ",
+            "type": "songs",
+            "attributes": { "name": "blank-id-row" }
+          }
+        ]
+      }
+    }
+  },
+  "expected": {
+    "parsed_ids": ["1440833098", "1440833097"],
+    "total_is_parsed_count": 2,
+    "has_more": false,
+    "filtered_notes": ["missing name", "blank id"]
+  },
+  "empty_case": {
+    "response": { "results": {} },
+    "note": "no songs node at all: empty item list, no error — search over the wrong storefront/term yields an empty page rather than NotFound (voicefox apple/api.rs:263-268 has the same silent-empty shape)"
+  }
+}

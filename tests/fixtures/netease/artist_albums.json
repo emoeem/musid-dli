@@ -1,0 +1,71 @@
+{
+  "code": 200,
+  "artist": {
+    "id": 6452,
+    "name": "周杰伦",
+    "picUrl": "https://p1.music.126.net/sample/artist.jpg"
+  },
+  "more": true,
+  "hotAlbums": [
+    {
+      "id": 100,
+      "name": "叶惠美",
+      "artist": {
+        "id": 6452,
+        "name": "周杰伦"
+      },
+      "picUrl": "https://p1.music.126.net/sample/album.jpg",
+      "size": 11,
+      "songs": [
+        {
+          "id": 123,
+          "name": "晴天"
+        },
+        {
+          "id": 301,
+          "name": "样例曲目 2"
+        },
+        {
+          "id": 302,
+          "name": "样例曲目 3"
+        }
+      ]
+    },
+    {
+      "id": 104,
+      "name": "EP",
+      "artist": {
+        "name": "独唱者"
+      },
+      "songs": [{}, {}, {}]
+    },
+    {
+      "id": 105,
+      "name": "样例专辑三",
+      "artist": {
+        "name": "周杰伦"
+      },
+      "picUrl": "https://p1.music.126.net/sample/album-3.jpg",
+      "size": 10,
+      "songs": [{}, {}]
+    },
+    {
+      "id": 106,
+      "name": "样例专辑四",
+      "artists": [
+        {
+          "name": "合唱团"
+        }
+      ],
+      "songs": [{}, {}]
+    },
+    {
+      "id": 107,
+      "name": "样例专辑五",
+      "artist": {
+        "name": "周杰伦"
+      },
+      "songs": [{}]
+    }
+  ]
+}

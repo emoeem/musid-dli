@@ -1,0 +1,40 @@
+{
+  "success": {
+    "result": "ok",
+    "total": "6",
+    "title": "经典华语合集",
+    "playnum": "123456",
+    "uname": "酷我用户",
+    "info": "歌单介绍",
+    "pic": "http://img4.kuwo.cn/star/playlist/d.jpg",
+    "musiclist": [
+      {
+        "id": "228908",
+        "name": "晴天",
+        "artist": "周杰伦&费玉清",
+        "album": "叶惠美",
+        "albumid": "104004",
+        "song_duration": "270",
+        "pic": "http://img4.kuwo.cn/star/albumcover/s1.jpg",
+        "formats": "MP3128|MP3H|ALFLAC|HIRFLAC"
+      },
+      {
+        "id": 6550104,
+        "name": "周边曲目",
+        "artist": "Alice&Bob",
+        "duration": "232",
+        "formats": "WMA128"
+      },
+      { "id": "228909", "name": "空formats", "artist": "独立歌手", "formats": "" },
+      { "id": "", "name": "缺id被跳过" },
+      { "id": "228910", "name": "hires曲目", "formats": "MP3128|HIRES" }
+    ]
+  },
+  "no_title": {
+    "result": "ok",
+    "total": 1,
+    "musiclist": [{ "id": "1", "name": "唯一曲目" }]
+  },
+  "failed": { "result": "fail", "msg": "歌单不存在" },
+  "no_musiclist": { "result": "ok" }
+}

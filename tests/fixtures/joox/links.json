@@ -1,0 +1,60 @@
+{
+  "cases": [
+    {
+      "source": "upstream single link",
+      "link": "https://www.joox.com/hk/single/abc123",
+      "kind": "song",
+      "id": "abc123"
+    },
+    {
+      "source": "upstream playlist link with query",
+      "link": "https://www.joox.com/sg/playlist/pl123?lang=zh_cn",
+      "kind": "playlist",
+      "id": "pl123"
+    },
+    {
+      "source": "upstream album link",
+      "link": "https://www.joox.com/hk/album/al123",
+      "kind": "album",
+      "id": "al123"
+    },
+    {
+      "source": "upstream homepage (no segment)",
+      "link": "https://www.joox.com/",
+      "kind": null
+    },
+    {
+      "source": "upstream plain keyword (has no marker and is short+CJK)",
+      "link": "周杰伦",
+      "kind": null
+    },
+    {
+      "source": "upstream bare share id",
+      "link": "AbCdEf12345xyz",
+      "kind": "song",
+      "id": "AbCdEf12345xyz"
+    },
+    {
+      "source": "upstream bare keyword with space",
+      "link": "周杰伦 晴天",
+      "kind": null
+    },
+    {
+      "source": "upstream too-short bare id",
+      "link": "short",
+      "kind": null
+    },
+    {
+      "source": "encoded id capture is URL-decoded",
+      "link": "https://www.joox.com/hk/single/abc%2Bdef",
+      "kind": "song",
+      "id": "abc+def"
+    },
+    {
+      "source": "live-shaped single link (search fixture id)",
+      "link": "https://www.joox.com/sg/single/bLnv0PqDX_qAlIqapc%2BOkw%3D%3D",
+      "kind": "song",
+      "id": "bLnv0PqDX_qAlIqapc+Okw=="
+    }
+  ]
+}

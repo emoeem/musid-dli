@@ -1,0 +1,29 @@
+{
+  "literal": "{total:'10',abslist:[{playlistid:'123',name:'华语',songnum:'5',intro:'介绍',nickname:'作者'}]};",
+  "valid_json": {
+    "total": "2",
+    "abslist": [
+      {
+        "playlistid": "1082685103",
+        "name": "热门歌单",
+        "pic": "http://img4.kuwo.cn/star/playlist/p_150.jpg",
+        "songnum": "12",
+        "nickname": "作者甲",
+        "intro": "简介"
+      },
+      { "playlistid": "", "name": "缺id被跳过" },
+      { "playlistid": "1082685104", "name": "   " }
+    ]
+  },
+  "uppercase_fields": {
+    "total": "1",
+    "abslist": [
+      {
+        "PLAYLISTID": "42",
+        "NAME": "全大写字段",
+        "PIC": "http://img4.kuwo.cn/star/playlist/q_150.jpg",
+        "SONGNUM": "3"
+      }
+    ]
+  }
+}

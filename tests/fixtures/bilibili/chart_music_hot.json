@@ -1,0 +1,37 @@
+{
+  "_provenance": "RECONSTRUCTED from the upstream parser reads (voicefox source/src/bili/leaderboard.rs:74-79, 250-275); no raw music/hot/rank capture exists in either repository. Shape mirrors exactly what parse_music_song reads: bvid required, music_title/author/album/cover flat fields (no owner object), duration numeric seconds only — a string duration is ignored, unlike the popular board.",
+  "code": 0,
+  "message": "0",
+  "ttl": 1,
+  "data": {
+    "list": [
+      {
+        "bvid": "BV1xx411c7m1",
+        "music_title": "热歌甲",
+        "author": "歌手甲",
+        "album": "专辑甲",
+        "cover": "//i0.hdslb.com/m1.jpg",
+        "duration": 245,
+        "cid": 301
+      },
+      {
+        "bvid": "BV1xx411c7m2",
+        "music_title": "热歌乙",
+        "author": "",
+        "album": "",
+        "cover": "",
+        "duration": "3:45",
+        "cid": 302
+      },
+      {
+        "bvid": "",
+        "music_title": "无bvid占位",
+        "author": "歌手丙",
+        "album": "专辑丙",
+        "cover": "//i0.hdslb.com/m3.jpg",
+        "duration": 60,
+        "cid": 303
+      }
+    ]
+  }
+}

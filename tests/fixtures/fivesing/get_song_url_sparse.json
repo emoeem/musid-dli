@@ -1,0 +1,15 @@
+{
+ "code": 1000,
+ "message": "success",
+ "success": true,
+ "data": {
+  "songid": 15622111,
+  "songtype": "fc",
+  "squrl": "https://wsaudiobssdlbig.kugou.com/example/sq.mp3",
+  "squrl_backup": "0",
+  "hqurl": "",
+  "hqurl_backup": "",
+  "lqurl": "https://wsaudiobssdlbig.kugou.com/example/lq.mp3",
+  "lqurl_backup": "https://wsaudiobssdlbig.cloud.kugou.com/example/lq.mp3"
+ }
+}

@@ -1,0 +1,102 @@
+{
+  "derivation_note": "Reconstructed, not captured. All upstream-cited cases follow the upstream inline link test in voicefox/source/src/apple/api.rs:554-573 (recognises_links) and the link_target semantics at api.rs:442-479. The case-insensitive/trimmed rows are musid-dli extensions documented below.",
+  "cases": [
+    {
+      "link": "https://music.apple.com/us/song/1440833098",
+      "kind": "song",
+      "id": "1440833098",
+      "note": "upstream inline test (api.rs:555-559)"
+    },
+    {
+      "link": "https://music.apple.com/cn/album/ye-hui-mei/1440833097?i=1440833098",
+      "kind": "song",
+      "id": "1440833098",
+      "note": "?i= wins over the album id: it points at the song inside the album (upstream api.rs:447-450, inline test api.rs:559-562). musid-dli ignored ?i= before this batch and would have passed the whole '1440833097?i=1440833098' segment as the id"
+    },
+    {
+      "link": "https://music.apple.com/us/album/ye-hui-mei/1440833097",
+      "kind": "album",
+      "id": "1440833097",
+      "note": "slug path: the id is the LAST path segment before ?/# (upstream api.rs:459-468). musid-dli took the FIRST segment ('ye-hui-mei') before this batch"
+    },
+    {
+      "link": "https://music.apple.com/us/album/1440833097",
+      "kind": "album",
+      "id": "1440833097",
+      "note": "single-segment album link"
+    },
+    {
+      "link": "https://music.apple.com/us/playlist/pl.abc123",
+      "kind": "playlist",
+      "id": "pl.abc123",
+      "note": "upstream inline test (api.rs:568-570); playlist ids keep their case"
+    },
+    {
+      "link": "https://music.apple.com/us/playlist/pl.u-Pb222x3C",
+      "kind": "playlist",
+      "id": "pl.u-Pb222x3C",
+      "note": "musid-dli extension: id keeps original casing (upstream slices the original string, api.rs:459-469); only kind matching is case-insensitive"
+    },
+    {
+      "link": "1440833098",
+      "kind": "song",
+      "id": "1440833098",
+      "note": "a bare numeric string is accepted as a song id (upstream api.rs:475-478)"
+    },
+    {
+      "link": "  HTTPS://MUSIC.APPLE.COM/us/song/1440833098  ",
+      "kind": "song",
+      "id": "1440833098",
+      "note": "musid-dli extension: trimmed + case-insensitive matching (to_ascii_lowercase preserves byte length so slices stay aligned)"
+    },
+    {
+      "link": "https://music.apple.com/us/album/1440833097?i=",
+      "kind": "album",
+      "id": "1440833097",
+      "note": "an empty ?i= value is ignored (query_value requires a non-empty value, upstream api.rs:481-488)"
+    },
+    {
+      "link": "https://music.apple.com/us/album/1440833097#fragment",
+      "kind": "album",
+      "id": "1440833097",
+      "note": "fragment is cut (upstream api.rs:462 splits on ? and #)"
+    },
+    {
+      "link": "https://music.apple.com/us/song/1440833098/",
+      "kind": "song",
+      "id": "1440833098",
+      "note": "trailing slash: empty trailing segments are skipped (rfind over non-empty segments)"
+    },
+    {
+      "link": "https://music.apple.com/",
+      "kind": null,
+      "id": null,
+      "note": "upstream inline test: homepage rejected"
+    },
+    {
+      "link": "周杰伦",
+      "kind": null,
+      "id": null,
+      "note": "upstream inline test: non-ASCII free text rejected (not all-digits, no kind segment)"
+    },
+    {
+      "link": "",
+      "kind": null,
+      "id": null,
+      "note": "empty string rejected"
+    },
+    {
+      "link": "https://music.apple.com/us/album/",
+      "kind": null,
+      "id": null,
+      "note": "kind segment present but no id after it → rejected (the id would be empty)"
+    },
+    {
+      "link": "https://music.apple.com/us/artist/1440833098",
+      "kind": null,
+      "id": null,
+      "note": "/artist/ is not a recognized kind (only song|album|playlist, upstream api.rs:451-455)"
+    }
+  ],
+  "resolver_note": "after recognition the resolver performs a live fetch per kind (song → fetch_song_detail → ResolvedLink::Track; album → container_tracks → ResolvedLink::Album; playlist → container_tracks → ResolvedLink::Playlist, musid-dli source_apple.rs LinkResolver::resolve_link). Those fetches are network-bound and covered by the apple smoke's link module, not by these offline vectors."
+}

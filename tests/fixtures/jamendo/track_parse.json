@@ -1,0 +1,56 @@
+{
+  "derivation_note": "Item shape follows the 2026-11-18 live /api/search capture for trackid 1538710 as recorded in the source audit; the harmless fields (query/score/status/tags/type/uniqueId/dateCreated/artistId/tagEntityId, idstr as empty string) are carried verbatim because the parser must ignore them, not because they are understood. Not a captured file: the upstream repo ships no Jamendo fixtures.",
+  "item": {
+    "id": 1538710,
+    "idstr": "",
+    "type": "track",
+    "query": "love",
+    "score": 9.87,
+    "status": 0,
+    "dateCreated": "2019-01-01T00:00:00+00:00",
+    "uniqueId": 1538710,
+    "artistId": 508325,
+    "tagEntityId": 1538710,
+    "tags": [{ "id": "pop", "name": "pop", "weight": 0 }],
+    "name": "Love Recycle",
+    "duration": 245,
+    "albumId": 176100,
+    "artist": { "id": 508325, "name": "LoveRecycle" },
+    "album": { "id": 176100, "name": "LoveRecycle" },
+    "cover": {
+      "big": { "size": 300, "size300": "https://usercontent.jamendo.com?type=album&id=176100&width=300&trackid=1538710" },
+      "small": { "size": 200, "sizeN": "https://usercontent.jamendo.com?type=album&id=176100&width=200&trackid=1538710" }
+    },
+    "download": {
+      "mp3": "https://prod-1.storage.jamendo.com/download/track/1538710/mp32/",
+      "ogg": "https://prod-1.storage.jamendo.com/download/track/1538710/ogg/"
+    },
+    "stream": {
+      "mp3": "https://prod-1.storage.jamendo.com/?trackid=1538710&format=mp31&from=eIEBlhMBd1KN7huGnYV3Yw%3D%3D%7C4jYcsw3QwV9UrybnZtim%2FA%3D%3D",
+      "ogg": "https://prod-1.storage.jamendo.com/?trackid=1538710&format=ogg&from=nH0RQH3KFn479PIpOJ%2BmtQ%3D%3D%7C3UCmpITzsuwgYp53L7xNOA%3D%3D"
+    }
+  },
+  "expected": {
+    "track_id": "1538710",
+    "title": "Love Recycle",
+    "artists": ["LoveRecycle"],
+    "album": "LoveRecycle",
+    "album_id": "176100",
+    "duration_secs": 245,
+    "artwork": "https://usercontent.jamendo.com?type=album&id=176100&width=300&trackid=1538710",
+    "available_qualities": ["Low"],
+    "stream_url_prefix": "https://prod-1.storage.jamendo.com/download/track/1538710/mp32/",
+    "stream_format": "Mp3",
+    "stream_quality": "Low"
+  },
+  "filtered": [
+    { "note": "id 0 is rejected (non-empty and != \"0\" required, mod.rs:119-122).", "item": { "id": 0, "name": "zero" } },
+    { "note": "Empty id string is rejected (the real idstr field is empty; the numeric id carries the value).", "item": { "id": "", "name": "no-id" } },
+    { "note": "Empty name is rejected (mod.rs:158-161).", "item": { "id": 9, "name": "" } }
+  ],
+  "cover_fallback": {
+    "note": "Without cover.big.size300 the parser falls back to the top-level image field (mod.rs:124-130).",
+    "item": { "id": 42, "name": "Image fallback", "image": "https://cdn/img.jpg" },
+    "expected_artwork": "https://cdn/img.jpg"
+  }
+}

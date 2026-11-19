@@ -1,0 +1,8 @@
+{
+  "source": "voicefox/source/src/kg/playlist.rs:530-541 inline test (audit 2026-11): the `id:tagid` category encoding; a missing tagid defaults to 0 and whitespace is trimmed.",
+  "cases": [
+    {"input": "12:3", "id": "12", "tag": "3"},
+    {"input": "12", "id": "12", "tag": "0"},
+    {"input": " 12 : ", "id": "12", "tag": "0"}
+  ]
+}

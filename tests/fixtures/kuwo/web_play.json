@@ -1,0 +1,14 @@
+{
+  "source": "voicefox/source/src/kw/url.rs:188-225 code-shape contract + session.rs:127-130 illegal marker (audit 2026-11). No live capture exists upstream: the success body is shape-derived and its data.url is a placeholder sample; only the code != 200 rejection path is vectorizable.",
+  "success": {
+    "code": 200,
+    "data": { "url": "http://gec-kw-doc.kuwo.cn/example/example.flac" }
+  },
+  "paid": { "code": -1 },
+  "region_block": { "code": 20005 },
+  "paid_text_url": {
+    "code": 200,
+    "data": { "url": "该歌曲为付费内容" }
+  },
+  "illegal_session": "{\"success\":false,\"message\":\"The request is illegal!\"}"
+}

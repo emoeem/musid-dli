@@ -1,0 +1,56 @@
+{
+ "state": true,
+ "errno": 22000,
+ "errmsg": "",
+ "elapsed_time": "0.0334",
+ "ip": "10.16.15.14",
+ "data": {
+  "total": 108,
+  "haveMore": 1,
+  "result": [
+   {
+    "tagList": [
+     "流行",
+     "经典",
+     "国语",
+     "国语流行"
+    ],
+    "pic": "https://img01.dmhmusic.com/0105/M00/FD/DD/ChR45F77BHuAectSABK0Uj1ttmY162.jpg",
+    "id": 309558,
+    "cateList": [
+     2368,
+     2438,
+     2376
+    ],
+    "title": "怀旧经典 | 华语至醇金曲",
+    "menu": [],
+    "addDate": "2025-09-09T00:20:48.000Z",
+    "desc": "",
+    "resourceType": 1,
+    "trackCount": 26,
+    "isFavorite": 0
+   },
+   {
+    "tagList": [
+     "小雪",
+     "流行",
+     "国语"
+    ],
+    "pic": "https://img01.dmhmusic.com/0206/M00/D5/54/ChR4613XUv-ACX6vAAWIkx9VcTw304.jpg",
+    "id": 309535,
+    "cateList": [
+     2368,
+     2376,
+     2446
+    ],
+    "title": "小雪雪满天，来年必丰年",
+    "menu": [],
+    "addDate": "2025-08-13T23:12:31.000Z",
+    "desc": "这个节气之所以叫小雪，是因为“雪”是寒冷天气的产物，这个节气期间的气候寒未深且降水未大，故用“小雪”来比喻这个节气期间的气候特征。",
+    "resourceType": 1,
+    "trackCount": 24,
+    "isFavorite": 0
+   }
+  ]
+ }
+}

@@ -1,0 +1,27 @@
+{
+  "code": 0,
+  "data": {
+    "list": [
+      {
+        "dissid": 6800944944,
+        "dissname": "劲爆嗨曲中文dj舞曲",
+        "imgurl": "http://img.example/logo.jpg",
+        "song_count": 71,
+        "listennum": 12345,
+        "introduction": "简介"
+      },
+      {
+        "dissid": "2654954555",
+        "dissname": "深夜学习陪伴",
+        "song_num": 45,
+        "introduction": ""
+      },
+      {
+        "dissid": 999,
+        "dissname": "  ",
+        "imgurl": "http://img.example/blank.jpg",
+        "song_count": 3
+      }
+    ]
+  }
+}

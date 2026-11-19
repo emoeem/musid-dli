@@ -1,0 +1,14 @@
+{
+  "cases": [
+    {
+      "note": "9-word container (144 hex chars); plaintext has the trailing newline and needs one NUL code unit of padding",
+      "plaintext": "[1000,500]你(1000,250)好(1250,250)\n",
+      "hex": "6b912272b43794e77ff4033e55e0c5e1b46d90a7dda33dcb0e018101a304cceb836d3fac1ddfa3b3c88da7315b274430699cb92a6a2ace49372af9d23c173c3da639a38da08cb973"
+    },
+    {
+      "note": "9-word container, no padding; the plaintext is also the upstream parse_mrc golden (mrc_parse.json single_line)",
+      "plaintext": "[61234,1200]你(61234,600)好(61834,600)",
+      "hex": "79a36d4c7d8137909fb66aa5b7c969c0ccb095af507641b2bb12c5e6cc2bde8cb60228dc58f760eb5a8328c84313ace5d54fb3bea139dd41b2d21287043e0290433fe7a6799cb86b"
+    }
+  ]
+}

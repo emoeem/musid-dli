@@ -1,0 +1,151 @@
+{
+  "url_golden": "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=82068&httpsStatus=1",
+  "success": {
+    "data": {
+      "songinfo": {
+        "album": "我们的生活 充满阳光",
+        "albumId": "1285",
+        "artist": "",
+        "artistId": "376",
+        "contentType": "0",
+        "coopFormats": [],
+        "copyRight": "0",
+        "duration": "0",
+        "formats": "",
+        "hasEcho": null,
+        "hasMv": "0",
+        "id": "82068",
+        "isExt": null,
+        "isNew": null,
+        "isPoint": "0",
+        "isbatch": null,
+        "isdownload": "0",
+        "isstar": "0",
+        "mkvNsig1": "0",
+        "mkvNsig2": "0",
+        "mkvRid": "MV_0",
+        "mp3Nsig1": "3730539741",
+        "mp3Nsig2": null,
+        "mp3Rid": "MP3_82068",
+        "mp3Size": "",
+        "mp4sig1": "",
+        "mp4sig2": "",
+        "musicrId": "MUSIC_82068",
+        "mutiVer": "0",
+        "mvpayinfo": null,
+        "mvpic": null,
+        "nsig1": "939694230",
+        "nsig2": "1072513107",
+        "online": "1",
+        "params": null,
+        "pay": "16515324",
+        "pic": "http://img1.kwcdn.kuwo.cn/star/albumcover/240/s4s26/64/940273715.jpg",
+        "playCnt": "",
+        "rankChange": null,
+        "reason": null,
+        "score": null,
+        "score100": "20",
+        "songName": "冰山上的雪莲",
+        "songTimeMinutes": "00:00",
+        "tpay": null,
+        "trend": null,
+        "upTime": null,
+        "uploader": ""
+      },
+      "lrclist": [
+        {
+          "lineLyric": "冰山上的雪莲 - 郑钧 (Michael)",
+          "time": "0.0"
+        },
+        {
+          "lineLyric": "词：雷振邦",
+          "time": "16.51"
+        }
+      ],
+      "simpl": {
+        "musiclist": [
+          {
+            "album": "",
+            "albumId": null,
+            "artist": "",
+            "artistId": null,
+            "contentType": null,
+            "coopFormats": [],
+            "copyRight": null,
+            "duration": null,
+            "formats": null,
+            "hasEcho": null,
+            "hasMv": null,
+            "id": "23564101",
+            "isExt": null,
+            "isNew": null,
+            "isPoint": null,
+            "isbatch": null,
+            "isdownload": null,
+            "isstar": "0",
+            "mkvNsig1": null,
+            "mkvNsig2": null,
+            "mkvRid": null,
+            "mp3Nsig1": null,
+            "mp3Nsig2": null,
+            "mp3Rid": null,
+            "mp3Size": "",
+            "mp4sig1": "",
+            "mp4sig2": "",
+            "musicrId": "23564101",
+            "mutiVer": null,
+            "mvpayinfo": null,
+            "mvpic": null,
+            "nsig1": null,
+            "nsig2": null,
+            "online": null,
+            "params": null,
+            "pay": null,
+            "pic": "",
+            "playCnt": null,
+            "rankChange": null,
+            "reason": "猜你喜欢",
+            "score": "1",
+            "score100": null,
+            "songName": "",
+            "songTimeMinutes": "",
+            "tpay": null,
+            "trend": null,
+            "upTime": null,
+            "uploader": null
+          }
+        ]
+      }
+    },
+    "msg": "成功",
+    "msgs": null,
+    "profileid": "site",
+    "reqid": "26315c4fXa373X436dXa117X4b710ddf0df5",
+    "status": 200
+  },
+  "numeric_duration": {
+    "data": {
+      "songinfo": {
+        "songName": "冰山上的雪莲",
+        "artist": "雷振邦&雷佳",
+        "album": "我们的生活 充满阳光",
+        "pic": "http://img1.kwcdn.kuwo.cn/star/albumcover/240/s4s26/64/940273715.jpg",
+        "duration": 234,
+        "id": "82068"
+      }
+    },
+    "msg": "成功",
+    "msgs": null,
+    "profileid": "site",
+    "reqid": "numeric-duration-variant",
+    "status": 200
+  },
+  "not_found": {
+    "data": null,
+    "msg": "音乐查询失败",
+    "msgs": null,
+    "profileid": "site",
+    "reqid": "26315c4fXa373X436dXa117X4b710ddf0df5",
+    "status": 301
+  }
+}

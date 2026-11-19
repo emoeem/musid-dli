@@ -1,6 +1,6 @@
 # LX Music JS custom-source bridge (design)
 
-Status: **design + protocol scaffold**; the JS engine wiring is a separate, feature-gated future step. This document fixes the contract so any host (VoiceFox included) can implement it without musid-dli growing a JS runtime dependency.
+Status: **implemented behind `lx-js-bridge` up to the provider wrapper layer** (envelope types, an in-tree NodeJsEngine child process and JsBridgeProvider wrappers, unit-tested against a fake engine); loading a real user script and managing the engine process lifecycle is a host-side step. This document fixes the contract so any host (VoiceFox included) can implement it without musid-dli growing a JS runtime dependency.
 
 ## What LX Music custom sources are
 
@@ -35,7 +35,7 @@ Each request is one JSON object per line; each response is one JSON object per l
 | Engine | Out of scope for musid-dli: the host picks Node, rquickjs, boa, or any sandbox. musid-dli defines the transport contract only. |
 | Filesystem | Engine must run with `--permission`-style restrictions (VoiceFox's `js/engine.rs` already does this) |
 | Secrets | Session cookies never enter the engine; JS sources are anonymous by contract |
-| Results | A bridge response is wrapped like any provider error; engine failures are `Error::Provider`, never panics |
+| Results | A bridge response is wrapped as a classified provider error, never a panic: sandbox/bridge-infrastructure failures → `ProviderInternal`, response-envelope violations (unparseable line, out-of-order id) → `InvalidResponse`, a missing contract result (`url`/`lyric`) → `UnsupportedOperation`; the message text is preserved in the `detail` slot (AUTH_REGISTRY_DESIGN.md §9.8). The `JsBridgeEngine` seam (`lx_js::response_value`) keeps the legacy `Error::Provider` for engine-reported failures |
 | Auth | The bridge never registers an `AuthenticationProvider`: LX custom sources have no login flow |
 
 ## Trait mapping
@@ -50,7 +50,7 @@ Each request is one JSON object per line; each response is one JSON object per l
 
 ## Scaffold
 
-`src/lx_js.rs` defines the request/response envelope types and a `JsBridgeEngine` trait (send a request line, receive a response line) so the host can plug its own engine. The provider wrappers translate errors and map unsupported commands to `Error::Unsupported`.
+`src/lx_js.rs` defines the request/response envelope types and a `JsBridgeEngine` trait (send a request line, receive a response line) so the host can plug its own engine. `src/lx_js_engine.rs` ships an in-tree `NodeJsEngine` (Node child process, wrapper script, JSON-lines over stdio). `src/lx_js_provider.rs` implements `JsBridgeProvider`, which realizes `TrackSearch`, `StreamResolver` and `LyricsProvider` over any engine by translating errors into provider errors and keeping contract-unexposed commands (auth, charts, albums, playlists, `pic`) out of the trait surface. All provider tests run against a fake engine; there is no online smoke for this feature, because user scripts are untrusted inputs and no anonymous endpoint exists to probe. Engine wiring with a real user script is the host's step.
 
 ## Non-goals
 

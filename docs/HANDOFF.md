@@ -52,8 +52,9 @@ src/
 | jamendo | source-jamendo | yes | none (no API) | yes (lossless-first) | none | playlists/albums (containers hang anonymously) | CC catalog |
 | apple | source-apple | yes | plain text | 30s preview only | none (no API) | playlists/albums | every stream is a preview by contract |
 | fivesing | source-fivesing | yes | LRC (dynamicWords) | 3-tier with backups | none (no API) | playlists (metadata; tracks JS-rendered) | original-music community |
+| qianqian | source-qianqian | yes | LRC (static CDN) | tracklink ladder (free tracks anonymous; VIP path-less) | none (no API) | playlists (categories/lists/detail; keyword search platform-refused) | migrated 2026-11-19 after the service revived |
 
-Deferred: soda (CENC local-file model conflicts with StreamInfo contract), qianqian/joox (endpoints closed since audit, probes 2026-11-17), apple full tracks (DRM).
+Deferred: soda (CENC local-file model conflicts with StreamInfo contract), joox (endpoints closed since audit, probes 2026-11-17), apple full tracks (DRM). Qianqian left this list on 2026-11-19 (audited `/v1/*` surface revived; playlist keyword search refused live, parses to an empty result per upstream parity).
 
 ## Architecture conventions
 
@@ -112,7 +113,7 @@ Pass criteria per platform: `poll_qr_login` reaches Success with non-empty ident
 4. **Migu playlists**: done (113 tracks live). Remaining: Migu user playlists need the mobile login session, which upstream does not document.
 5. **Bilibili favorites**: done (login-gated). Remaining: Bilibili artist/album modules.
 6. **LX Music JS adapter**: protocol scaffold + Node engine done (feature `lx-js-bridge`). Remaining: wire the engine into actual provider wrappers (`impl TrackSearch for JsBridgeProvider`) and test with a real LX custom-source file.
-7. **Qianqian/JOOX**: deferred (endpoints closed). Re-probe before implementing.
+7. **JOOX**: deferred (endpoints closed). Re-probe before implementing. **Qianqian**: done (2026-11-19, `source-qianqian`, live-verified anonymously; playlist keyword search platform-refused).
 8. **Soda**: deferred (CENC model). Needs a host-side decryption contract first.
 
 ## Build and test commands
@@ -163,6 +164,7 @@ cargo build --no-default-features   # lib compiles without any provider
 | 2026-11-17 | All four QR channels verified through first poll (Waiting); phone scan pending |
 | 2026-11-17 | QR renderer fixed: inverted colors on dark terminals blocked phone scans (bilibili scan attempt stuck on Waiting); explicit black-on-white ANSI + PNG fallback shipped, round-trip test added; phone rescan still pending |
 | 2026-11-17 | Bilibili QR phone scan confirmed working by the user; musid-dli v0.1.0 published to crates.io (docs.rs green), GitHub repo emoeem/musid-dli created and pushed |
+| 2026-11-19 | Qianqian anonymous smoke (search-30-tracks/stream-High-Mp3-free-track/VIP-track-honest-NotFound/lyrics-86-LRC-lines/playlist-71-categories-detail-20-tracks/album-assetId-shape/links; playlist keyword search platform-refused errno 23001, parses to an empty result per upstream parity). Slice source-qianqian; tracklink now requires `rate` inside the signed text (upstream recipe errno 22001) |
 
 ## Gotchas for the next engineer
 

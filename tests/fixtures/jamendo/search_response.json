@@ -1,0 +1,49 @@
+[
+  {
+    "id": 1538710,
+    "idstr": "",
+    "type": "track",
+    "query": "love",
+    "score": 9.87,
+    "status": 0,
+    "dateCreated": "2019-01-01T00:00:00+00:00",
+    "uniqueId": 1538710,
+    "artistId": 508325,
+    "tagEntityId": 1538710,
+    "tags": [{ "id": "pop", "name": "pop", "weight": 0 }],
+    "name": "Love Recycle",
+    "duration": 245,
+    "albumId": 176100,
+    "artist": { "id": 508325, "name": "LoveRecycle" },
+    "album": { "id": 176100, "name": "LoveRecycle" },
+    "cover": {
+      "big": { "size": 300, "size300": "https://usercontent.jamendo.com?type=album&id=176100&width=300&trackid=1538710" },
+      "small": { "size": 200, "sizeN": "https://usercontent.jamendo.com?type=album&id=176100&width=200&trackid=1538710" }
+    },
+    "download": {
+      "mp3": "https://prod-1.storage.jamendo.com/download/track/1538710/mp32/",
+      "ogg": "https://prod-1.storage.jamendo.com/download/track/1538710/ogg/"
+    },
+    "stream": {
+      "mp3": "https://prod-1.storage.jamendo.com/?trackid=1538710&format=mp31&from=eIEBlhMBd1KN7huGnYV3Yw%3D%3D%7C4jYcsw3QwV9UrybnZtim%2FA%3D%3D",
+      "ogg": "https://prod-1.storage.jamendo.com/?trackid=1538710&format=ogg&from=nH0RQH3KFn479PIpOJ%2BmtQ%3D%3D%7C3UCmpITzsuwgYp53L7xNOA%3D%3D"
+    }
+  },
+  {
+    "id": 741555,
+    "type": "track",
+    "name": "Placeholder Stream-Only",
+    "duration": 180,
+    "albumId": 901,
+    "artist": { "id": 12, "name": "Placeholder Artist" },
+    "album": { "id": 901, "name": "Placeholder Album" },
+    "cover": { "big": { "size300": "https://usercontent.jamendo.com?type=album&id=901&width=300" } },
+    "download": {},
+    "stream": {
+      "mp3": "https://prod-1.storage.jamendo.com/?trackid=741555&format=mp31&from=PLACEHOLDER",
+      "ogg": "https://prod-1.storage.jamendo.com/?trackid=741555&format=ogg&from=PLACEHOLDER"
+    }
+  },
+  { "id": 0, "type": "track", "name": "Zero id must be filtered" },
+  { "id": 9, "type": "track", "name": "" }
+]

@@ -1,0 +1,24 @@
+{
+ "code": 1000,
+ "message": "",
+ "data": {
+  "songid": 15622111,
+  "songtype": "fc",
+  "squrl": "https://wsaudiobssdlbig.kugou.com/202611180449/7de097966984f81de648b88ca6827b47/bss/extname/wsaudio/e16fe9656014667c92d5c7a158251a0d.mp3",
+  "squrl_backup": "https://wsaudiobssdlbig.cloud.kugou.com/202611180449/8c6b6222a85405d54e8de4f1f15a1762/bss/extname/wsaudio/e16fe9656014667c92d5c7a158251a0d.mp3",
+  "squrlmd5": "e16fe9656014667c92d5c7a158251a0d",
+  "sqsize": "10462607",
+  "sqext": "mp3",
+  "hqurl": "https://wsaudiobssdlbig.kugou.com/202611180449/e9d6a589a75cb1c94df432294e53ac9e/bss/extname/wsaudio/045802510fa5527105812f85233b1d73.mp3",
+  "hqurl_backup": "https://wsaudiobssdlbig.cloud.kugou.com/202611180449/4ad2152161e17c6618a543f7a3ae19e8/bss/extname/wsaudio/045802510fa5527105812f85233b1d73.mp3",
+  "hqurlmd5": "045802510fa5527105812f85233b1d73",
+  "hqsize": "6277582",
+  "hqext": "mp3",
+  "lqurl": "https://wsaudiobssdlbig.kugou.com/202611180449/7deb93b917fd1eb6c3e4c223be3f4f7a/bss/extname/wsaudio/f9d989ccbb5ac496d548e2686e628aa4.mp3",
+  "lqurl_backup": "https://wsaudiobssdlbig.cloud.kugou.com/202611180449/f0fe886812abbb326292f6c0c25cfae5/bss/extname/wsaudio/f9d989ccbb5ac496d548e2686e628aa4.mp3",
+  "lqurlmd5": "f9d989ccbb5ac496d548e2686e628aa4",
+  "lqsize": "4185069",
+  "lqext": "mp3"
+ },
+ "success": true
+}

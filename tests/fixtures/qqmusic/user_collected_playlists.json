@@ -1,0 +1,29 @@
+{
+  "code": 0,
+  "data": {
+    "cdlist": [
+      {
+        "dissid": 6800944944,
+        "dissname": "自建歌单（收藏重复项）",
+        "songnum": 5,
+        "listennum": 0,
+        "logo": "http://img.example/dup.jpg",
+        "nickname": "某位用户"
+      },
+      {
+        "dissid": 6800944945,
+        "dissname": "劲爆嗨曲中文dj舞曲",
+        "songnum": 71,
+        "listennum": 12345,
+        "logo": "http://img.example/logo.jpg",
+        "nickname": "某位用户"
+      },
+      {
+        "dissid": 6800944946,
+        "dissname": "   ",
+        "songnum": 3,
+        "listennum": 0
+      }
+    ]
+  }
+}

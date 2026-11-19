@@ -1,0 +1,10 @@
+{
+  "source": "voicefox/source/src/kg/login.rs:104-114 formula and :295-302 inline test (audit 2026-11): md5(key + sorted k=v pairs joined directly + key). Parameters are sorted by key ascending before joining.",
+  "key": "NVPh5oo715z5DIWAeQlhMDsWXXQV4hwt",
+  "params": {
+    "a": "1",
+    "b": "2"
+  },
+  "preimage": "a=1b=2",
+  "signature": "70ccbef64fdcc9271fe883d1d7f07395"
+}

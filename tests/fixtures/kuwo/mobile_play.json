@@ -1,0 +1,15 @@
+{
+  "source": "voicefox/source/src/kw/url.rs:10-12 module doc (live-observed paid placeholder) + inline test vectors url.rs:316-333 (audit 2026-11). Reconstructed, not captured: the kw-*.kuwo.cn hosts are placeholder CDN names.",
+  "placeholder": {
+    "code": 200,
+    "data": { "rid": 260839262, "duration": 11, "bitrate": 1, "url": "http://kw-er.kuwo.cn/x.mp3" }
+  },
+  "good": {
+    "code": 200,
+    "data": { "rid": 6550104, "duration": 232, "bitrate": 320, "url": "http://kw-bj.kuwo.cn/x.mp3" }
+  },
+  "good_string_rid": {
+    "code": 200,
+    "data": { "rid": "6550104", "duration": 232, "bitrate": 320, "url": "http://kw-bj.kuwo.cn/x.mp3" }
+  }
+}

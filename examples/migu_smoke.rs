@@ -3,7 +3,7 @@
 //! Usage:
 //!   cargo run --features source-migu --example migu_smoke [MODULE...]
 //!
-//! Modules: search lyrics stream playlist
+//! Modules: search lyrics stream playlist chart album link
 //! Default (no args): search lyrics.
 //!
 //! Migu anonymously serves only PQ (128k) audio even when a higher toneFlag
@@ -14,8 +14,8 @@
 use musid_dli::{
     StreamQuality,
     provider::{
-        CollectionProvider, LyricsProvider, PlaylistProvider, ResolveOptions, SearchQuery,
-        StreamResolver, TrackSearch,
+        AlbumProvider, ChartProvider, CollectionProvider, LinkResolver, LyricsProvider,
+        PlaylistProvider, ResolveOptions, ResolvedLink, SearchQuery, StreamResolver, TrackSearch,
     },
     source_migu::MiguProvider,
 };
@@ -127,8 +127,143 @@ async fn run_module(provider: &MiguProvider, module: &str) -> Result<(), String>
             );
             Ok(())
         }
+        "chart" => {
+            let charts = provider.charts().await.map_err(|e| e.to_string())?;
+            let first = charts.first().ok_or("chart catalogue returned nothing")?;
+            println!(
+                "{} boards; first: {} ({}{})",
+                charts.len(),
+                first.title,
+                first.id.id,
+                first
+                    .description
+                    .as_deref()
+                    .map(|desc| format!(", {desc}"))
+                    .unwrap_or_default()
+            );
+            let entries = provider
+                .chart_tracks(&first.id.id)
+                .await
+                .map_err(|e| e.to_string())?;
+            let top = entries.first().ok_or("chart returned no entries")?;
+            println!(
+                "board \"{}\": {} entries; rank 1: {} - {}",
+                first.title,
+                entries.len(),
+                top.track.artists.join("、"),
+                top.track.title
+            );
+            Ok(())
+        }
+        "album" => {
+            // Migu search rows carry no albumId (the search endpoint returns
+            // album names only), so the album module pins one live-verified
+            // anonymous album: 10927, 孙燕姿《逆光》, 12 tracks over
+            // queryAlbumSong (pageNo > 1 answers an empty data object).
+            let album_id = "10927";
+            let album = provider.album(album_id).await.map_err(|e| e.to_string())?;
+            let tracks = provider
+                .album_tracks(album_id)
+                .await
+                .map_err(|e| e.to_string())?;
+            println!(
+                "album \"{}\" ({}): artists={}; track_count={:?}; fetched {} tracks",
+                album.title,
+                album.id.id,
+                album.artists.join("、"),
+                album.track_count,
+                tracks.len()
+            );
+            if let Some(track) = tracks.first() {
+                print_track(track);
+            }
+            Ok(())
+        }
+        "link" => {
+            // Song share link: metadata only — the play URL needs Migu's
+            // extra key negotiation and upstream keeps it out of link
+            // parsing (mg/parse.rs:106), so no stream is resolved here.
+            // The resourceinfo.do route takes the contentId, which search
+            // rows carry in extra.
+            let hit = first_search_hit(provider).await?;
+            let content_id = hit
+                .extra
+                .get("contentId")
+                .ok_or("search hit carries no contentId for the song link")?
+                .clone();
+            let song_url = format!("https://music.migu.cn/v3/music/song/{content_id}");
+            let ResolvedLink::Track(track) = provider
+                .resolve_link(&song_url)
+                .await
+                .map_err(|e| e.to_string())?
+            else {
+                return Err("song link did not resolve to a track".into());
+            };
+            println!("song link {song_url} -> \"{}\"", track.title);
+            // Playlist share link: metadata + the first 50-row page in one
+            // request (upstream get_detail_with_meta shape, never paginated).
+            let found = provider
+                .search_playlists("华语", 1)
+                .await
+                .map_err(|e| e.to_string())?;
+            let playlist_id = found
+                .first()
+                .ok_or("playlist search returned nothing")?
+                .id
+                .id
+                .clone();
+            let playlist_url = format!("https://music.migu.cn/v3/music/playlist/{playlist_id}");
+            let ResolvedLink::Playlist(playlist) = provider
+                .resolve_link(&playlist_url)
+                .await
+                .map_err(|e| e.to_string())?
+            else {
+                return Err("playlist link did not resolve to a playlist".into());
+            };
+            println!(
+                "playlist link {playlist_url} -> \"{}\": total={:?} tracks on page 1: {}",
+                playlist.title,
+                playlist.track_count,
+                playlist.tracks.len()
+            );
+            // Album share link: metadata only in this port — the Album model
+            // has no tracks slot, the songs stay reachable via album_tracks.
+            let album_id = "10927";
+            let album_url = format!("https://music.migu.cn/v3/music/album/{album_id}");
+            let ResolvedLink::Album(album) = provider
+                .resolve_link(&album_url)
+                .await
+                .map_err(|e| e.to_string())?
+            else {
+                return Err("album link did not resolve to an album".into());
+            };
+            println!(
+                "album link {album_url} -> \"{}\": artists={}; track_count={:?}",
+                album.title,
+                album.artists.join("、"),
+                album.track_count
+            );
+            // Unrecognized links must be rejected, not fetched.
+            match provider
+                .resolve_link("https://example.com/v3/music/song/1")
+                .await
+            {
+                Err(musid_dli::Error::InvalidInput(_)) => {
+                    println!("invalid link rejected as expected")
+                }
+                Err(e) => {
+                    return Err(format!(
+                        "invalid link produced {e:?}, expected InvalidInput"
+                    ));
+                }
+                Ok(resolved) => {
+                    return Err(format!("invalid link unexpectedly resolved: {resolved:?}"));
+                }
+            }
+            Ok(())
+        }
         other => Err(format!(
-            "unknown module \"{other}\"; expected one of: search lyrics stream playlist"
+            "unknown module \"{other}\"; expected one of: search lyrics stream playlist chart album link"
         )),
     }
 }

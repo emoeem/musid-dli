@@ -16,7 +16,7 @@ cargo test --no-default-features
 cargo test --all-features
 ```
 
-Expected: fmt clean, clippy clean, 19 + 172 tests green.
+Expected: fmt clean, clippy clean, all tests green (19 lib + 1 integration without default features, 200 lib + 1 integration with all features at the time of writing; fixture-test totals move as more providers are ported, so trust the per-run summary over the pinned numbers).
 
 ## 2. Anonymous provider verification (automated, one command)
 
@@ -31,10 +31,10 @@ Runs all nine provider smokes in sequence. Expected outcomes per provider:
 | netease | all | user needs a stored session cookie |
 | qqmusic | all except stream | stream refused anonymously (code 10006) |
 | kugou | all except stream | stream requires login (server-side) |
-| kuwo | all | lossless tier via web signing (live-verified) |
+| kuwo | all | lossless requests take the web-signed playUrl first; the anonymous run resolved High/Mp3 through the mobile fallback, so the web tier itself stays unverified anonymously |
 | migu | all | anonymously only PQ/128k served |
 | bilibili | all except keyword search | keyword search v_voucher-gated; references/streams work |
-| jamendo | search/stream | containers hang anonymously (server-side) |
+| jamendo | search/stream | containers hang anonymously (server-side); the live endpoint also fails intermittently (connection resets or plain-text 403 bodies), so a failed run can be endpoint-side rather than a parsing defect |
 | apple | all | every stream is a 30-second preview (DRM contract) |
 | fivesing | search/stream/lyrics/link | playlist track lists are JS-rendered server-side |
 
@@ -69,7 +69,7 @@ Expected: the previously gated modules return real data (QQ stream code 10006 di
 
 - QQ Music QRC 3DES: needs a verifiable key reference; the crypt:0 plain path covers the readable lyrics.
 - Soda: CENC-encrypted MP4s require host-side decryption, which conflicts with the StreamInfo-only contract.
-- Qianqian/JOOX: endpoints closed since the audit (probes 2026-11-17); re-probe before implementing.
+- JOOX: endpoints closed since the audit (probes 2026-11-17); re-probe before implementing. Qianqian left this list on 2026-11-19: the audited `/v1/*` surface revived (anonymous re-probe) and the provider landed live-verified behind `source-qianqian`; its playlist keyword search stays platform-refused (errno 23001, parses to an empty result per upstream parity).
 - Bilibili lyrics: the platform exposes no lyric API.
 
 ## 5. Parity checklist after login
@@ -80,7 +80,8 @@ Expected: the previously gated modules return real data (QQ stream code 10006 di
 - [ ] kugou user: user_playlists lists created + collected folders
 - [ ] bilibili search: keyword query returns results past v_voucher
 - [ ] bilibili favorites: folders list and their media resolve
+- [ ] kuwo stream (lossless-entitlement account session): the web-signed playUrl tier serves real lossless/HiRes instead of the anonymous placeholder with the mobile fallback (human check, docs/HUMAN_TEST_CHECKLIST.md section 6)
 
 ## 6. Provider status after this workflow
 
-9 of 12 VoiceFox providers implemented and live-verified (netease, qqmusic, kugou, kuwo, migu, bilibili, jamendo, apple, fivesing). 2 deferred with recorded reasons (soda CENC model, qianqian/joox closed endpoints). 1 planned (LX Music JS adapter: contract scaffold done, engine wiring host-provided).
+10 of 12 VoiceFox providers implemented and live-verified (netease, qqmusic, kugou, kuwo, migu, bilibili, jamendo, apple, fivesing, qianqian; qianqian migrated 2026-11-19 with its playlist keyword search platform-refused). 1 deferred with recorded reasons (soda CENC model; joox closed endpoints). 1 planned (LX Music JS adapter: contract, in-tree Node engine and provider wrappers implemented and fake-engine tested; end-to-end wiring with a real user script is host-provided).

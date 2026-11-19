@@ -1,0 +1,29 @@
+{
+ "message": "成功",
+ "success": true,
+ "data": {
+  "ID": "5c198e848788ade7cbe97542",
+  "CS": 2,
+  "H": 36509,
+  "CT": 1545178756,
+  "T": "翻唱",
+  "C": "暂无简介",
+  "P": "https://5sstatic.kugou.com/public/images/app/NEWcover@2x.png",
+  "E": 4,
+  "S": 1,
+  "user": {
+   "ID": 63056612,
+   "NN": "迷彩云南",
+   "I": "https://wsingbssdl.kugou.com/3c4684d861b8d328bc8b8b97f589ec3e.jpg",
+   "MC": 0,
+   "Bigv": 0,
+   "Tao": 0
+  },
+  "L": "",
+  "SE": "",
+  "shares": "",
+  "collects": 13,
+  "RecommandTime": 0
+ },
+ "code": 0
+}

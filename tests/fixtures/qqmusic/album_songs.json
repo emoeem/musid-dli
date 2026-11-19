@@ -1,0 +1,49 @@
+{
+  "code": 0,
+  "albumSonglist": {
+    "code": 0,
+    "data": {
+      "totalNum": 3,
+      "songList": [
+        {
+          "songInfo": {
+            "id": 483034200,
+            "mid": "003aAYrm3GE0Ac",
+            "title": "晴天",
+            "singer": [{"name": "周杰伦"}],
+            "album": {"mid": "002Neh8l0uciQ1", "name": "叶惠美"},
+            "interval": 269,
+            "file": {
+              "media_mid": "003aAYrm3GE0Ac",
+              "size_128mp3": 4312832,
+              "size_320mp3": 10781692,
+              "size_flac": 23706814
+            }
+          }
+        },
+        {
+          "songInfo": {
+            "id": 101002366,
+            "mid": "000Qg2SD0ZqYFn",
+            "title": "爱在西元前",
+            "singer": [{"name": "周杰伦"}, {"name": "方文山"}],
+            "album": {"mid": "002Neh8l0uciQ1", "name": "叶惠美"},
+            "interval": 239,
+            "file": {"media_mid": "000Qg2SD0ZqYFn", "size_128mp3": 3817216}
+          }
+        },
+        {
+          "songInfo": {
+            "id": 101002367,
+            "mid": "",
+            "title": "坏数据：空 mid",
+            "singer": [{"name": "占位"}],
+            "album": {"mid": "x", "name": "x"},
+            "interval": 1,
+            "file": {"media_mid": "x", "size_128mp3": 1}
+          }
+        }
+      ]
+    }
+  }
+}

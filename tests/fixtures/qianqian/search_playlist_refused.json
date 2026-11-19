@@ -1,0 +1,7 @@
+{
+ "state": false,
+ "errno": 23001,
+ "errmsg": "不被支持的搜索类型(10000)",
+ "elapsed_time": "0.0255",
+ "data": []
+}

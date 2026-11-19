@@ -1,0 +1,33 @@
+{
+  "_provenance": "RECONSTRUCTED from the upstream parser reads (voicefox source/src/bili/leaderboard.rs:111-119, 277-303); no raw region/feed/rcmd capture exists in either repository. Shape mirrors exactly what parse_recommend_song reads: bvid required, author = owner.name else author.name (nested object) else \"哔哩哔哩用户\", pic-or-cover, duration numeric seconds.",
+  "code": 0,
+  "message": "0",
+  "ttl": 1,
+  "data": {
+    "archives": [
+      {
+        "bvid": "BV1xx411c7rc",
+        "title": "热门推荐甲",
+        "owner": { "mid": 401, "name": "UP主丙" },
+        "pic": "//i0.hdslb.com/rc1.jpg",
+        "duration": 188,
+        "cid": 401
+      },
+      {
+        "bvid": "BV1xx411c7rd",
+        "title": "热门推荐乙",
+        "author": { "mid": 402, "name": "UP主丁" },
+        "cover": "//i0.hdslb.com/rc2.jpg",
+        "duration": 205,
+        "cid": 402
+      },
+      {
+        "bvid": "BV1xx411c7re",
+        "title": "热门推荐无作者",
+        "pic": "//i0.hdslb.com/rc3.jpg",
+        "duration": 90,
+        "cid": 403
+      }
+    ]
+  }
+}

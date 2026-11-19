@@ -1,0 +1,73 @@
+{
+  "derivation_note": "Reconstructed, not captured. The playlist golden follows the upstream inline parse test in voicefox/source/src/apple/api.rs:538-551 (id pl.abc, 华语精选, curatorName 'Apple Music', trackCount 50, description.standard '每日更新'). Playlist-search rows and the filtered cases are placeholder samples exercising parser branches.",
+  "item": {
+    "id": "pl.abc",
+    "type": "playlists",
+    "attributes": {
+      "name": "华语精选",
+      "curatorName": "Apple Music",
+      "trackCount": 50,
+      "artwork": { "url": "https://is1-ssl.mzstatic.com/{w}x{h}.jpg" },
+      "description": { "standard": "每日更新", "short": "短描述" }
+    }
+  },
+  "expected": {
+    "provider": "applemusic",
+    "id": "pl.abc",
+    "title": "华语精选",
+    "description": "每日更新",
+    "artwork_600": "https://is1-ssl.mzstatic.com/600x600.jpg",
+    "track_count": 50
+  },
+  "model_gap_note": "upstream parse_playlist also records creator (artistName, else curatorName; api.rs:237-241), a canonical link ({home}/{storefront}/playlist/{id}; api.rs:243) and a {kind}_id extra (api.rs:244); musid-dli's Playlist model has no creator/link/extra fields, so those are dropped on port — the parser never reads them (source_apple.rs apple_parse_playlist). description falls back to the bare 'short'/'standard' variants upstream (api.rs:229-236) but musid-dli reads only description.standard.",
+  "description_fallback_gap": {
+    "item": {
+      "id": "pl.nostd",
+      "type": "playlists",
+      "attributes": {
+        "name": "无standard描述",
+        "description": "裸字符串描述"
+      }
+    },
+    "upstream_parses": "裸字符串描述",
+    "musid_dli_parses": null,
+    "note": "upstream api.rs:230-234 falls back to attributes.description as a plain string; musid-dli only reads description.standard, so a bare-string description yields None here"
+  },
+  "playlist_search_response": {
+    "results": {
+      "playlists": {
+        "href": "/v1/catalog/us/search?term=x&types=playlists&limit=20",
+        "data": [
+          {
+            "id": "pl.abc",
+            "type": "playlists",
+            "attributes": {
+              "name": "华语精选",
+              "curatorName": "Apple Music",
+              "trackCount": 50,
+              "artwork": { "url": "https://is1-ssl.mzstatic.com/{w}x{h}.jpg" }
+            }
+          },
+          {
+            "id": "",
+            "type": "playlists",
+            "attributes": { "name": "empty-id-row" }
+          },
+          {
+            "id": "pl.zzz",
+            "type": "playlists",
+            "attributes": {}
+          }
+        ]
+      }
+    }
+  },
+  "playlist_search_expected": {
+    "parsed_ids": ["pl.abc"],
+    "filtered_notes": ["empty id", "missing name"]
+  },
+  "empty_case": {
+    "response": { "results": { "playlists": { "data": [] } } },
+    "note": "an empty data array is valid and yields zero playlists"
+  }
+}

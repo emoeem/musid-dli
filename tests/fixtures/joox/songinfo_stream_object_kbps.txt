@@ -1,0 +1,1 @@
+MusicInfoCallback({"code":0,"msong":"晴天","msinger":"周杰倫","malbum":"葉惠美","minterval":269,"img":"https://image.joox.example/JOOXcover/0/aaf707b7fa2e2c8c/300","kbps_map":{"320":1,"192":0,"128":1,"96":0},"r320Url":"https://od.stream.joox.example/r320/song.mp3","r192Url":"https://od.stream.joox.example/r192/song.mp3","mp3Url":"https://od.stream.joox.example/mp3/song.mp3","m4aUrl":""})

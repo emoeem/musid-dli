@@ -1,0 +1,6 @@
+{
+  "source": "Shape vectors from the 2026-11-17 audit live smoke (voicefox source/src/kw/url.rs:120-137): artistpicserver.kuwo.cn answers HTTP 200 with one line of plain text carrying the real image URL for rid 6550104 (http://... that day), and the plain text NO_PIC for rid 999999999999 — is_http_url is the only NO_PIC defense (the filter itself is pinned by url_filter.json). The padded entry pins the upstream .trim() of the response body; it is a formula-class vector, not a captured body. Literal URLs are the day-of baseline only: CDN hosts/paths rotate.",
+  "success": "http://img1.kwcdn.kuwo.cn/star/albumcover/500/49/84/3394948607.jpg",
+  "no_pic": "NO_PIC",
+  "padded": "\n  http://img1.kwcdn.kuwo.cn/star/albumcover/500/49/84/3394948607.jpg  \n"
+}

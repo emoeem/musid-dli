@@ -1,0 +1,149 @@
+{
+  "code": 0,
+  "data": {
+    "result": [
+      {
+        "bvid": "BV0000000000",
+        "title": "song 0",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      },
+      {
+        "bvid": "BV0000000001",
+        "title": "song 1",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      },
+      {
+        "bvid": "BV0000000002",
+        "title": "song 2",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      },
+      {
+        "bvid": "BV0000000003",
+        "title": "song 3",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      },
+      {
+        "bvid": "BV0000000004",
+        "title": "song 4",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      },
+      {
+        "bvid": "BV0000000005",
+        "title": "song 5",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      },
+      {
+        "bvid": "BV0000000006",
+        "title": "song 6",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      },
+      {
+        "bvid": "BV0000000007",
+        "title": "song 7",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      },
+      {
+        "bvid": "BV0000000008",
+        "title": "song 8",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      },
+      {
+        "bvid": "BV0000000009",
+        "title": "song 9",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      },
+      {
+        "bvid": "BV0000000010",
+        "title": "song 10",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      },
+      {
+        "bvid": "BV0000000011",
+        "title": "song 11",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      },
+      {
+        "bvid": "BV0000000012",
+        "title": "song 12",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      },
+      {
+        "bvid": "BV0000000013",
+        "title": "song 13",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      },
+      {
+        "bvid": "BV0000000014",
+        "title": "song 14",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      },
+      {
+        "bvid": "BV0000000015",
+        "title": "song 15",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      },
+      {
+        "bvid": "BV0000000016",
+        "title": "song 16",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      },
+      {
+        "bvid": "BV0000000017",
+        "title": "song 17",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      },
+      {
+        "bvid": "BV0000000018",
+        "title": "song 18",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      },
+      {
+        "bvid": "BV0000000019",
+        "title": "song 19",
+        "author": "artist",
+        "duration": "03:00",
+        "pic": "//example.com/cover.jpg"
+      }
+    ],
+    "numResults": 45,
+    "pagesize": 20
+  }
+}

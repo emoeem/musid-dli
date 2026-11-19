@@ -1,0 +1,71 @@
+{
+ "state": true,
+ "errno": 22000,
+ "errmsg": "",
+ "elapsed_time": "0.0473",
+ "ip": "10.16.15.13",
+ "data": {
+  "artist": [
+   {
+    "artistCode": "A10893323",
+    "gender": "乐队",
+    "name": "告五人",
+    "artistType": 38,
+    "artistTypeName": "歌手",
+    "pic": "https://img01.dmhmusic.com/0513/M00/85/54/ChAKCGP9sTyAZ-HBABjeUlVyjsI939.jpg",
+    "region": "内地",
+    "isFavorite": 0
+   },
+   {
+    "artistCode": "A12264346",
+    "gender": "未知",
+    "name": "藤冈靛",
+    "artistType": 38,
+    "artistTypeName": "歌手",
+    "pic": "",
+    "region": "",
+    "isFavorite": 0
+   }
+  ],
+  "cpId": 23,
+  "pic": "https://img01.dmhmusic.com/0513/M00/1C/1A/ChAKCGTCSMiADV_uAA5MJ-yuWlk589.jpg",
+  "title": "晴れの日(晴天)",
+  "duration": 299,
+  "assetId": "T10063944833",
+  "genre": "流行",
+  "albumTitle": "晴れの日(晴天)",
+  "id": "T10063944833",
+  "lang": "日语",
+  "afReplayGain": 0,
+  "albumAssetCode": "P10004123845",
+  "releaseDate": "2023-07-29T00:00:00.000Z",
+  "isrc": "TWK232383500",
+  "sort": 1,
+  "meanVolume": 0,
+  "maxVolume": 0,
+  "lyric": "https://static-qianqian.taihe.com/0513/M00/AA/52/ChAKFGTCQn6AS34ZAAAFX9OsHHE291.txt",
+  "TSID": "T10063944833",
+  "allRate": [
+   "64",
+   "128",
+   "320",
+   "3000"
+  ],
+  "pushTime": "2023-07-29T00:00:00+08:00",
+  "downTime": "2037-01-01T00:00:00+08:00",
+  "bizList": [
+   "sdk_cpm"
+  ],
+  "bits": 16,
+  "path": "https://audio04.dmhmusic.com/71_53_T10063944833_128_4_1_0_sdk-cpm/cn/0513/M00/1C/92/ChAKCGTDMLKAMsSkAEkm9GcBRe4394.mp3?xcode=d3ef5ab91880f7eb129673a8003dbfe9c8fc5e8c",
+  "size": 4794100,
+  "rate": 128,
+  "hashcode": "c416e8480eeaf8601a5a9370e837b61861d41e11",
+  "format": "mp3",
+  "filemd5": "05450caaef4a160e7042082e77196599",
+  "expireTime": 1795049597,
+  "isFavorite": 0,
+  "isVip": 0,
+  "isPaid": 0
+ }
+}

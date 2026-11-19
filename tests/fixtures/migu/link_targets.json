@@ -1,0 +1,68 @@
+{
+  "source": "voicefox/source/src/mg/parse.rs:25-56 link-target routing. The first five positive cases and the first two rejected cases are the parse.rs:163-205 inline test vectors verbatim (audit 2026-11-18); the rest are the audit probes run against a verbatim transcription of link_target (cargo test --offline in a standalone harness: 10 passed, 0 failed). Order matters: the playlistId=/musicListId=/playlist|songlist loop (parse.rs:30-38) runs before the album patterns (:39-47), every capture is unanchored (no scheme/host validation, a documented inherited gap), and a bare all-digits string with no '/' always routes to Playlist (parse.rs:49-54).",
+  "positive": [
+    {
+      "link": "https://music.migu.cn/v3/music/song/60054701934",
+      "kind": "song",
+      "id": "60054701934"
+    },
+    {
+      "link": "https://music.migu.cn/v3/music/playlist/123456?playlistId=123456",
+      "kind": "playlist",
+      "id": "123456"
+    },
+    {
+      "link": "https://music.migu.cn/v3/music/album/789456",
+      "kind": "album",
+      "id": "789456"
+    },
+    {
+      "link": "https://music.migu.cn/share?albumId=456789",
+      "kind": "album",
+      "id": "456789"
+    },
+    {
+      "link": "123456789",
+      "kind": "playlist",
+      "id": "123456789",
+      "note": "bare numeric share id (分享里常见「复制这段内容…60054701934」): always Playlist, never Song (parse.rs:49-54), so a bare song contentId resolves as a playlist id too"
+    },
+    {
+      "link": "https://music.migu.cn/v3/music/album/789456?playlistId=123456",
+      "kind": "playlist",
+      "id": "123456",
+      "note": "priority probe: the playlistId= loop (parse.rs:30-38) runs before the album patterns (:39-47), so the album path inside the same link loses"
+    },
+    {
+      "link": "https://app.migu.cn/share?resourceId=888",
+      "kind": "album",
+      "id": "888",
+      "note": "resourceId= routes to Album (parse.rs:42) even though the song-metadata endpoint takes a resourceId; there is no link branch that queries a song by resourceId upstream"
+    },
+    {
+      "link": "https://music.migu.cn/v5/music/album/777",
+      "kind": "album",
+      "id": "777",
+      "note": "the album path alternation covers both v3 and v5 (parse.rs:40); the song pattern only matches v3 (parse.rs:27)"
+    },
+    {
+      "link": "https://music.migu.cn/songlist/314159",
+      "kind": "playlist",
+      "id": "314159",
+      "note": "the (playlist|songlist)/ alternative (parse.rs:33)"
+    },
+    {
+      "link": "https://evil.example/?u=music.migu.cn/v3/music/song/60054701934",
+      "kind": "song",
+      "id": "60054701934",
+      "note": "unanchored capture: no scheme/host validation upstream, a music.migu.cn fragment inside a foreign query string also matches (documented inherited gap)"
+    }
+  ],
+  "rejected": [
+    "https://music.migu.cn/v3",
+    "周杰伦 晴天",
+    "https://music.migu.cn/v3/music/song/abc",
+    "",
+    "12345x"
+  ]
+}

@@ -1,0 +1,27 @@
+[
+ {
+  "raw": "<em>晴天</em>",
+  "want": "晴天",
+  "source": "upstream api.rs:439 inline test"
+ },
+ {
+  "raw": "A&amp;B",
+  "want": "A&B",
+  "source": "upstream api.rs:440 inline test"
+ },
+ {
+  "raw": "  <b>周杰伦</b>  ",
+  "want": "周杰伦",
+  "source": "upstream api.rs:441 inline test"
+ },
+ {
+  "raw": "<em class=\"keyword\">晴天</em>",
+  "want": "晴天",
+  "source": "live capture 2026-11-18 (real highlight shape with class attribute)"
+ },
+ {
+  "raw": "A&quot;B&#39;C&nbsp;D",
+  "want": "A\"B'C D",
+  "source": "shared entity decode list (upstream api.rs:74-84, musid-dli source_fivesing.rs:196-202); entities not separately live-captured"
+ }
+]

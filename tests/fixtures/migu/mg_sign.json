@@ -1,0 +1,17 @@
+{
+  "salt_md5": "6cdc72a439cef99a3418d2a78aa28c73",
+  "salt_suffix": "yyapp2d16148780a1dcc7408e06336b98cfd50",
+  "device_id": "963B7AA0D21511ED807EE5846EC87D20",
+  "cases": [
+    {
+      "keyword": "晴天",
+      "timestamp": "1700000000000",
+      "sign": "7ef69f00985e56ac8e4f70d7b50121e2"
+    },
+    {
+      "keyword": "ABC",
+      "timestamp": "0000000000000",
+      "sign": "a14205e8fced1683e60f7ec924ec91a5"
+    }
+  ]
+}

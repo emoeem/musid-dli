@@ -1,0 +1,7 @@
+{
+  "magic_hex": "abcd01",
+  "key_ascii": "Jk8qzuePiJ1qE3mDYhLQ3T73DtDoAhLP",
+  "seed": 66,
+  "encrypted_hex": "abcd0142834b5a90ac944548a22a64a16f1365247f9a7e7f2b412457749767a178997e3c768f249ca19a983c8a761ea7315797637a48363164816358246c7d4f639b7c6f7c92659d5a6d554257856cac",
+  "payload": "{\"data\":{\"url\":\"http://freetyst.nf.migu.cn/x.flac\",\"song\":{\"duration\":240}}}"
+}

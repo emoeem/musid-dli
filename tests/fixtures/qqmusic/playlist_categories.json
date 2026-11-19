@@ -1,0 +1,20 @@
+{
+  "code": 0,
+  "data": {
+    "categories": [
+      {
+        "categoryGroupName": "语种",
+        "items": [
+          {"categoryId": 3, "categoryName": "华语", "usable": 1},
+          {"categoryId": 0, "categoryName": "坏数据", "usable": 1},
+          {"categoryId": 10000000, "categoryName": "全部", "usable": 1},
+          {"categoryId": 4, "categoryName": "下架分类", "usable": 0}
+        ]
+      },
+      {
+        "categoryGroupName": "风格",
+        "items": [{"categoryId": 6, "categoryName": "摇滚", "usable": 1}]
+      }
+    ]
+  }
+}

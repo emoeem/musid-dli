@@ -1,0 +1,24 @@
+{
+  "code": 0,
+  "data": {
+    "medias": [
+      {
+        "bvid": "BV1xx411c7mD",
+        "title": "歌名",
+        "upper": { "name": "UP主" },
+        "cover": "//i0.hdslb.com/bfs/archive/yy.jpg",
+        "duration": 245,
+        "cid": "1001"
+      },
+      {
+        "bvid": "BV1yy411c8mE",
+        "title": "第二首",
+        "upper": { "name": "UP主" },
+        "cover": "//i0.hdslb.com/bfs/archive/zz.jpg",
+        "duration": 0,
+        "cid": 1002
+      }
+    ],
+    "has_more": false
+  }
+}

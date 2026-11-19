@@ -1,0 +1,12 @@
+{
+  "code": 0,
+  "data": {
+    "bvid": "BV1yy411c8mE",
+    "aid": 170002,
+    "cid": 777,
+    "title": "单P视频",
+    "pic": "//example.com/fallback.jpg",
+    "owner": { "name": "UP主", "mid": 42 },
+    "duration": 120
+  }
+}

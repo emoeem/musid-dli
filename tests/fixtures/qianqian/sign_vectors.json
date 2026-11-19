@@ -1,0 +1,73 @@
+{
+ "secret": "0b50b02fd0d73a9c4c8c3a781c30845f",
+ "note": "MD5 of sorted k=v& pairs (unencoded) + secret suffix, timestamp included; see tests fixture README",
+ "cases": [
+  {
+   "name": "search_song",
+   "timestamp": "1795045949",
+   "params": [
+    [
+     "word",
+     "晴天"
+    ],
+    [
+     "type",
+     "1"
+    ],
+    [
+     "pageNo",
+     "1"
+    ],
+    [
+     "pageSize",
+     "5"
+    ],
+    [
+     "appid",
+     "16073360"
+    ]
+   ],
+   "extra": [],
+   "signed_text": "appid=16073360&pageNo=1&pageSize=5&timestamp=1795045949&type=1&word=晴天",
+   "sign": "cfa936576cd56b8cf43b9ff6266051f2",
+   "source": "live-probed 2026-11-19: this exact (timestamp, sign) pair was server-accepted (HTTP 200 errno 22000)"
+  },
+  {
+   "name": "tracklink_rate_signed",
+   "timestamp": "1795045949",
+   "params": [
+    [
+     "TSID",
+     "T10065400429"
+    ],
+    [
+     "appid",
+     "16073360"
+    ]
+   ],
+   "extra": [
+    [
+     "rate",
+     "128"
+    ]
+   ],
+   "signed_text": "TSID=T10065400429&appid=16073360&rate=128&timestamp=1795045949",
+   "sign": "edde5530d24f20857e199bb8a3001262",
+   "source": "formula-derived; the rate-signed recipe was server-accepted live (errno 22000, free track)"
+  },
+  {
+   "name": "categories",
+   "timestamp": "1795045949",
+   "params": [
+    [
+     "appid",
+     "16073360"
+    ]
+   ],
+   "extra": [],
+   "signed_text": "appid=16073360&timestamp=1795045949",
+   "sign": "6b5be088d143e70364b8c5acab6f5436",
+   "source": "live-probed 2026-11-19: server-accepted (HTTP 200 errno 22000)"
+  }
+ ]
+}

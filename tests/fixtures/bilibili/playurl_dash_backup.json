@@ -1,0 +1,14 @@
+{
+  "code": 0,
+  "data": {
+    "dash": {
+      "audio": [
+        {
+          "bandwidth": 128000,
+          "backupUrl": ["https://cdn/backup-camel"],
+          "backup_url": ["https://cdn/backup-snake"]
+        }
+      ]
+    }
+  }
+}

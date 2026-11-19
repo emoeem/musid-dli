@@ -1,0 +1,254 @@
+{
+  "cases": [
+    {
+      "name": "exact_match_is_high_confidence",
+      "target": {
+        "provider": "a",
+        "id": "t1",
+        "title": "Song Title",
+        "artists": ["Example Artist"],
+        "album": "Example Album",
+        "duration_secs": 180,
+        "isrc": null
+      },
+      "candidate": {
+        "provider": "b",
+        "id": "c1",
+        "title": "Song Title",
+        "artists": ["Example Artist"],
+        "album": "Example Album",
+        "duration_secs": 180,
+        "isrc": null
+      },
+      "expect_score_min": 95,
+      "expect_score_max": 100,
+      "expect_confidence": "High",
+      "expect_flags": []
+    },
+    {
+      "name": "live_version_is_penalized_to_medium",
+      "target": {
+        "provider": "a",
+        "id": "t2",
+        "title": "Song Title",
+        "artists": ["Example Artist"],
+        "album": "Example Album",
+        "duration_secs": 180,
+        "isrc": null
+      },
+      "candidate": {
+        "provider": "b",
+        "id": "c2",
+        "title": "Song Title (Live)",
+        "artists": ["Example Artist"],
+        "album": "Example Album",
+        "duration_secs": 180,
+        "isrc": null
+      },
+      "expect_score_min": 55,
+      "expect_score_max": 80,
+      "expect_confidence": "Medium",
+      "expect_flags": ["version_token_mismatch"]
+    },
+    {
+      "name": "symmetric_live_is_not_penalized",
+      "target": {
+        "provider": "a",
+        "id": "t3",
+        "title": "Song Title (Live)",
+        "artists": ["Example Artist"],
+        "album": "Example Album",
+        "duration_secs": 180,
+        "isrc": null
+      },
+      "candidate": {
+        "provider": "b",
+        "id": "c3",
+        "title": "Song Title (Live)",
+        "artists": ["Example Artist"],
+        "album": "Example Album",
+        "duration_secs": 180,
+        "isrc": null
+      },
+      "expect_score_min": 90,
+      "expect_score_max": 100,
+      "expect_confidence": "High",
+      "expect_flags": []
+    },
+    {
+      "name": "remix_version_is_penalized_to_medium",
+      "target": {
+        "provider": "a",
+        "id": "t4",
+        "title": "Song Title",
+        "artists": ["Example Artist"],
+        "album": "Example Album",
+        "duration_secs": 180,
+        "isrc": null
+      },
+      "candidate": {
+        "provider": "b",
+        "id": "c4",
+        "title": "Song Title (Remix)",
+        "artists": ["Example Artist"],
+        "album": "Example Album",
+        "duration_secs": 180,
+        "isrc": null
+      },
+      "expect_score_min": 55,
+      "expect_score_max": 80,
+      "expect_confidence": "Medium",
+      "expect_flags": ["version_token_mismatch"]
+    },
+    {
+      "name": "cjk_accompaniment_token_is_penalized",
+      "target": {
+        "provider": "a",
+        "id": "t5",
+        "title": "夜曲",
+        "artists": ["周杰伦"],
+        "album": "十一月的萧邦",
+        "duration_secs": 240,
+        "isrc": null
+      },
+      "candidate": {
+        "provider": "b",
+        "id": "c5",
+        "title": "夜曲 (伴奏)",
+        "artists": ["周杰伦"],
+        "album": "十一月的萧邦",
+        "duration_secs": 240,
+        "isrc": null
+      },
+      "expect_score_min": 55,
+      "expect_score_max": 80,
+      "expect_confidence": "Medium",
+      "expect_flags": ["version_token_mismatch"]
+    },
+    {
+      "name": "multi_artist_collaboration_mismatch_is_penalized",
+      "target": {
+        "provider": "a",
+        "id": "t6",
+        "title": "Song Title",
+        "artists": ["Artist A", "Artist B"],
+        "album": null,
+        "duration_secs": 180,
+        "isrc": null
+      },
+      "candidate": {
+        "provider": "b",
+        "id": "c6",
+        "title": "Song Title",
+        "artists": ["Artist A", "Artist C"],
+        "album": null,
+        "duration_secs": 180,
+        "isrc": null
+      },
+      "expect_score_min": 55,
+      "expect_score_max": 80,
+      "expect_confidence": "Medium",
+      "expect_flags": ["multi_artist_mismatch"]
+    },
+    {
+      "name": "matching_isrc_overrides_version_tokens",
+      "target": {
+        "provider": "a",
+        "id": "t7",
+        "title": "Song Title",
+        "artists": ["Example Artist"],
+        "album": null,
+        "duration_secs": 180,
+        "isrc": "CNW000000001"
+      },
+      "candidate": {
+        "provider": "b",
+        "id": "c7",
+        "title": "Song Title (Live)",
+        "artists": ["Example Artist"],
+        "album": null,
+        "duration_secs": 180,
+        "isrc": "cnw000000001"
+      },
+      "expect_score_min": 100,
+      "expect_score_max": 100,
+      "expect_confidence": "High",
+      "expect_flags": []
+    },
+    {
+      "name": "conflicting_isrc_is_hard_rejection",
+      "target": {
+        "provider": "a",
+        "id": "t8",
+        "title": "Song Title",
+        "artists": ["Example Artist"],
+        "album": null,
+        "duration_secs": 180,
+        "isrc": "CNW000000001"
+      },
+      "candidate": {
+        "provider": "b",
+        "id": "c8",
+        "title": "Song Title",
+        "artists": ["Example Artist"],
+        "album": null,
+        "duration_secs": 180,
+        "isrc": "USBBB0000002"
+      },
+      "expect_score_min": 0,
+      "expect_score_max": 0,
+      "expect_confidence": "Low",
+      "expect_flags": []
+    },
+    {
+      "name": "same_title_different_artist_is_low",
+      "target": {
+        "provider": "a",
+        "id": "t9",
+        "title": "Song Title",
+        "artists": ["Example Artist"],
+        "album": null,
+        "duration_secs": null,
+        "isrc": null
+      },
+      "candidate": {
+        "provider": "b",
+        "id": "c9",
+        "title": "Song Title",
+        "artists": ["Totally Different Artist"],
+        "album": null,
+        "duration_secs": null,
+        "isrc": null
+      },
+      "expect_score_min": 35,
+      "expect_score_max": 45,
+      "expect_confidence": "Low",
+      "expect_flags": ["duration_unknown"]
+    },
+    {
+      "name": "duration_unknown_is_flagged_not_penalized",
+      "target": {
+        "provider": "a",
+        "id": "t10",
+        "title": "Song Title",
+        "artists": ["Example Artist"],
+        "album": "Example Album",
+        "duration_secs": null,
+        "isrc": null
+      },
+      "candidate": {
+        "provider": "b",
+        "id": "c10",
+        "title": "Song Title",
+        "artists": ["Example Artist"],
+        "album": "Example Album",
+        "duration_secs": null,
+        "isrc": null
+      },
+      "expect_score_min": 70,
+      "expect_score_max": 80,
+      "expect_confidence": "Medium",
+      "expect_flags": ["duration_unknown"]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "source": "Shape vectors from the 2026-11-17 audit live smoke (voicefox source/src/kw/url.rs:108-117): the web-signed musicInfo endpoint answers code=200 with data.pic as an absolute https albumcover URL for rid 6550104, and code=-1 msg=歌曲不存在 for rid 999999999999. The literal URLs are the day-of baseline only — CDN hosts/paths rotate — so the tests lock the shape (code==200, pic starts with https://), not the literal URL. Empty and missing pic both fall through the same is_http_url filter (audit gap note); the paid-content text in place of a URL is the upstream url_filter vector applied to the pic gate.",
+  "success": {
+    "code": 200,
+    "data": {
+      "name": "晴天",
+      "pic": "https://img1.kuwo.cn/star/albumcover/500/49/84/3394948607.jpg"
+    }
+  },
+  "not_found": {
+    "code": -1,
+    "msg": "歌曲不存在"
+  },
+  "empty_pic": {
+    "code": 200,
+    "data": {
+      "pic": ""
+    }
+  },
+  "missing_pic": {
+    "code": 200,
+    "data": {
+      "name": "晴天"
+    }
+  },
+  "paid_text_pic": {
+    "code": 200,
+    "data": {
+      "pic": "该歌曲为付费内容"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+[
+ {
+  "id": "12345|yc",
+  "extra": {},
+  "songid": "12345",
+  "songtype": "yc",
+  "source": "upstream mod.rs:183-195 inline test"
+ },
+ {
+  "id": "12345|yc",
+  "extra": {
+   "songid": "999",
+   "songtype": "fc"
+  },
+  "songid": "999",
+  "songtype": "fc",
+  "source": "upstream mod.rs:196-201 inline test (extra overrides id suffix)"
+ },
+ {
+  "id": "1",
+  "extra": {},
+  "songid": null,
+  "songtype": null,
+  "source": "upstream mod.rs:202-209 inline test (missing type -> None); musid-dli errors instead of returning None",
+  "musid_dli_error": true
+ },
+ {
+  "id": "12345|yc",
+  "extra": {
+   "songid": "999"
+  },
+  "songid": "999",
+  "songtype": "",
+  "source": "DEVIATION PIN: upstream mod.rs:54 returns None when the kind is empty; musid-dli split_track_id (source_fivesing.rs:109-124) builds '999|' from extra songid without songtype and returns Ok((\"999\",\"\")) - the empty kind flows into the query string. Neither parser's own code path produces this shape (fs_parse_search_song and resolve_link always set both extras), so it is pinned as documented current behavior, not exercised live.",
+  "musid_dli_deviation": true
+ }
+]

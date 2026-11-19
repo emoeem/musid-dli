@@ -1,0 +1,29 @@
+{
+ "list": [
+  {
+   "remark": null,
+   "songCnt": 4,
+   "title": "<em class=\"keyword\">翻唱</em>",
+   "commentCnt": 0,
+   "songListId": "5c198e848788ade7cbe97542",
+   "userId": "63056612",
+   "label": "",
+   "content": "",
+   "recommended": false,
+   "type": 8,
+   "createTime": "2018-12-19",
+   "pictureUrl": "http://static.5sing.kugou.com/public/images/app/NEWcover@2x.png",
+   "collectCnt": 10,
+   "audio": null,
+   "playCount": 36509,
+   "url": "http://5sing.kugou.com/63056612/dj/5c198e848788ade7cbe97542.html",
+   "userName": ""
+  }
+ ],
+ "type": 1,
+ "pageInfo": {
+  "cur": 1,
+  "totalCount": 10000,
+  "totalPages": 667
+ }
+}

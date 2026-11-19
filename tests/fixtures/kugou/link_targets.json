@@ -1,0 +1,48 @@
+{
+  "source": "voicefox/source/src/kg/parse.rs:29-77 link-target regexes; positive cases from the parse.rs:139-188 inline tests (audit 2026-11). hash wins first; numeric page ids must never keep a trailing .html; a bare album/(\\d+).html path is recognized; everything else is rejected.",
+  "positive": [
+    {
+      "link": "https://www.kugou.com/song/#hash=0f1e2d3c4b5a69788796a5b4c3d2e1f0",
+      "kind": "song",
+      "id": "0f1e2d3c4b5a69788796a5b4c3d2e1f0"
+    },
+    {
+      "link": "https://www.kugou.com/mixsong/abc.html?hash=0F1E2D3C4B5A69788796A5B4C3D2E1F0",
+      "kind": "song",
+      "id": "0F1E2D3C4B5A69788796A5B4C3D2E1F0",
+      "note": "case-insensitive hash= match; the captured hash keeps its original case"
+    },
+    {
+      "link": "https://www.kugou.com/yy/special/single/546903.html",
+      "kind": "playlist",
+      "id": "546903",
+      "note": "the .html suffix is stripped, otherwise special_detail would build single/546903.html-5-9999.html"
+    },
+    {
+      "link": "https://www.kugou.com/songlist/gcid_3z9abcd",
+      "kind": "playlist",
+      "id": "gcid_3z9abcd"
+    },
+    {
+      "link": "https://www.kugou.com/yy/album/single/12345.html",
+      "kind": "album",
+      "id": "12345"
+    },
+    {
+      "link": "https://www.kugou.com/album/12345.html",
+      "kind": "album",
+      "id": "12345",
+      "note": "bare album page shape (parse.rs:44); album links are rejected downstream, but the target must still be recognized"
+    },
+    {
+      "link": "https://www.kugou.com/albumid=6789",
+      "kind": "album",
+      "id": "6789"
+    }
+  ],
+  "rejected": [
+    "https://www.kugou.com/",
+    "https://www.kugou.com/song/#hash=short",
+    "随便一段文字"
+  ]
+}

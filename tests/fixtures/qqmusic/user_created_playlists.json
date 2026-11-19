@@ -1,0 +1,26 @@
+{
+  "code": 0,
+  "data": {
+    "disslist": [
+      {"dirid": 205, "tid": 0, "diss_name": "QZone背景音乐", "song_cnt": 0},
+      {"dirid": 201, "tid": 7758023113, "diss_name": "我喜欢", "song_cnt": 267},
+      {"dirid": 206, "tid": 0, "diss_name": "本地上传", "song_cnt": 0},
+      {
+        "dirid": 3,
+        "tid": 6800944944,
+        "diss_name": "自建歌单",
+        "diss_cover": "http://img.example/self.jpg",
+        "song_cnt": 5,
+        "listen_num": 0
+      },
+      {
+        "dirid": 3,
+        "tid": 7758023114,
+        "diss_name": "通勤路上",
+        "diss_cover": "http://img.example/commute.jpg",
+        "song_cnt": 12,
+        "listen_num": 0
+      }
+    ]
+  }
+}

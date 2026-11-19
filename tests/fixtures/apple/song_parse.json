@@ -1,0 +1,92 @@
+{
+  "derivation_note": "Reconstructed, not captured. The item values follow the upstream inline parse test in voicefox/source/src/apple/api.rs:520-536 (id 1440833098, 晴天, 周杰伦, 叶惠美, durationInMillis 269000, {w}x{h} artwork template). The previews node and the relationships.albums detail shape follow the parser read paths (voicefox apple/api.rs:306-312 and musid-dli source_apple.rs apple_detail_album_id); URL and id values there are placeholder samples chosen to exercise the branches, not verified catalog data.",
+  "search_item": {
+    "id": "1440833098",
+    "type": "songs",
+    "href": "/v1/catalog/us/songs/1440833098",
+    "attributes": {
+      "name": "晴天",
+      "artistName": "周杰伦",
+      "albumName": "叶惠美",
+      "durationInMillis": 269000,
+      "genreNames": ["Mandopop"],
+      "artwork": {
+        "width": 3000,
+        "height": 3000,
+        "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/{w}x{h}bb.jpg"
+      }
+    }
+  },
+  "expected": {
+    "provider": "applemusic",
+    "id": "1440833098",
+    "song_id": "1440833098",
+    "title": "晴天",
+    "artists": ["周杰伦"],
+    "album": "叶惠美",
+    "duration_millis": 269000,
+    "artwork_600": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/600x600bb.jpg",
+    "available_qualities": ["Low"],
+    "preview_only": "true"
+  },
+  "detail_item": {
+    "id": "1440833098",
+    "type": "songs",
+    "attributes": {
+      "name": "晴天",
+      "artistName": "周杰伦",
+      "albumName": "叶惠美",
+      "durationInMillis": 269000,
+      "artwork": {
+        "url": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/{w}x{h}bb.jpg"
+      },
+      "previews": [
+        {
+          "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/placeholder.m4a"
+        }
+      ]
+    },
+    "relationships": {
+      "albums": {
+        "data": [{ "id": "1440833097", "type": "albums" }]
+      }
+    }
+  },
+  "detail_expected": {
+    "album_id": "1440833097",
+    "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/placeholder.m4a"
+  },
+  "detail_no_album": {
+    "id": "1440833098",
+    "type": "songs",
+    "attributes": {
+      "name": "晴天",
+      "previews": []
+    },
+    "relationships": {
+      "albums": { "data": [] }
+    }
+  },
+  "artwork_cases": [
+    {
+      "template": "https://is1-ssl.mzstatic.com/x/{w}x{h}.jpg",
+      "size": 600,
+      "expected": "https://is1-ssl.mzstatic.com/x/600x600.jpg",
+      "note": "musid-dli inline test value"
+    },
+    {
+      "template": "https://cdn/{w}x{h}bb.jpg",
+      "size": 600,
+      "expected": "https://cdn/600x600bb.jpg",
+      "note": "upstream inline test vector (api.rs:512-518)"
+    },
+    { "template": "   ", "size": 600, "expected": null, "note": "blank template" }
+  ],
+  "filtered": [
+    { "item": { "id": "   ", "attributes": { "name": "x" } }, "note": "blank id" },
+    { "item": { "id": "" }, "note": "no attributes node at all" },
+    { "item": { "id": "2", "attributes": { "artistName": "x" } }, "note": "missing name" },
+    { "item": { "id": "", "attributes": { "name": "x" } }, "note": "empty id" }
+  ],
+  "preview_trap_note": "every StreamInfo is a 30-second preview: resolve() returns duration=30s, quality=Low, format=M4a regardless of the item (musid-dli source_apple.rs StreamResolver impl; upstream declares only Quality::Low128, voicefox apple/mod.rs:116-119). A missing previews node resolves to a provider error, not a fallback."
+}

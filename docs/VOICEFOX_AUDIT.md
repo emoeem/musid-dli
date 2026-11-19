@@ -24,7 +24,7 @@ VoiceFox is Rust 2024, version 0.8.1, MIT. Crates:
 | Kugou | source/src/kg | Above + QR login and personal playlists |
 | QQ Music | source/src/tx | Above + QQ/WeChat QR login and personal playlists |
 | Netease | source/src/wy | Above + QR login and personal playlists |
-| Migu | source/src/mg | Search, URL, lyrics, cover, artist/album, playlists, charts, links |
+| Migu | source/src/mg | Search, URL, lyrics, cover, album (derived track list; mg/ has no artist function), playlists, charts, links |
 | Bilibili | source/src/bili | Search, audio stream, cover, creator, playlists, charts, links, QR login; no lyrics |
 | Qianqian | source/src/qianqian | Search, URL, lyrics, cover, artist/album, playlists, links |
 | JOOX | source/src/joox | Search, URL, lyrics, cover, album, playlist search/detail, links |

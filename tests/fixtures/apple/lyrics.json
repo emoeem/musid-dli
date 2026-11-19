@@ -1,0 +1,60 @@
+{
+  "derivation_note": "Reconstructed, not captured. The relationship path follows the parser read path in voicefox/source/src/apple/api.rs:316-331 (fetch_lyric) and musid-dli source_apple.rs apple_lyric_text. The text value is a placeholder built to exercise the trim/filter branches; real lyric text is untestable offline and the live path is covered by the apple smoke's lyrics module.",
+  "request_note": "GET /v1/catalog/us/songs/{id}?include=lyrics — no extend needed; only the lyrics relationship is read (musid-dli source_apple.rs LyricsProvider::lyrics; upstream api.rs:316-331)",
+  "response": {
+    "data": [
+      {
+        "id": "1440833098",
+        "type": "songs",
+        "attributes": { "name": "晴天" },
+        "relationships": {
+          "lyrics": {
+            "data": [
+              {
+                "id": "lyrics.1440833098",
+                "type": "lyrics",
+                "attributes": {
+                  "text": "  故事的小黄花\n从出生那年就飘着\n  ",
+                  "title": "Lyrics",
+                  "providerName": "placeholder",
+                  "releaseDate": "2003-07-31"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "text": "故事的小黄花\n从出生那年就飘着",
+    "format": "PlainText",
+    "lines_count": 0,
+    "translation": null,
+    "romanization": null,
+    "note": "text is trimmed; LyricFormat is PlainText and lines stays empty — the catalog relationship carries no timing, so no LRC/QRC parsing happens (musid-dli source_apple.rs LyricsProvider::lyrics)"
+  },
+  "none_cases": [
+    {
+      "response": { "data": [] },
+      "note": "no song → None (not an error); upstream maps the same shape to Ok(None) via fetch_lyric → get_lyric turns None into FetchError::NotFound (voicefox apple/mod.rs:101-110), musid-dli returns Ok(None) directly"
+    },
+    {
+      "response": { "data": [{ "id": "1", "relationships": { "lyrics": { "data": [] } } }] },
+      "note": "empty lyrics data array → None"
+    },
+    {
+      "response": { "data": [{ "id": "2" }] },
+      "note": "no relationships node → None"
+    },
+    {
+      "response": { "data": [{ "id": "3", "relationships": { "lyrics": { "data": [{ "attributes": { "text": "   " } }] } } }] },
+      "note": "whitespace-only text is filtered to None (upstream api.rs:328-329)"
+    },
+    {
+      "response": { "data": [{ "id": "4", "relationships": { "lyrics": { "data": [{ "attributes": { "noText": true } }] } } }] },
+      "note": "missing text attribute → None"
+    }
+  ],
+  "capability_note": "only plain-text lyrics exist in the unsigned catalog API; timed/syllable lyrics and translation require the media-user-token MusicKit surfaces, which neither upstream nor musid-dli implements (voicefox apple/api.rs:5 notes media-user-token is for personal libraries only; musid-dli implements no AuthenticationProvider login — login_status is always LoggedOut)."
+}

@@ -1,0 +1,599 @@
+{
+  "_derivation": "Live capture 2026-11-18: anonymous GET https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/queryAlbumSong?albumId=10927&pageNo=1&pageSize=100 with the playlist header set (Referer https://m.music.migu.cn/, channel 0146921, iPhone UA) - HTTP 200, 87885 bytes, code 000000, info 操作成功, 12 rows, totalCount int 12. ok.response is a trimmed verbatim slice: the wrapper keeps its real keys (data carries only songList + totalCount), row 0 keeps the parser-consumed and trap keys verbatim: string songId; the live rows carry NO duration/audioFormats/singerList keys at all (the audit recorded them as null/empty - absent and null parse identically through serde_json::Value::Null), duration comes from length hh:mm:ss; audioFormats is absent and newRateFormats carries PQ/HQ/SQ; the cover exists only in albumImgs[0].img (img1/2/3 absent, webpImg empty strings); artists carries {id,name,nameSpelling} while singerList is absent; mrcUrl/trcUrl are empty strings and no lowercase mrcurl key exists; copyrightId is alphanumeric (6005751F411); contentId is numeric (600910000003611567); the row also carries trackNumber/disc/needEncrypt('0') which the parser ignores. Rows 1-11 are trimmed to identity/length/track keys with their real catalog values; row 1 keeps its verbatim newRateFormats so ZQ (HiRes) is pinned on a later row. string_total_count is a reconstructed variant (playlist_pages.json already pins string totals for the shared wrapper; queryAlbumSong's totalCount goes through the same u64-or-string read). empty_data.response is the verbatim 49-byte body the live endpoint returns for an invalid albumId (999999999999, HTTP 200, code still 000000, info 操作成功) and for pageNo=2 alike: the code gate cannot catch it, so NotFound must be derived from the missing/empty songList (upstream mg/parse.rs:125-133 does exactly that). code_error is a reconstructed defensive code-gate case: musid-dli's sibling parsers all gate on code 000000 while upstream fetch_album has no code gate - a deliberate documented port difference.",
+  "ok": {
+    "response": {
+      "code": "000000",
+      "info": "操作成功",
+      "data": {
+        "songList": [
+          {
+            "songId": "1001464322",
+            "songName": "In the Beginning",
+            "singer": "孙燕姿",
+            "singerId": "259",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:00:59",
+            "trackNumber": "1",
+            "disc": "Disc 1",
+            "needEncrypt": "0",
+            "copyrightId": "6005751F411",
+            "contentId": "600910000003611567",
+            "newRateFormats": [
+              {
+                "resourceType": "2",
+                "formatType": "PQ",
+                "format": "020007",
+                "size": "958172",
+                "fileType": "mp3",
+                "price": "200",
+                "showTag": [
+                  "vip"
+                ],
+                "showTagNew": [
+                  "vip"
+                ]
+              },
+              {
+                "resourceType": "2",
+                "formatType": "HQ",
+                "format": "020010",
+                "size": "2395116",
+                "fileType": "mp3",
+                "price": "200",
+                "showTag": [
+                  "vip"
+                ],
+                "showTagNew": [
+                  "vip"
+                ]
+              },
+              {
+                "resourceType": "E",
+                "formatType": "SQ",
+                "format": "011002",
+                "size": "5081739",
+                "price": "200",
+                "androidFileType": "flac",
+                "iosFileType": "m4a",
+                "iosSize": "5200239",
+                "androidSize": "5081739",
+                "iosFormat": "011003",
+                "androidFormat": "011002",
+                "iosAccuracyLevel": "16bit",
+                "androidAccuracyLevel": "16bit",
+                "showTag": [
+                  "vip"
+                ],
+                "showTagNew": [
+                  "vip"
+                ]
+              }
+            ],
+            "albumImgs": [
+              {
+                "imgSizeType": "01",
+                "img": "https://d.musicapp.migu.cn/data/oss/resource/00/5t/0w/679316c4e8bb47a7bedc10b5e0384068.webp",
+                "imgOri": "",
+                "fileId": "69fd40dd147e494ed1149c58",
+                "webpImg": ""
+              },
+              {
+                "imgSizeType": "02",
+                "img": "https://d.musicapp.migu.cn/data/oss/resource/00/5t/0w/5d0e8800f101443f8a3795e5292e1c7e.webp",
+                "imgOri": "",
+                "fileId": "69fd40dd147e494ed1149c57",
+                "webpImg": ""
+              },
+              {
+                "imgSizeType": "03",
+                "img": "https://d.musicapp.migu.cn/data/oss/resource/00/5t/0w/cb89e8582a424847be4a4197ff513ad1.webp",
+                "imgOri": "",
+                "fileId": "69fd40dd147e494ed1149c55",
+                "webpImg": ""
+              }
+            ],
+            "artists": [
+              {
+                "id": "259",
+                "name": "孙燕姿",
+                "nameSpelling": "sunyanzi"
+              }
+            ],
+            "lrcUrl": "https://d.musicapp.migu.cn/data/oss/resource/00/5w/wf/adca072d7c3442c383ad286bebf92f13",
+            "mrcUrl": "",
+            "trcUrl": ""
+          },
+          {
+            "songId": "11007",
+            "songName": "逆光",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:04:54",
+            "trackNumber": "2",
+            "disc": "Disc 1",
+            "newRateFormats": [
+              {
+                "resourceType": "2",
+                "formatType": "PQ",
+                "format": "020007",
+                "size": "4709607",
+                "fileType": "mp3",
+                "price": "200",
+                "showTag": [
+                  "vip"
+                ],
+                "showTagNew": [
+                  "vip"
+                ]
+              },
+              {
+                "resourceType": "2",
+                "formatType": "HQ",
+                "format": "020010",
+                "size": "11767684",
+                "fileType": "mp3",
+                "price": "200",
+                "showTag": [
+                  "vip"
+                ],
+                "showTagNew": [
+                  "vip"
+                ]
+              },
+              {
+                "resourceType": "E",
+                "formatType": "SQ",
+                "format": "011002",
+                "size": "31907071",
+                "price": "200",
+                "androidFileType": "flac",
+                "iosFileType": "m4a",
+                "iosSize": "32494992",
+                "androidSize": "31907071",
+                "iosFormat": "011003",
+                "androidFormat": "011002",
+                "iosAccuracyLevel": "16bit",
+                "androidAccuracyLevel": "16bit",
+                "showTag": [
+                  "vip"
+                ],
+                "showTagNew": [
+                  "vip"
+                ]
+              },
+              {
+                "resourceType": "2",
+                "formatType": "ZQ",
+                "price": "200",
+                "androidFileType": "flac",
+                "iosFileType": "m4a",
+                "iosSize": "62634866",
+                "androidSize": "61583798",
+                "iosFormat": "011006",
+                "androidFormat": "011005",
+                "androidNewFormat": "011005",
+                "iosBit": 24,
+                "androidBit": 24,
+                "showTag": [
+                  "vip"
+                ],
+                "showTagNew": [
+                  "tl-vip",
+                  "vip"
+                ]
+              }
+            ]
+          },
+          {
+            "songId": "54712",
+            "songName": "梦游",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:03:08",
+            "trackNumber": "3",
+            "disc": "Disc 1"
+          },
+          {
+            "songId": "55433",
+            "songName": "咕叽咕叽",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:04:33",
+            "trackNumber": "4",
+            "disc": "Disc 1"
+          },
+          {
+            "songId": "54714",
+            "songName": "我怀念的",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:04:49",
+            "trackNumber": "5",
+            "disc": "Disc 1"
+          },
+          {
+            "songId": "54710",
+            "songName": "安宁",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:03:19",
+            "trackNumber": "6",
+            "disc": "Disc 1"
+          },
+          {
+            "songId": "56467",
+            "songName": "飘着",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:04:09",
+            "trackNumber": "7",
+            "disc": "Disc 1"
+          },
+          {
+            "songId": "54230",
+            "songName": "爱情的花样",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:03:43",
+            "trackNumber": "8",
+            "disc": "Disc 1"
+          },
+          {
+            "songId": "54709",
+            "songName": "漩涡",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:04:51",
+            "trackNumber": "9",
+            "disc": "Disc 1"
+          },
+          {
+            "songId": "54711",
+            "songName": "需要你",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:04:08",
+            "trackNumber": "10",
+            "disc": "Disc 1"
+          },
+          {
+            "songId": "54713",
+            "songName": "关于",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:03:57",
+            "trackNumber": "11",
+            "disc": "Disc 1"
+          },
+          {
+            "songId": "1105026658",
+            "songName": "Afterward",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:00:56",
+            "trackNumber": "12",
+            "disc": "Disc 1"
+          }
+        ],
+        "totalCount": 12
+      }
+    }
+  },
+  "string_total_count": {
+    "response": {
+      "code": "000000",
+      "info": "操作成功",
+      "data": {
+        "songList": [
+          {
+            "songId": "1001464322",
+            "songName": "In the Beginning",
+            "singer": "孙燕姿",
+            "singerId": "259",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:00:59",
+            "trackNumber": "1",
+            "disc": "Disc 1",
+            "needEncrypt": "0",
+            "copyrightId": "6005751F411",
+            "contentId": "600910000003611567",
+            "newRateFormats": [
+              {
+                "resourceType": "2",
+                "formatType": "PQ",
+                "format": "020007",
+                "size": "958172",
+                "fileType": "mp3",
+                "price": "200",
+                "showTag": [
+                  "vip"
+                ],
+                "showTagNew": [
+                  "vip"
+                ]
+              },
+              {
+                "resourceType": "2",
+                "formatType": "HQ",
+                "format": "020010",
+                "size": "2395116",
+                "fileType": "mp3",
+                "price": "200",
+                "showTag": [
+                  "vip"
+                ],
+                "showTagNew": [
+                  "vip"
+                ]
+              },
+              {
+                "resourceType": "E",
+                "formatType": "SQ",
+                "format": "011002",
+                "size": "5081739",
+                "price": "200",
+                "androidFileType": "flac",
+                "iosFileType": "m4a",
+                "iosSize": "5200239",
+                "androidSize": "5081739",
+                "iosFormat": "011003",
+                "androidFormat": "011002",
+                "iosAccuracyLevel": "16bit",
+                "androidAccuracyLevel": "16bit",
+                "showTag": [
+                  "vip"
+                ],
+                "showTagNew": [
+                  "vip"
+                ]
+              }
+            ],
+            "albumImgs": [
+              {
+                "imgSizeType": "01",
+                "img": "https://d.musicapp.migu.cn/data/oss/resource/00/5t/0w/679316c4e8bb47a7bedc10b5e0384068.webp",
+                "imgOri": "",
+                "fileId": "69fd40dd147e494ed1149c58",
+                "webpImg": ""
+              },
+              {
+                "imgSizeType": "02",
+                "img": "https://d.musicapp.migu.cn/data/oss/resource/00/5t/0w/5d0e8800f101443f8a3795e5292e1c7e.webp",
+                "imgOri": "",
+                "fileId": "69fd40dd147e494ed1149c57",
+                "webpImg": ""
+              },
+              {
+                "imgSizeType": "03",
+                "img": "https://d.musicapp.migu.cn/data/oss/resource/00/5t/0w/cb89e8582a424847be4a4197ff513ad1.webp",
+                "imgOri": "",
+                "fileId": "69fd40dd147e494ed1149c55",
+                "webpImg": ""
+              }
+            ],
+            "artists": [
+              {
+                "id": "259",
+                "name": "孙燕姿",
+                "nameSpelling": "sunyanzi"
+              }
+            ],
+            "lrcUrl": "https://d.musicapp.migu.cn/data/oss/resource/00/5w/wf/adca072d7c3442c383ad286bebf92f13",
+            "mrcUrl": "",
+            "trcUrl": ""
+          },
+          {
+            "songId": "11007",
+            "songName": "逆光",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:04:54",
+            "trackNumber": "2",
+            "disc": "Disc 1",
+            "newRateFormats": [
+              {
+                "resourceType": "2",
+                "formatType": "PQ",
+                "format": "020007",
+                "size": "4709607",
+                "fileType": "mp3",
+                "price": "200",
+                "showTag": [
+                  "vip"
+                ],
+                "showTagNew": [
+                  "vip"
+                ]
+              },
+              {
+                "resourceType": "2",
+                "formatType": "HQ",
+                "format": "020010",
+                "size": "11767684",
+                "fileType": "mp3",
+                "price": "200",
+                "showTag": [
+                  "vip"
+                ],
+                "showTagNew": [
+                  "vip"
+                ]
+              },
+              {
+                "resourceType": "E",
+                "formatType": "SQ",
+                "format": "011002",
+                "size": "31907071",
+                "price": "200",
+                "androidFileType": "flac",
+                "iosFileType": "m4a",
+                "iosSize": "32494992",
+                "androidSize": "31907071",
+                "iosFormat": "011003",
+                "androidFormat": "011002",
+                "iosAccuracyLevel": "16bit",
+                "androidAccuracyLevel": "16bit",
+                "showTag": [
+                  "vip"
+                ],
+                "showTagNew": [
+                  "vip"
+                ]
+              },
+              {
+                "resourceType": "2",
+                "formatType": "ZQ",
+                "price": "200",
+                "androidFileType": "flac",
+                "iosFileType": "m4a",
+                "iosSize": "62634866",
+                "androidSize": "61583798",
+                "iosFormat": "011006",
+                "androidFormat": "011005",
+                "androidNewFormat": "011005",
+                "iosBit": 24,
+                "androidBit": 24,
+                "showTag": [
+                  "vip"
+                ],
+                "showTagNew": [
+                  "tl-vip",
+                  "vip"
+                ]
+              }
+            ]
+          },
+          {
+            "songId": "54712",
+            "songName": "梦游",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:03:08",
+            "trackNumber": "3",
+            "disc": "Disc 1"
+          },
+          {
+            "songId": "55433",
+            "songName": "咕叽咕叽",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:04:33",
+            "trackNumber": "4",
+            "disc": "Disc 1"
+          },
+          {
+            "songId": "54714",
+            "songName": "我怀念的",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:04:49",
+            "trackNumber": "5",
+            "disc": "Disc 1"
+          },
+          {
+            "songId": "54710",
+            "songName": "安宁",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:03:19",
+            "trackNumber": "6",
+            "disc": "Disc 1"
+          },
+          {
+            "songId": "56467",
+            "songName": "飘着",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:04:09",
+            "trackNumber": "7",
+            "disc": "Disc 1"
+          },
+          {
+            "songId": "54230",
+            "songName": "爱情的花样",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:03:43",
+            "trackNumber": "8",
+            "disc": "Disc 1"
+          },
+          {
+            "songId": "54709",
+            "songName": "漩涡",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:04:51",
+            "trackNumber": "9",
+            "disc": "Disc 1"
+          },
+          {
+            "songId": "54711",
+            "songName": "需要你",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:04:08",
+            "trackNumber": "10",
+            "disc": "Disc 1"
+          },
+          {
+            "songId": "54713",
+            "songName": "关于",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:03:57",
+            "trackNumber": "11",
+            "disc": "Disc 1"
+          },
+          {
+            "songId": "1105026658",
+            "songName": "Afterward",
+            "singer": "孙燕姿",
+            "album": "逆光",
+            "albumId": "10927",
+            "length": "00:00:56",
+            "trackNumber": "12",
+            "disc": "Disc 1"
+          }
+        ],
+        "totalCount": "12"
+      }
+    }
+  },
+  "empty_data": {
+    "response": {
+      "code": "000000",
+      "info": "操作成功",
+      "data": {}
+    }
+  },
+  "code_error": {
+    "response": {
+      "code": "54321025",
+      "info": "参数异常",
+      "data": {}
+    }
+  }
+}

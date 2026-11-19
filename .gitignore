@@ -6,3 +6,6 @@
 .env.*
 !.env.example
 *_qr.png
+
+# zcode session state
+.zcode/

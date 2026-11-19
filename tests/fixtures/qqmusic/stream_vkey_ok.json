@@ -1,0 +1,26 @@
+{
+  "code": 0,
+  "req_0": {
+    "code": 0,
+    "data": {
+      "sip": ["http://dl.stream.qqmusic.qq.com/"],
+      "midurlinfo": [
+        {
+          "filename": "AI00003aAYrm3GE0Ac.flac",
+          "purl": "",
+          "vkey": "v_ai"
+        },
+        {
+          "filename": "M800003aAYrm3GE0Ac.mp3",
+          "purl": "M800003aAYrm3GE0Ac.mp3?extra=1",
+          "vkey": "v_800"
+        },
+        {
+          "filename": "M500003aAYrm3GE0Ac.mp3",
+          "purl": "M500003aAYrm3GE0Ac.mp3?extra=1",
+          "vkey": ""
+        }
+      ]
+    }
+  }
+}

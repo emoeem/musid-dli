@@ -1,0 +1,57 @@
+{
+  "url_golden_board93_rn3": "http://kbangserver.kuwo.cn/ksong.s?from=pc&fmt=json&pn=0&rn=3&type=bang&data=content&id=93&show_copyright_off=0&pcmp4=1&isbang=1",
+  "board": {
+    "name": "酷我热榜",
+    "leader": "张榜官",
+    "term": "day",
+    "info": "酷我音乐官方热榜",
+    "pic": "http://img4.kuwo.cn/star/upload/bang/board93.jpg",
+    "pub": "2026-11-17",
+    "timestamp": "1731878400",
+    "num": "300",
+    "v9_pic2": "",
+    "type": "bang",
+    "musiclist": [
+      {
+        "id": "668801544",
+        "name": "慌啥子嘛 (赵本山版)",
+        "artist": "赵本山",
+        "album": "慌啥子嘛（赵本山版）",
+        "albumid": "107468365",
+        "song_duration": "189",
+        "duration": "3",
+        "formats": "MP3H|MP3128|ALFLAC|DDJOC768|AC4256|ZPGA714|ZPLY|BCMS",
+        "pic": "http://img4.kuwo.cn/star/albumcover/row0.jpg",
+        "artistid": "50639",
+        "aartist": "",
+        "rank_change": "0",
+        "trend": "0",
+        "highest_rank": "1",
+        "pay": "0",
+        "score": "0",
+        "score100": "0"
+      },
+      {
+        "id": 669076081,
+        "name": "双歌手行",
+        "artist": "张三&李四",
+        "albumid": "107468366",
+        "duration": "200",
+        "formats": ""
+      },
+      {
+        "id": "",
+        "name": "无id行",
+        "artist": "王五"
+      },
+      {
+        "id": "669462612",
+        "name": "第三行"
+      }
+    ],
+    "volume": "1",
+    "currentVolume": "1"
+  },
+  "empty_musiclist": {"num": "0", "musiclist": []},
+  "no_musiclist": {"name": "未知榜单"}
+}

@@ -1,0 +1,34 @@
+{
+  "_provenance": "RECONSTRUCTED from the upstream parser reads (voicefox source/src/bili/leaderboard.rs:211-217; rows reuse parse_popular_song, leaderboard.rs:220-248); no raw ranking/v2 capture exists in either repository. Pins the author fallback chain owner.name -> author -> \"哔哩哔哩用户\", the \"h:mm:ss\" duration form and the whitespace-cover drop.",
+  "code": 0,
+  "message": "0",
+  "ttl": 1,
+  "data": {
+    "note": "the signed ranking/v2 reply returns the whole list at once; only the first CHART_PAGE_SIZE rows are sliced client-side (upstream page_slice)",
+    "list": [
+      {
+        "bvid": "BV1xx411c7r1",
+        "title": "全站排行甲",
+        "owner": { "mid": 201, "name": "UP主甲" },
+        "pic": "//i0.hdslb.com/r1.jpg",
+        "duration": 200,
+        "cid": 201
+      },
+      {
+        "bvid": "BV1xx411c7r2",
+        "title": "全站排行乙",
+        "author": "UP主乙",
+        "pic": "//i0.hdslb.com/r2.jpg",
+        "duration": "4:05",
+        "cid": 202
+      },
+      {
+        "bvid": "BV1xx411c7r3",
+        "title": "全站排行丙",
+        "pic": "   ",
+        "duration": "1:02:03",
+        "cid": 203
+      }
+    ]
+  }
+}

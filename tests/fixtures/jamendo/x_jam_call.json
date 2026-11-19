@@ -1,0 +1,42 @@
+{
+  "algorithm": "x-jam-call = '$' + lowercase-hex SHA1(path + nonce) + '*' + nonce + '~'. The hash input is the plain ASCII concatenation of the request path and the nonce, without the query string; the nonce echoed inside the header must byte-match the nonce that went into the hash (voicefox/source/src/jamendo/mod.rs:66-70 signs the path at :98 and again for /api/tracks at :243).",
+  "source_constants": {
+    "note": "Pins the fixed request headers against drift. x-jam-version '4gvfvv' appears exactly once in the whole upstream tree (mod.rs:27) with no documented origin; it is pinned as-is, not explained.",
+    "base": "https://www.jamendo.com",
+    "referer": "https://www.jamendo.com/search?q=musicdl",
+    "x_jam_version": "4gvfvv",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/143.0 Safari/537.36"
+  },
+  "cases": [
+    {
+      "note": "The /api/search + '0.5' vector is the upstream inline test assertion (mod.rs:513-525), i.e. hex(SHA1('/api/search0.5')); it was accepted by the live server (HTTP 200, 2026-11-18).",
+      "path": "/api/search",
+      "nonce": "0.5",
+      "expected": "$b3b3fd94650d2b10acbb75b3b8401ca82c06046c*0.5~"
+    },
+    {
+      "note": "Three-decimal nonce shape as musid-dli's nanosecond generator emits it; recomputed with sha1 and accepted by the live server (HTTP 200, 2026-11-18). The server accepts hand-made nonces ('0.5', '0.253' both verified).",
+      "path": "/api/search",
+      "nonce": "0.253",
+      "expected": "$dbd833e84ef6b277c15632e0438838928b6e3581*0.253~"
+    },
+    {
+      "note": "Batch track path: still signed with the bare path, no query string.",
+      "path": "/api/tracks",
+      "nonce": "0.123",
+      "expected": "$367cb9815421f9d83f7f14279b2876215403a0fb*0.123~"
+    },
+    {
+      "note": "Playlist container path.",
+      "path": "/api/playlists",
+      "nonce": "0.999",
+      "expected": "$fe4477191b98a5b70df5fef3ed5a064da21b6c1c*0.999~"
+    },
+    {
+      "note": "Album container path with a non-float nonce: any nonce string works as long as the echoed header matches the hashed input.",
+      "path": "/api/albums",
+      "nonce": "123",
+      "expected": "$a0bcd8fb0d21f9735e21b2ee4a0f397fb3904164*123~"
+    }
+  ]
+}

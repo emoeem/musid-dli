@@ -1,0 +1,72 @@
+{
+  "derivation_note": "Reconstructed, not captured. Vector values follow the upstream inline tests in voicefox/source/src/apple/api.rs (script_path/extract_tokens test at api.rs:494-509); musid-dli's own inline test value (source_apple.rs, extracts_jwt_candidates) is kept as a case. The token probe URL and its reasoning are pinned from voicefox apple/api.rs:120-137 and musid-dli src/source_apple.rs token() (source_apple.rs:168-186 pre-batch numbering).",
+  "source_constants": {
+    "home": "https://music.apple.com",
+    "amp_api": "https://amp-api.music.apple.com",
+    "storefront": "us",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/143.0 Safari/537.36",
+    "script_markers": ["/assets/index-legacy", "/assets/index~", "/assets/index-"],
+    "probe_url": "https://amp-api.music.apple.com/v1/catalog/us/search?term=music&types=songs&limit=1",
+    "probe_reason": "the probe uses a generic search, never a specific song id: a specific id can 404 on storefront grounds, which says nothing about token validity (voicefox apple/api.rs:120-137)"
+  },
+  "script_path_cases": [
+    {
+      "homepage": "<script src=\"/assets/index-legacy~abc123.js\"></script>",
+      "expected": "/assets/index-legacy~abc123.js",
+      "note": "tilde bundle shape; upstream's inline test uses the same homepage but expects the path WITHOUT the leading slash (regex capture, api.rs:496-503) — musid-dli keeps the leading slash because it slices from the '/assets' marker"
+    },
+    {
+      "homepage": "<script src=\"/assets/index-legacy-abc123.js\" crossorigin>",
+      "expected": "/assets/index-legacy-abc123.js",
+      "note": "dash bundle shape (musid-dli inline test value)"
+    },
+    {
+      "homepage": "<script src=\"/assets/index~abc123.js\"></script>",
+      "expected": "/assets/index~abc123.js",
+      "note": "plain index~ marker, second known shape"
+    },
+    {
+      "homepage": "<script src=\"/assets/index-abc123.js\"></script>",
+      "expected": "/assets/index-abc123.js",
+      "note": "plain index- marker, third known shape"
+    },
+    {
+      "homepage": "<html></html>",
+      "expected": null,
+      "note": "no marker at all"
+    },
+    {
+      "homepage": "<script src=\"/assets/other.js\"></script>",
+      "expected": null,
+      "note": "marker must start with /assets/index"
+    }
+  ],
+  "extract_token_cases": [
+    {
+      "script": "window.__TOKEN__=\"eyJhbGciOiJFUzI1NiJ9.eyJpc3MiOiJhcHBsZSJ9.c2lnbmF0dXJl\";",
+      "expected": ["eyJhbGciOiJFUzI1NiJ9.eyJpc3MiOiJhcHBsZSJ9.c2lnbmF0dXJl"],
+      "note": "upstream inline test vector (api.rs:497-506); 54 chars, over both the upstream floor (40 after 'eyJ', api.rs:79) and musid-dli's floor (40 total)"
+    },
+    {
+      "script": "var a=\"eyJhbGciOiJFUzI1NiJ9.eyJpc3MiOiJhcHBsZSJ9.c2lnbmF0dXJl\",b=\"eyJhbGciOiJFUzI1NiJ9.eyJpc3MiOiJhcHBsZSJ9.c2lnbmF0dXJl\";",
+      "expected": ["eyJhbGciOiJFUzI1NiJ9.eyJpc3MiOiJhcHBsZSJ9.c2lnbmF0dXJl"],
+      "note": "duplicate candidates are deduped (both upstream api.rs:86 and musid-dli)"
+    },
+    {
+      "script": "var a=\"eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.extra-token-abc-123-456\";var b=\"short\";",
+      "expected": ["eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.extra-token-abc-123-456"],
+      "note": "musid-dli inline test value; the short string is dropped"
+    },
+    {
+      "script": "var t=\"eyJtok.eyJp-ss_9\";",
+      "expected": [],
+      "note": "JWT-shaped but under the length floor: dropped by both implementations (upstream needs >=40 after 'eyJ', musid-dli >=40 total; this 17-char token passes neither)"
+    },
+    {
+      "script": "<script>var a = 1;</script>",
+      "expected": [],
+      "note": "upstream inline test: no token candidates"
+    }
+  ],
+  "floor_divergence_note": "the length floor differs by 3 chars (upstream counts after 'eyJ', musid-dli counts the whole token); a 41-42 char token would pass musid-dli and be dropped upstream. No real web JWT is that short, and every shared vector above behaves identically, so the divergence is recorded rather than reconciled."
+}

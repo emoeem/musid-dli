@@ -1,0 +1,25 @@
+{
+  "code": 200,
+  "data": {
+    "data": [
+      {
+        "id": "1082685103",
+        "name": "热门华语精选",
+        "digest": "",
+        "img": "http://img4.kuwo.cn/star/playlist/a.jpg",
+        "total": "12",
+        "desc": "每日更新的华语热门歌单",
+        "listencnt": "98765"
+      },
+      {
+        "id": 1082685104,
+        "name": "经典老歌",
+        "digest": "3",
+        "total": 45
+      },
+      { "id": "1082685105", "name": "节点歌单", "digest": "5", "total": "8" },
+      { "id": "", "name": "缺id被跳过" },
+      { "id": "1082685106", "name": "" }
+    ]
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "sq_variant_pairing": {
+    "note": "audit-recorded SQ row: the flac (generic/android) size differs from the m4a (ios) size, so a URL variant must pair with its own size field",
+    "formatType": "SQ",
+    "format": "011002",
+    "size": "31529675",
+    "androidSize": "31529675",
+    "iosSize": "31931278",
+    "url": "http://freetyst.nf.migu.cn/a.flac",
+    "androidUrl": "http://freetyst.nf.migu.cn/a-android.flac",
+    "iosUrl": "http://freetyst.nf.migu.cn/a-ios.m4a"
+  },
+  "size_text_cases": [
+    ["4317311", 4317311],
+    [" 4317311 ", 4317311],
+    ["3.5MB", 3670016],
+    ["1 GB", 1073741824],
+    ["0", null],
+    ["", null],
+    ["abc", null]
+  ],
+  "quality_for_size": {
+    "note": "anonymous Migu serves PQ regardless of the requested toneFlag, so the served size is mapped back through the declared tiers",
+    "formats": [
+      { "formatType": "PQ", "size": "3997991" },
+      { "formatType": "HQ", "size": "9994661" },
+      {
+        "formatType": "SQ",
+        "size": "30477128",
+        "androidSize": "30477128",
+        "iosSize": "31246068"
+      }
+    ],
+    "cases": [
+      [3997991, "Low"],
+      [9994661, "High"],
+      [30477128, "Lossless"],
+      [31246068, "Lossless"],
+      [12345, null]
+    ]
+  },
+  "zq24_format": { "formatType": "ZQ24" },
+  "resource_id_cases": [
+    {
+      "song": { "songId": 3790007, "songName": "晴天", "copyrightId": "60054701923" },
+      "expected": "60054701923"
+    },
+    {
+      "song": {
+        "songId": 3790007,
+        "songName": "晴天",
+        "copyrightId": "60054701923",
+        "contentId": "600902000006889366"
+      },
+      "expected": "600902000006889366"
+    },
+    {
+      "song": { "songId": 3790007, "songName": "晴天", "contentId": "  " },
+      "expected": null
+    }
+  ],
+  "preview_cases": [
+    ["https://cdn.migu.cn/audition/2019/a.mp3", true],
+    ["https://cdn.migu.cn/trail_audio/x/a.mp3", true],
+    ["https://cdn.migu.cn/a.mp3?preview=1", true],
+    ["https://cdn.migu.cn/a.mp3?node_is_preview=true", true],
+    ["https://cdn.migu.cn/public/a.mp3", false],
+    ["https://cdn.migu.cn/a.mp3?preview=0", false],
+    ["", false]
+  ]
+}

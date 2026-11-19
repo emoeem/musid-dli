@@ -1,0 +1,22 @@
+{
+  "source": "voicefox/source/src/kg/lyric.rs:279-312 test vector (audit 2026-11); the language metadata base64 is the compact-serialized {\"version\":1,\"content\":[{type 0 romanization},{type 1 translation}]} payload. Word tags carry line-relative offsets; line start = [millis,...], word start = line start + offset. The third value inside <offset,duration,extra> is ignored.",
+  "krc": "[language:eyJ2ZXJzaW9uIjoxLCJjb250ZW50IjpbeyJ0eXBlIjowLCJseXJpY0NvbnRlbnQiOltbIm5pIiwiIGhhbyJdLFsiemFpIiwiIGppYW4iXV19LHsidHlwZSI6MSwibHlyaWNDb250ZW50IjpbWyLkvaAiLCLlpb0iXSxbIuWGjSIsIuingSJdXX1dfQ==]\n[61234,1200]<0,600,0>你<600,600,0>好\n[62434,1200]<0,600,0>再<600,600,0>见",
+  "expected": {
+    "format": "krc",
+    "original": "[01:01.234]你好\n[01:02.434]再见",
+    "translation": "[01:01.234]你好\n[01:02.434]再见",
+    "romanization": "[01:01.234]ni hao\n[01:02.434]zai jian",
+    "lines": [
+      {
+        "start_ms": 61234,
+        "text": "你好",
+        "words": [[61234, 600], [61834, 600]]
+      },
+      {
+        "start_ms": 62434,
+        "text": "再见",
+        "words": [[62434, 600], [63034, 600]]
+      }
+    ]
+  }
+}

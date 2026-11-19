@@ -47,6 +47,17 @@ pub const QQ_CODES: ApiCodes = ApiCodes {
     throttled: None,
 };
 
+/// Kugou body-code semantics, pinned by the §8 slice 3 code-table inventory
+/// (AUTH_REGISTRY_DESIGN.md §9.2): neither the voicefox `lx-source::kg`
+/// upstream nor the reconstructed `tests/fixtures/kugou` set shows any
+/// `error_code` value with login-expiry semantics — the only code-bearing
+/// faces are the QR poll's `data.status` field (`-1`/`5`/`6` mean the QR
+/// *code* expired, not the session) and search's bare `error_code != 0`
+/// check, and no fixture pins a body `error_code` as session-expiry
+/// (tasks.md §15.4: fixture-less codes are not claimed live-verified).
+/// Session expiry therefore rides the provider-written `login_expired`
+/// marker (`KugouProvider::mark_session_expired`), and the empty
+/// `expired` table keeps every non-ok body code terminal/Fatal.
 #[cfg(feature = "source-kugou")]
 pub const KUGOU_CODES: ApiCodes = ApiCodes {
     ok: 0,
@@ -170,6 +181,32 @@ mod tests {
         assert_eq!(
             classify_api(55, "quota exceeded", 0, budget, &QQ_CODES),
             StepOutcome::Fatal("API code 55: quota exceeded".into())
+        );
+    }
+
+    /// Pins the §8 slice 3 decision: no discernible expired code, so the
+    /// classifier hands kugou no `SessionExpired` verdict at all — session
+    /// expiry rides the provider's `login_expired` marker instead
+    /// (AUTH_REGISTRY_DESIGN.md §9.2). 31100 is the observed fatal body code
+    /// from the kugou fixture set, used here as the representative non-ok
+    /// value.
+    #[test]
+    #[cfg(feature = "source-kugou")]
+    fn kugou_api_codes_pin_the_no_discernible_expired_code_decision() {
+        let budget = 4;
+        assert_eq!(KUGOU_CODES.ok, 0);
+        assert!(
+            KUGOU_CODES.expired.is_empty(),
+            "code-table inventory found no fixture-backed expiry code"
+        );
+        assert_eq!(KUGOU_CODES.throttled, None);
+        assert_eq!(
+            classify_api(0, "", 0, budget, &KUGOU_CODES),
+            StepOutcome::Ok
+        );
+        assert_eq!(
+            classify_api(31100, "参数异常", 0, budget, &KUGOU_CODES),
+            StepOutcome::Fatal("API code 31100: 参数异常".into())
         );
     }
 }

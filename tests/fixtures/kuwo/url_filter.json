@@ -1,0 +1,5 @@
+{
+  "source": "voicefox/source/src/kw/url.rs:336-342 inline test vectors (audit 2026-11): the CDN also returns the paid-content text in place of a URL.",
+  "accepted": ["http://kw-bj.kuwo.cn/a.mp3", "https://kw-bj.kuwo.cn/a.mp3"],
+  "rejected": ["该歌曲为付费内容", ""]
+}

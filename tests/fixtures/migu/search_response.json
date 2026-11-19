@@ -1,0 +1,142 @@
+{
+  "ok_numeric_total": {
+    "response": {
+      "code": "000000",
+      "songResultData": {
+        "totalCount": 113,
+        "resultList": [
+          [
+            {
+              "songId": 3790007,
+              "songName": "晴天",
+              "singerList": [{ "name": "周杰伦" }],
+              "album": "叶惠美",
+              "copyrightId": "60054701923",
+              "contentId": "600902000006889366",
+              "duration": 269,
+              "img3": "https://img.example/a.jpg",
+              "audioFormats": [{ "formatType": "PQ" }, { "formatType": "SQ" }]
+            },
+            { "songName": "无编号的行会被丢弃" }
+          ],
+          [
+            {
+              "songId": 3790007,
+              "songName": "晴天（bestShow 分组的重复项，按 songId:copyrightId 去重）",
+              "singerList": [{ "name": "周杰伦" }],
+              "copyrightId": "60054701923",
+              "contentId": "600902000006889366"
+            },
+            { "songId": 3799998, "copyrightId": "60054709999" },
+            {
+              "songId": 3790008,
+              "songName": "七里香",
+              "singerList": [{ "name": "周杰伦" }],
+              "album": "七里香",
+              "copyrightId": "60054701924",
+              "contentId": "600902000006889367",
+              "duration": "04:59",
+              "audioFormats": [{ "formatType": "PQ" }]
+            }
+          ]
+        ]
+      }
+    },
+    "expected_ids": ["3790007", "3790008"]
+  },
+  "ok_string_total": {
+    "response": {
+      "code": "000000",
+      "songResultData": {
+        "totalCount": "50",
+        "resultList": [
+          [
+            {
+              "songId": 3790008,
+              "songName": "七里香",
+              "singerList": [{ "name": "周杰伦" }],
+              "copyrightId": "60054701924",
+              "contentId": "600902000006889367",
+              "audioFormats": [{ "formatType": "PQ" }]
+            }
+          ]
+        ]
+      }
+    }
+  },
+  "error_code": {
+    "response": { "code": "CJ-403", "info": "未登录或无权限" }
+  },
+  "missing_result_list": {
+    "response": {
+      "code": "000000",
+      "songResultData": { "totalCount": "7" }
+    }
+  },
+  "playlist_search": {
+    "_derivation": "Reconstructed shape over the upstream parse_searched_playlist field contract (voicefox source/src/mg/playlist.rs:134-156): songListResultData.result rows carry id/name, cover from musicListPicUrl or the imgItems 03/first pick, track_count from numeric-or-string musicNum, play_count from numeric-or-string playNum, creator from the first string among userName/ownerName with the upstream find-then-filter quirk (a blank first hit voids the chain; mg/playlist.rs:149-153), and the canonical web link mg/playlist.rs:154. No upstream fixture exists; row values are constructed examples per the same derivation class as playlist_pages.json.",
+    "response": {
+      "code": "000000",
+      "songListResultData": {
+        "result": [
+          {
+            "id": "135423084",
+            "name": "示例搜索歌单",
+            "musicListPicUrl": "https://img.example/pl-84.jpg",
+            "musicNum": "12",
+            "playNum": 34567,
+            "userName": "搜索歌主"
+          },
+          {
+            "id": "135423085",
+            "name": "链式搜索歌单",
+            "musicNum": 7,
+            "playNum": "999",
+            "ownerName": "链式歌主",
+            "imgItems": [
+              { "imgSizeType": "01", "img": "https://img.example/pl-85-x.jpg" },
+              { "imgSizeType": "03", "img": "https://img.example/pl-85.jpg" }
+            ]
+          },
+          {
+            "id": "135423086",
+            "name": "空白歌主歌单",
+            "playNum": 0,
+            "userName": "   ",
+            "ownerName": "不该被采用的歌主"
+          },
+          { "id": "", "name": "空ID行会被丢弃" }
+        ]
+      }
+    },
+    "expected": [
+      {
+        "id": "135423084",
+        "title": "示例搜索歌单",
+        "cover": "https://img.example/pl-84.jpg",
+        "track_count": 12,
+        "play_count": 34567,
+        "creator": "搜索歌主",
+        "link": "https://music.migu.cn/v3/music/playlist/135423084"
+      },
+      {
+        "id": "135423085",
+        "title": "链式搜索歌单",
+        "cover": "https://img.example/pl-85.jpg",
+        "track_count": 7,
+        "play_count": 999,
+        "creator": "链式歌主",
+        "link": "https://music.migu.cn/v3/music/playlist/135423085"
+      },
+      {
+        "id": "135423086",
+        "title": "空白歌主歌单",
+        "cover": null,
+        "track_count": null,
+        "play_count": 0,
+        "creator": null,
+        "link": "https://music.migu.cn/v3/music/playlist/135423086"
+      }
+    ]
+  }
+}

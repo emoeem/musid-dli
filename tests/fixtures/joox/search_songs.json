@@ -1,0 +1,117 @@
+{
+  "error": "",
+  "error_code": 0,
+  "has_more": true,
+  "next_page": 1,
+  "tracks": [
+    [
+      {
+        "album_id": "YiT3xohoUs5qeo9aJ2yjDw==",
+        "id": "bLnv0PqDX_qAlIqapc+Okw==",
+        "name": "晴天",
+        "album_name": "葉惠美",
+        "artist_list": [
+          {
+            "id": "JlwrqRxx2ztLLil3yooBkw==",
+            "name": "周杰倫"
+          }
+        ],
+        "play_duration": 269,
+        "images": [
+          {
+            "width": 1000,
+            "height": 1000,
+            "url": "https://image.joox.com/JOOXcover/0/aaf707b7fa2e2c8c/1000"
+          },
+          {
+            "width": 300,
+            "height": 300,
+            "url": "https://image.joox.com/JOOXcover/0/aaf707b7fa2e2c8c/300"
+          },
+          {
+            "width": 100,
+            "height": 100,
+            "url": "https://image.joox.com/JOOXcover/0/aaf707b7fa2e2c8c/100"
+          }
+        ],
+        "vip_flag": 1,
+        "auth_terminal": 1,
+        "is_playable": false,
+        "track_free_action_control": 0
+      }
+    ],
+    [
+      {
+        "album_id": "ArmBTDyA7PWGdn3VoaESBw==",
+        "id": "QFNiHsC_rduq+qTcPPaPDg==",
+        "name": "晴天 (cover: 白允y) (完整版)",
+        "album_name": "繼續尋找周杰倫",
+        "artist_list": [
+          {
+            "id": "r_4DBSTZ0FYr2ldZBI1geg==",
+            "name": "凌霄(莊雲霄)"
+          }
+        ],
+        "play_duration": 269,
+        "images": [
+          {
+            "width": 1000,
+            "height": 1000,
+            "url": "https://image.joox.com/JOOXcover/0/a7931f4bac2f2865/1000"
+          },
+          {
+            "width": 300,
+            "height": 300,
+            "url": "https://image.joox.com/JOOXcover/0/a7931f4bac2f2865/300"
+          },
+          {
+            "width": 100,
+            "height": 100,
+            "url": "https://image.joox.com/JOOXcover/0/a7931f4bac2f2865/100"
+          }
+        ],
+        "vip_flag": 0,
+        "auth_terminal": 1,
+        "is_playable": true,
+        "track_free_action_control": 41
+      }
+    ],
+    [
+      {
+        "album_id": "VId4soyzNOZRGI_zf3gZOw==",
+        "id": "qrBRXB9iuAMKfjPVg_mhmg==",
+        "name": "晴天 (女聲完整版)",
+        "album_name": "晴天 (女聲版)",
+        "artist_list": [
+          {
+            "id": "ZucO4zE4MFgI8Mtpl+C6tw==",
+            "name": "梅菜扣肉肉"
+          }
+        ],
+        "play_duration": 268,
+        "images": [
+          {
+            "width": 1000,
+            "height": 1000,
+            "url": "https://image.joox.com/JOOXcover/0/53694b28996f33d9/1000"
+          },
+          {
+            "width": 300,
+            "height": 300,
+            "url": "https://image.joox.com/JOOXcover/0/53694b28996f33d9/300"
+          },
+          {
+            "width": 100,
+            "height": 100,
+            "url": "https://image.joox.com/JOOXcover/0/53694b28996f33d9/100"
+          }
+        ],
+        "vip_flag": 0,
+        "auth_terminal": 1,
+        "is_playable": true,
+        "track_free_action_control": 41
+      }
+    ]
+  ],
+  "_trim_note": "trimmed verbatim live capture 2026-11-19: tracks kept 3 of 30"
+}

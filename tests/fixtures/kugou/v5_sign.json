@@ -1,0 +1,42 @@
+{
+  "source": "voicefox/source/src/kg/url.rs:215-259 formula (audit 2026-11). This is a formula-class vector recomputed with the documented md5 recipes, NOT a captured traffic sample: upstream only ships the formulas, no golden request. access_key = md5(hash + LITE_KEY + appid + mid + userid); signature = md5(LITE_SIGN + sorted k=v pairs joined directly + LITE_SIGN).",
+  "lite_key": "185672dd44712f60bb1736df5a377e82",
+  "lite_sign": "LnT6xpN3khm36zse0QzvmgTZ3waWdRSA",
+  "access_key_input": {
+    "hash": "0f1e2d3c4b5a69788796a5b4c3d2e1f0",
+    "appid": "3116",
+    "mid": "1234567890",
+    "userid": "88888888"
+  },
+  "access_key": "67c0f70c17610c8368f0e929addfc16b",
+  "params": {
+    "dfid": "TESTDFID",
+    "mid": "1234567890",
+    "uuid": "-",
+    "appid": "3116",
+    "clientver": "11440",
+    "clienttime": "1700000000",
+    "token": "TOKEN",
+    "userid": "88888888",
+    "album_id": "0",
+    "area_code": "1",
+    "hash": "0f1e2d3c4b5a69788796a5b4c3d2e1f0",
+    "ssa_flag": "is_fromtrack",
+    "version": "11436",
+    "page_id": "967177915",
+    "quality": "320",
+    "album_audio_id": "0",
+    "behavior": "play",
+    "pid": "411",
+    "cmd": "26",
+    "pidversion": "3001",
+    "IsFreePart": "0",
+    "ppage_id": "356753938,823673182,967485191",
+    "cdnBackup": "1",
+    "kcard": "0",
+    "module": "",
+    "key": "67c0f70c17610c8368f0e929addfc16b"
+  },
+  "canonical_preimage": "IsFreePart=0album_audio_id=0album_id=0appid=3116area_code=1behavior=playcdnBackup=1clienttime=1700000000clientver=11440cmd=26dfid=TESTDFIDhash=0f1e2d3c4b5a69788796a5b4c3d2e1f0kcard=0key=67c0f70c17610c8368f0e929addfc16bmid=1234567890module=page_id=967177915pid=411pidversion=3001ppage_id=356753938,823673182,967485191quality=320ssa_flag=is_fromtracktoken=TOKENuserid=88888888uuid=-version=11436",
+  "signature": "dad3165e58d1983d545c5107b2084767"
+}

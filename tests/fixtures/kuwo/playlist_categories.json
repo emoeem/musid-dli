@@ -1,0 +1,21 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "name": "风格",
+      "data": [
+        { "id": "21", "name": "流行", "digest": "", "extend": "hot" },
+        { "id": "22", "name": "摇滚", "digest": "10000", "extend": "HOT" },
+        { "id": "24", "name": "旧分类", "digest": "9", "extend": "HOT" },
+        { "id": "", "name": "缺id被跳过", "digest": "", "extend": "HOT" },
+        { "id": "23", "name": "", "digest": "", "extend": "HOT" },
+        { "id": "26", "name": "民谣", "digest": "", "extend": "relax" },
+        { "id": "27", "name": "无extend", "digest": "" }
+      ]
+    },
+    {
+      "name": "",
+      "data": [{ "id": "25", "name": "无组名", "digest": "", "extend": "HOT" }]
+    }
+  ]
+}

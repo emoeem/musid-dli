@@ -1,0 +1,98 @@
+{
+  "derivation_note": "Reconstructed, not captured. The container envelope (data[0] with relationships.tracks.data) follows the parser read path in voicefox/source/src/apple/api.rs:335-357 (fetch_container_tracks) and musid-dli source_apple.rs container_tracks. Track rows reuse the upstream inline song values (api.rs:520-536); the album/playlist attribute values are placeholder samples.",
+  "request_note": "GET /v1/catalog/us/{albums|playlists}/{id}?include=tracks&limit[tracks]=100 (musid-dli source_apple.rs container_tracks; upstream api.rs:339-343) — the same envelope serves both kinds, only the /albums/ vs /playlists/ path segment differs",
+  "album_response": {
+    "data": [
+      {
+        "id": "1440833097",
+        "type": "albums",
+        "attributes": {
+          "name": "叶惠美",
+          "artistName": "周杰伦",
+          "trackCount": 2,
+          "artwork": { "url": "https://is1-ssl.mzstatic.com/{w}x{h}.jpg" },
+          "copyright": "(P) placeholder",
+          "releaseDate": "2003-07-31"
+        },
+        "relationships": {
+          "tracks": {
+            "data": [
+              {
+                "id": "1440833098",
+                "type": "songs",
+                "attributes": {
+                  "name": "晴天",
+                  "artistName": "周杰伦",
+                  "albumName": "叶惠美",
+                  "durationInMillis": 269000,
+                  "artwork": { "url": "https://is1-ssl.mzstatic.com/{w}x{h}.jpg" }
+                }
+              },
+              {
+                "id": "1440833097",
+                "type": "songs",
+                "attributes": {
+                  "name": "以父之名",
+                  "artistName": "周杰伦",
+                  "albumName": "叶惠美",
+                  "durationInMillis": 342000,
+                  "artwork": { "url": "https://is1-ssl.mzstatic.com/{w}x{h}.jpg" }
+                }
+              },
+              { "id": "9", "type": "songs", "attributes": { "artistName": "no-name" } }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "playlist_response": {
+    "data": [
+      {
+        "id": "pl.abc",
+        "type": "playlists",
+        "attributes": {
+          "name": "华语精选",
+          "curatorName": "Apple Music",
+          "trackCount": 3,
+          "description": { "standard": "每日更新" }
+        },
+        "relationships": {
+          "tracks": {
+            "data": [
+              {
+                "id": "1440833098",
+                "type": "songs",
+                "attributes": {
+                  "name": "晴天",
+                  "artistName": "周杰伦",
+                  "durationInMillis": 269000,
+                  "artwork": { "url": "https://is1-ssl.mzstatic.com/{w}x{h}.jpg" }
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "album_title": "叶惠美",
+    "album_artwork_600": "https://is1-ssl.mzstatic.com/600x600.jpg",
+    "album_parsed_track_ids": ["1440833098", "1440833097"],
+    "album_filtered_notes": ["missing name"],
+    "playlist_title": "华语精选",
+    "playlist_parsed_track_ids": ["1440833098"]
+  },
+  "empty_cases": [
+    {
+      "response": { "data": [] },
+      "note": "empty data array → Error::NotFound (musid-dli container_tracks: ok_or(NotFound); upstream yields 'Apple Music 未找到该 {kind}' Other error, api.rs:344-347)"
+    },
+    {
+      "response": {},
+      "note": "no data node at all → Error::NotFound on the same path"
+    }
+  ],
+  "page_note": "both upstream and musid-dli cap at limit[tracks]=100 and ignore paging for containers; playlist detail and album tracks always answer the first 100 tracks (upstream api.rs:341, musid-dli source_apple.rs container_tracks). The _page/_limit arguments are decorative."
+}

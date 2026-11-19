@@ -1,0 +1,59 @@
+{
+  "tier_order_note": "Group choice first: the download group wins whenever it is a non-empty dict, otherwise the stream group. Key order inside the chosen group: flac > mp33 > mp32 > mp3 > ogg, mapped flac/Flac/Lossless, mp33/Mp3/High, mp32/Mp3/High, mp3/Mp3/Low, ogg/Ogg/Low (voicefox/source/src/jamendo/mod.rs:133-154).",
+  "cases": [
+    {
+      "note": "Lossless-first: the flac key beats mp3 regardless of dict order (upstream inline golden mod.rs:528-547).",
+      "item": {
+        "download": { "flac": "https://cdn/a.flac", "mp3": "https://cdn/a.mp3" }
+      },
+      "expected": { "url": "https://cdn/a.flac", "format": "Flac", "quality": "Lossless" }
+    },
+    {
+      "note": "An empty download dict falls back to the stream group; mp32 outranks ogg (upstream inline golden mod.rs:528-547).",
+      "item": {
+        "download": {},
+        "stream": { "mp32": "https://cdn/b.mp3", "ogg": "https://cdn/b.ogg" }
+      },
+      "expected": { "url": "https://cdn/b.mp3", "format": "Mp3", "quality": "High" }
+    },
+    {
+      "note": "mp33 outranks ogg and maps to Mp3/High (the 320k label follows the upstream quality tag and the mp33 URL naming convention; no bitrate was ever measured for this tier, 2026-11-18 audit gap).",
+      "item": {
+        "download": { "mp33": "https://cdn/c.mp33", "ogg": "https://cdn/c.ogg" }
+      },
+      "expected": { "url": "https://cdn/c.mp33", "format": "Mp3", "quality": "High" }
+    },
+    {
+      "note": "Real-form capture, trackid 1538710 (2026-11-18): the download group wins, so the /download/track/1538710/mp32/ URL is selected, NOT the stream group's format=mp31 URL. Measured bitrates: /mp32/ is 192k VBR, format=mp31 is 96k, so the mp3 key's Low label is approximate while the /mp32/ URL is the better stream. Only the URL shape is pinned here; the from= token values have unknown validity and must not be pinned.",
+      "item": {
+        "download": {
+          "mp3": "https://prod-1.storage.jamendo.com/download/track/1538710/mp32/",
+          "ogg": "https://prod-1.storage.jamendo.com/download/track/1538710/ogg/"
+        },
+        "stream": {
+          "mp3": "https://prod-1.storage.jamendo.com/?trackid=1538710&format=mp31&from=eIEBlhMBd1KN7huGnYV3Yw%3D%3D%7C4jYcsw3QwV9UrybnZtim%2FA%3D%3D",
+          "ogg": "https://prod-1.storage.jamendo.com/?trackid=1538710&format=ogg&from=nH0RQH3KFn479PIpOJ%2BmtQ%3D%3D%7C3UCmpITzsuwgYp53L7xNOA%3D%3D"
+        }
+      },
+      "expected": {
+        "url_prefix": "https://prod-1.storage.jamendo.com/download/track/1538710/mp32/",
+        "not_url_prefix": "https://prod-1.storage.jamendo.com/?trackid=",
+        "format": "Mp3",
+        "quality": "Low"
+      }
+    },
+    {
+      "note": "Upstream trap kept verbatim: a non-empty download dict that contains none of the five known keys returns None and does NOT fall back to the stream group (mod.rs:133-154).",
+      "item": {
+        "download": { "aac": "https://cdn/x.aac" },
+        "stream": { "mp3": "https://cdn/y.mp3" }
+      },
+      "expected": null
+    },
+    {
+      "note": "No groups at all: None.",
+      "item": {},
+      "expected": null
+    }
+  ]
+}

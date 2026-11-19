@@ -1,0 +1,171 @@
+{
+  "_derivation": "Rank-index catalogue vectors. Upstream voicefox source/src/mg/leaderboard.rs ships no tests or fixtures; these are (a) a synthetic contract vector derived from leaderboard.rs:87-122 (collect_boards recursion, desc inheritance, rankId as_str gate, dedup) and (b) a reconstructed trim of the live capture taken anonymously on 2026-11-18 (GET https://app.c.nf.migu.cn/pc/bmw/rank/rank-index/v1.0 with Referer https://app.c.nf.migu.cn/, channel 0146921 and the Nexus-6 UA; HTTP 200, code 000000, 31820 bytes). The live tree is trimmed to the fields the parser reads plus the ignored-but-real imageUrl/header shapes: the two style groups (咪咕特色榜 flat boards, 咪咕尖叫榜 desc-carrying group) keep their real ids, names, imageUrls and ordering, and one song-preview object per real subtree key set is kept to pin the no-rankId skip. The parser ignores imageUrl and data.header, so values there are not pinned behaviour.",
+  "synthetic_desc_inheritance": {
+    "response": {
+      "code": "000000",
+      "data": {
+        "contents": [
+          {
+            "style": "A",
+            "contents": [
+              { "rankId": "1", "rankName": "甲" }
+            ]
+          },
+          {
+            "desc": "每小时更新",
+            "contents": [
+              { "rankId": 2, "rankName": "数字ID应被跳过" },
+              {
+                "rankId": "3",
+                "rankName": "丙",
+                "contents": [
+                  { "txt": "预览歌曲无rankId不入榜" }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "expected": [
+      { "id": "1", "title": "甲", "description": null },
+      { "id": "3", "title": "丙", "description": "每小时更新" }
+    ]
+  },
+  "live_shape_2026_11_18": {
+    "response": {
+      "code": "000000",
+      "info": "操作成功",
+      "data": {
+        "header": {
+          "title": "咪咕排行榜",
+          "dataVersion": "20261118170000",
+          "nextPageNo": 1
+        },
+        "contents": [
+          {
+            "view": "ZJ-RANK-SPECIAL",
+            "style": "咪咕特色榜",
+            "contents": [
+              {
+                "view": "rank-item",
+                "rankId": "83048887",
+                "rankName": "全网热歌榜",
+                "imageUrl": "https://d.musicapp.migu.cn/data/oss/column/00/1w/yi/2981744541a345958d285c75e8fa907c.webp"
+              },
+              {
+                "view": "rank-item",
+                "rankId": "83049014",
+                "rankName": "抖音热歌榜",
+                "imageUrl": "https://d.musicapp.migu.cn/data/oss/column/00/1w/yi/6b3b5e0429954c19ad8d667e6eb9b681.webp"
+              },
+              {
+                "view": "rank-item",
+                "rankId": "83048867",
+                "rankName": "免费热歌榜",
+                "imageUrl": "https://d.musicapp.migu.cn/data/oss/column/00/1w/yi/b3ce6d0d06b743f397d6b6ed860d90d7.webp"
+              },
+              {
+                "view": "rank-item",
+                "rankId": "83049056",
+                "rankName": "收藏人气榜",
+                "imageUrl": "https://d.musicapp.migu.cn/data/oss/column/00/1w/yi/a496915cd68c4007849ac3e76e98df28.webp"
+              },
+              {
+                "view": "rank-item",
+                "rankId": "76557745",
+                "rankName": "会员臻爱榜",
+                "imageUrl": "https://d.musicapp.migu.cn/data/oss/column/00/1w/yh/de330be754524299a84d697fd070bcaf.webp"
+              }
+            ]
+          },
+          {
+            "view": "ZJ-RANK-NORMAL",
+            "style": "咪咕尖叫榜",
+            "desc": "每小时更新",
+            "contents": [
+              {
+                "rankId": "83176390",
+                "rankName": "国风热歌榜",
+                "imageUrl": "https://d.musicapp.migu.cn/data/oss/resource/00/63/au/4cc20fefdbc84e1181e915cfc46bfe39.webp",
+                "contents": [
+                  {
+                    "resType": "2",
+                    "resId": "600930000006406438",
+                    "img": "https://d.musicapp.migu.cn/data/oss/resource/00/63/au/4cc20fefdbc84e1181e915cfc46bfe39.webp",
+                    "txt": "归期雨抄(Live)",
+                    "txt2": "刘宇宁",
+                    "txt3": "音乐缘计划3 第二期",
+                    "txt5": "0",
+                    "vip": "",
+                    "qualities": ["pq", "hq", "isq", "asq", "izq24", "azq24"],
+                    "showTag": [],
+                    "copyright": "1",
+                    "copyrightId": "69084500489",
+                    "songId": "1145638306",
+                    "mvId": "",
+                    "copyrightType": "1"
+                  }
+                ]
+              },
+              {
+                "rankId": "27553319",
+                "rankName": "新歌榜",
+                "imageUrl": "https://d.musicapp.migu.cn/data/oss/resource/00/62/iu/ca81cbd9060449459c147edb58c169e9.webp",
+                "contents": []
+              },
+              {
+                "rankId": "27186466",
+                "rankName": "热歌榜",
+                "imageUrl": "https://d.musicapp.migu.cn/data/oss/resource/00/4t/9y/a64e69c4d8c54f59b580b1a25ae5ceb3.webp",
+                "contents": []
+              },
+              {
+                "rankId": "27553408",
+                "rankName": "原创榜",
+                "imageUrl": "https://d.musicapp.migu.cn/data/oss/resource/00/61/vs/37fef6e0f65540068fe0b0a6a1ecf6aa.webp",
+                "contents": []
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "expected_ids": [
+      "83048887",
+      "83049014",
+      "83048867",
+      "83049056",
+      "76557745",
+      "83176390",
+      "27553319",
+      "27186466",
+      "27553408"
+    ],
+    "expected_titles": [
+      "全网热歌榜",
+      "抖音热歌榜",
+      "免费热歌榜",
+      "收藏人气榜",
+      "会员臻爱榜",
+      "国风热歌榜",
+      "新歌榜",
+      "热歌榜",
+      "原创榜"
+    ],
+    "hourly_updated_ids": ["83176390", "27553319", "27186466", "27553408"]
+  },
+  "error_gate": {
+    "code": "404",
+    "info": "找不到资源"
+  },
+  "error_gate_missing_info": {
+    "code": "500"
+  },
+  "empty_contents": {
+    "code": "000000",
+    "data": {
+      "contents": []
+    }
+  }
+}

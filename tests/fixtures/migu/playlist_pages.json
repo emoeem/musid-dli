@@ -1,0 +1,2647 @@
+{
+  "page_113_1": {
+    "code": "000000",
+    "data": {
+      "name": "示例歌单",
+      "userName": "示例歌主",
+      "imgUrl": "https://img.example/cover-113.jpg",
+      "totalCount": 113,
+      "songList": [
+        {
+          "songId": 37900070001,
+          "songName": "示例歌曲1",
+          "album": "示例专辑",
+          "copyrightId": "6005400000001",
+          "contentId": "6009020000000000001",
+          "duration": 240,
+          "img3": "https://img.example/1.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            },
+            {
+              "name": "客座歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070002,
+          "songName": "示例歌曲2",
+          "album": "示例专辑",
+          "copyrightId": "6005400000002",
+          "contentId": "6009020000000000002",
+          "duration": 240,
+          "img3": "https://img.example/2.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singer": "示例歌手、客座歌手"
+        },
+        {
+          "songId": 37900070003,
+          "songName": "示例歌曲3",
+          "album": "示例专辑",
+          "copyrightId": "6005400000003",
+          "contentId": "6009020000000000003",
+          "duration": "04:00",
+          "img3": "https://img.example/3.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ]
+        },
+        {
+          "songId": 37900070004,
+          "songName": "示例歌曲4",
+          "album": "示例专辑",
+          "copyrightId": "6005400000004",
+          "contentId": "6009020000000000004",
+          "duration": 240,
+          "img3": "https://img.example/4.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070005,
+          "songName": "示例歌曲5",
+          "album": "示例专辑",
+          "copyrightId": "6005400000005",
+          "contentId": "6009020000000000005",
+          "duration": 240,
+          "img3": "https://img.example/5.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070006,
+          "songName": "示例歌曲6",
+          "album": "示例专辑",
+          "copyrightId": "6005400000006",
+          "contentId": "6009020000000000006",
+          "duration": 240,
+          "img3": "https://img.example/6.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070007,
+          "songName": "示例歌曲7",
+          "album": "示例专辑",
+          "copyrightId": "6005400000007",
+          "contentId": "6009020000000000007",
+          "duration": 240,
+          "img3": "https://img.example/7.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070008,
+          "songName": "示例歌曲8",
+          "album": "示例专辑",
+          "copyrightId": "6005400000008",
+          "contentId": "6009020000000000008",
+          "duration": 240,
+          "img3": "https://img.example/8.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070009,
+          "songName": "示例歌曲9",
+          "album": "示例专辑",
+          "copyrightId": "6005400000009",
+          "contentId": "6009020000000000009",
+          "duration": 240,
+          "img3": "https://img.example/9.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070010,
+          "songName": "示例歌曲10",
+          "album": "示例专辑",
+          "copyrightId": "6005400000010",
+          "contentId": "6009020000000000010",
+          "duration": 240,
+          "img3": "https://img.example/10.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070011,
+          "songName": "示例歌曲11",
+          "album": "示例专辑",
+          "copyrightId": "6005400000011",
+          "contentId": "6009020000000000011",
+          "duration": 240,
+          "img3": "https://img.example/11.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070012,
+          "songName": "示例歌曲12",
+          "album": "示例专辑",
+          "copyrightId": "6005400000012",
+          "contentId": "6009020000000000012",
+          "duration": 240,
+          "img3": "https://img.example/12.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070013,
+          "songName": "示例歌曲13",
+          "album": "示例专辑",
+          "copyrightId": "6005400000013",
+          "contentId": "6009020000000000013",
+          "duration": 240,
+          "img3": "https://img.example/13.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070014,
+          "songName": "示例歌曲14",
+          "album": "示例专辑",
+          "copyrightId": "6005400000014",
+          "contentId": "6009020000000000014",
+          "duration": 240,
+          "img3": "https://img.example/14.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070015,
+          "songName": "示例歌曲15",
+          "album": "示例专辑",
+          "copyrightId": "6005400000015",
+          "contentId": "6009020000000000015",
+          "duration": 240,
+          "img3": "https://img.example/15.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070016,
+          "songName": "示例歌曲16",
+          "album": "示例专辑",
+          "copyrightId": "6005400000016",
+          "contentId": "6009020000000000016",
+          "duration": 240,
+          "img3": "https://img.example/16.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070017,
+          "songName": "示例歌曲17",
+          "album": "示例专辑",
+          "copyrightId": "6005400000017",
+          "contentId": "6009020000000000017",
+          "duration": 240,
+          "img3": "https://img.example/17.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070018,
+          "songName": "示例歌曲18",
+          "album": "示例专辑",
+          "copyrightId": "6005400000018",
+          "contentId": "6009020000000000018",
+          "duration": 240,
+          "img3": "https://img.example/18.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070019,
+          "songName": "示例歌曲19",
+          "album": "示例专辑",
+          "copyrightId": "6005400000019",
+          "contentId": "6009020000000000019",
+          "duration": 240,
+          "img3": "https://img.example/19.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070020,
+          "songName": "示例歌曲20",
+          "album": "示例专辑",
+          "copyrightId": "6005400000020",
+          "contentId": "6009020000000000020",
+          "duration": 240,
+          "img3": "https://img.example/20.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070021,
+          "songName": "示例歌曲21",
+          "album": "示例专辑",
+          "copyrightId": "6005400000021",
+          "contentId": "6009020000000000021",
+          "duration": 240,
+          "img3": "https://img.example/21.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070022,
+          "songName": "示例歌曲22",
+          "album": "示例专辑",
+          "copyrightId": "6005400000022",
+          "contentId": "6009020000000000022",
+          "duration": 240,
+          "img3": "https://img.example/22.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070023,
+          "songName": "示例歌曲23",
+          "album": "示例专辑",
+          "copyrightId": "6005400000023",
+          "contentId": "6009020000000000023",
+          "duration": 240,
+          "img3": "https://img.example/23.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070024,
+          "songName": "示例歌曲24",
+          "album": "示例专辑",
+          "copyrightId": "6005400000024",
+          "contentId": "6009020000000000024",
+          "duration": 240,
+          "img3": "https://img.example/24.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070025,
+          "songName": "示例歌曲25",
+          "album": "示例专辑",
+          "copyrightId": "6005400000025",
+          "contentId": "6009020000000000025",
+          "duration": 240,
+          "img3": "https://img.example/25.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070026,
+          "songName": "示例歌曲26",
+          "album": "示例专辑",
+          "copyrightId": "6005400000026",
+          "contentId": "6009020000000000026",
+          "duration": 240,
+          "img3": "https://img.example/26.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070027,
+          "songName": "示例歌曲27",
+          "album": "示例专辑",
+          "copyrightId": "6005400000027",
+          "contentId": "6009020000000000027",
+          "duration": 240,
+          "img3": "https://img.example/27.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070028,
+          "songName": "示例歌曲28",
+          "album": "示例专辑",
+          "copyrightId": "6005400000028",
+          "contentId": "6009020000000000028",
+          "duration": 240,
+          "img3": "https://img.example/28.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070029,
+          "songName": "示例歌曲29",
+          "album": "示例专辑",
+          "copyrightId": "6005400000029",
+          "contentId": "6009020000000000029",
+          "duration": 240,
+          "img3": "https://img.example/29.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070030,
+          "songName": "示例歌曲30",
+          "album": "示例专辑",
+          "copyrightId": "6005400000030",
+          "contentId": "6009020000000000030",
+          "duration": 240,
+          "img3": "https://img.example/30.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070031,
+          "songName": "示例歌曲31",
+          "album": "示例专辑",
+          "copyrightId": "6005400000031",
+          "contentId": "6009020000000000031",
+          "duration": 240,
+          "img3": "https://img.example/31.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070032,
+          "songName": "示例歌曲32",
+          "album": "示例专辑",
+          "copyrightId": "6005400000032",
+          "contentId": "6009020000000000032",
+          "duration": 240,
+          "img3": "https://img.example/32.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070033,
+          "songName": "示例歌曲33",
+          "album": "示例专辑",
+          "copyrightId": "6005400000033",
+          "contentId": "6009020000000000033",
+          "duration": 240,
+          "img3": "https://img.example/33.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070034,
+          "songName": "示例歌曲34",
+          "album": "示例专辑",
+          "copyrightId": "6005400000034",
+          "contentId": "6009020000000000034",
+          "duration": 240,
+          "img3": "https://img.example/34.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070035,
+          "songName": "示例歌曲35",
+          "album": "示例专辑",
+          "copyrightId": "6005400000035",
+          "contentId": "6009020000000000035",
+          "duration": 240,
+          "img3": "https://img.example/35.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070036,
+          "songName": "示例歌曲36",
+          "album": "示例专辑",
+          "copyrightId": "6005400000036",
+          "contentId": "6009020000000000036",
+          "duration": 240,
+          "img3": "https://img.example/36.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070037,
+          "songName": "示例歌曲37",
+          "album": "示例专辑",
+          "copyrightId": "6005400000037",
+          "contentId": "6009020000000000037",
+          "duration": 240,
+          "img3": "https://img.example/37.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070038,
+          "songName": "示例歌曲38",
+          "album": "示例专辑",
+          "copyrightId": "6005400000038",
+          "contentId": "6009020000000000038",
+          "duration": 240,
+          "img3": "https://img.example/38.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070039,
+          "songName": "示例歌曲39",
+          "album": "示例专辑",
+          "copyrightId": "6005400000039",
+          "contentId": "6009020000000000039",
+          "duration": 240,
+          "img3": "https://img.example/39.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070040,
+          "songName": "示例歌曲40",
+          "album": "示例专辑",
+          "copyrightId": "6005400000040",
+          "contentId": "6009020000000000040",
+          "duration": 240,
+          "img3": "https://img.example/40.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070041,
+          "songName": "示例歌曲41",
+          "album": "示例专辑",
+          "copyrightId": "6005400000041",
+          "contentId": "6009020000000000041",
+          "duration": 240,
+          "img3": "https://img.example/41.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070042,
+          "songName": "示例歌曲42",
+          "album": "示例专辑",
+          "copyrightId": "6005400000042",
+          "contentId": "6009020000000000042",
+          "duration": 240,
+          "img3": "https://img.example/42.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070043,
+          "songName": "示例歌曲43",
+          "album": "示例专辑",
+          "copyrightId": "6005400000043",
+          "contentId": "6009020000000000043",
+          "duration": 240,
+          "img3": "https://img.example/43.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070044,
+          "songName": "示例歌曲44",
+          "album": "示例专辑",
+          "copyrightId": "6005400000044",
+          "contentId": "6009020000000000044",
+          "duration": 240,
+          "img3": "https://img.example/44.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070045,
+          "songName": "示例歌曲45",
+          "album": "示例专辑",
+          "copyrightId": "6005400000045",
+          "contentId": "6009020000000000045",
+          "duration": 240,
+          "img3": "https://img.example/45.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070046,
+          "songName": "示例歌曲46",
+          "album": "示例专辑",
+          "copyrightId": "6005400000046",
+          "contentId": "6009020000000000046",
+          "duration": 240,
+          "img3": "https://img.example/46.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070047,
+          "songName": "示例歌曲47",
+          "album": "示例专辑",
+          "copyrightId": "6005400000047",
+          "contentId": "6009020000000000047",
+          "duration": 240,
+          "img3": "https://img.example/47.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070048,
+          "songName": "示例歌曲48",
+          "album": "示例专辑",
+          "copyrightId": "6005400000048",
+          "contentId": "6009020000000000048",
+          "duration": 240,
+          "img3": "https://img.example/48.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070049,
+          "songName": "示例歌曲49",
+          "album": "示例专辑",
+          "copyrightId": "6005400000049",
+          "contentId": "6009020000000000049",
+          "duration": 240,
+          "img3": "https://img.example/49.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070050,
+          "songName": "示例歌曲50",
+          "album": "示例专辑",
+          "copyrightId": "6005400000050",
+          "contentId": "6009020000000000050",
+          "duration": 240,
+          "img3": "https://img.example/50.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "page_113_2": {
+    "code": "000000",
+    "data": {
+      "name": "示例歌单",
+      "totalCount": 113,
+      "songList": [
+        {
+          "songId": 37900070051,
+          "songName": "示例歌曲51",
+          "album": "示例专辑",
+          "copyrightId": "6005400000051",
+          "contentId": "6009020000000000051",
+          "duration": 240,
+          "img3": "https://img.example/51.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070052,
+          "songName": "示例歌曲52",
+          "album": "示例专辑",
+          "copyrightId": "6005400000052",
+          "contentId": "6009020000000000052",
+          "duration": 240,
+          "img3": "https://img.example/52.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070053,
+          "songName": "示例歌曲53",
+          "album": "示例专辑",
+          "copyrightId": "6005400000053",
+          "contentId": "6009020000000000053",
+          "duration": 240,
+          "img3": "https://img.example/53.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070054,
+          "songName": "示例歌曲54",
+          "album": "示例专辑",
+          "copyrightId": "6005400000054",
+          "contentId": "6009020000000000054",
+          "duration": 240,
+          "img3": "https://img.example/54.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070055,
+          "songName": "示例歌曲55",
+          "album": "示例专辑",
+          "copyrightId": "6005400000055",
+          "contentId": "6009020000000000055",
+          "duration": 240,
+          "img3": "https://img.example/55.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070056,
+          "songName": "示例歌曲56",
+          "album": "示例专辑",
+          "copyrightId": "6005400000056",
+          "contentId": "6009020000000000056",
+          "duration": 240,
+          "img3": "https://img.example/56.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070057,
+          "songName": "示例歌曲57",
+          "album": "示例专辑",
+          "copyrightId": "6005400000057",
+          "contentId": "6009020000000000057",
+          "duration": 240,
+          "img3": "https://img.example/57.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070058,
+          "songName": "示例歌曲58",
+          "album": "示例专辑",
+          "copyrightId": "6005400000058",
+          "contentId": "6009020000000000058",
+          "duration": 240,
+          "img3": "https://img.example/58.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070059,
+          "songName": "示例歌曲59",
+          "album": "示例专辑",
+          "copyrightId": "6005400000059",
+          "contentId": "6009020000000000059",
+          "duration": 240,
+          "img3": "https://img.example/59.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070060,
+          "songName": "示例歌曲60",
+          "album": "示例专辑",
+          "copyrightId": "6005400000060",
+          "contentId": "6009020000000000060",
+          "duration": 240,
+          "img3": "https://img.example/60.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070061,
+          "songName": "示例歌曲61",
+          "album": "示例专辑",
+          "copyrightId": "6005400000061",
+          "contentId": "6009020000000000061",
+          "duration": 240,
+          "img3": "https://img.example/61.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070062,
+          "songName": "示例歌曲62",
+          "album": "示例专辑",
+          "copyrightId": "6005400000062",
+          "contentId": "6009020000000000062",
+          "duration": 240,
+          "img3": "https://img.example/62.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070063,
+          "songName": "示例歌曲63",
+          "album": "示例专辑",
+          "copyrightId": "6005400000063",
+          "contentId": "6009020000000000063",
+          "duration": 240,
+          "img3": "https://img.example/63.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070064,
+          "songName": "示例歌曲64",
+          "album": "示例专辑",
+          "copyrightId": "6005400000064",
+          "contentId": "6009020000000000064",
+          "duration": 240,
+          "img3": "https://img.example/64.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070065,
+          "songName": "示例歌曲65",
+          "album": "示例专辑",
+          "copyrightId": "6005400000065",
+          "contentId": "6009020000000000065",
+          "duration": 240,
+          "img3": "https://img.example/65.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070066,
+          "songName": "示例歌曲66",
+          "album": "示例专辑",
+          "copyrightId": "6005400000066",
+          "contentId": "6009020000000000066",
+          "duration": 240,
+          "img3": "https://img.example/66.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070067,
+          "songName": "示例歌曲67",
+          "album": "示例专辑",
+          "copyrightId": "6005400000067",
+          "contentId": "6009020000000000067",
+          "duration": 240,
+          "img3": "https://img.example/67.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070068,
+          "songName": "示例歌曲68",
+          "album": "示例专辑",
+          "copyrightId": "6005400000068",
+          "contentId": "6009020000000000068",
+          "duration": 240,
+          "img3": "https://img.example/68.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070069,
+          "songName": "示例歌曲69",
+          "album": "示例专辑",
+          "copyrightId": "6005400000069",
+          "contentId": "6009020000000000069",
+          "duration": 240,
+          "img3": "https://img.example/69.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070070,
+          "songName": "示例歌曲70",
+          "album": "示例专辑",
+          "copyrightId": "6005400000070",
+          "contentId": "6009020000000000070",
+          "duration": 240,
+          "img3": "https://img.example/70.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070071,
+          "songName": "示例歌曲71",
+          "album": "示例专辑",
+          "copyrightId": "6005400000071",
+          "contentId": "6009020000000000071",
+          "duration": 240,
+          "img3": "https://img.example/71.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070072,
+          "songName": "示例歌曲72",
+          "album": "示例专辑",
+          "copyrightId": "6005400000072",
+          "contentId": "6009020000000000072",
+          "duration": 240,
+          "img3": "https://img.example/72.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070073,
+          "songName": "示例歌曲73",
+          "album": "示例专辑",
+          "copyrightId": "6005400000073",
+          "contentId": "6009020000000000073",
+          "duration": 240,
+          "img3": "https://img.example/73.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070074,
+          "songName": "示例歌曲74",
+          "album": "示例专辑",
+          "copyrightId": "6005400000074",
+          "contentId": "6009020000000000074",
+          "duration": 240,
+          "img3": "https://img.example/74.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070075,
+          "songName": "示例歌曲75",
+          "album": "示例专辑",
+          "copyrightId": "6005400000075",
+          "contentId": "6009020000000000075",
+          "duration": 240,
+          "img3": "https://img.example/75.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070076,
+          "songName": "示例歌曲76",
+          "album": "示例专辑",
+          "copyrightId": "6005400000076",
+          "contentId": "6009020000000000076",
+          "duration": 240,
+          "img3": "https://img.example/76.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070077,
+          "songName": "示例歌曲77",
+          "album": "示例专辑",
+          "copyrightId": "6005400000077",
+          "contentId": "6009020000000000077",
+          "duration": 240,
+          "img3": "https://img.example/77.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070078,
+          "songName": "示例歌曲78",
+          "album": "示例专辑",
+          "copyrightId": "6005400000078",
+          "contentId": "6009020000000000078",
+          "duration": 240,
+          "img3": "https://img.example/78.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070079,
+          "songName": "示例歌曲79",
+          "album": "示例专辑",
+          "copyrightId": "6005400000079",
+          "contentId": "6009020000000000079",
+          "duration": 240,
+          "img3": "https://img.example/79.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070080,
+          "songName": "示例歌曲80",
+          "album": "示例专辑",
+          "copyrightId": "6005400000080",
+          "contentId": "6009020000000000080",
+          "duration": 240,
+          "img3": "https://img.example/80.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070081,
+          "songName": "示例歌曲81",
+          "album": "示例专辑",
+          "copyrightId": "6005400000081",
+          "contentId": "6009020000000000081",
+          "duration": 240,
+          "img3": "https://img.example/81.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070082,
+          "songName": "示例歌曲82",
+          "album": "示例专辑",
+          "copyrightId": "6005400000082",
+          "contentId": "6009020000000000082",
+          "duration": 240,
+          "img3": "https://img.example/82.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070083,
+          "songName": "示例歌曲83",
+          "album": "示例专辑",
+          "copyrightId": "6005400000083",
+          "contentId": "6009020000000000083",
+          "duration": 240,
+          "img3": "https://img.example/83.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070084,
+          "songName": "示例歌曲84",
+          "album": "示例专辑",
+          "copyrightId": "6005400000084",
+          "contentId": "6009020000000000084",
+          "duration": 240,
+          "img3": "https://img.example/84.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070085,
+          "songName": "示例歌曲85",
+          "album": "示例专辑",
+          "copyrightId": "6005400000085",
+          "contentId": "6009020000000000085",
+          "duration": 240,
+          "img3": "https://img.example/85.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070086,
+          "songName": "示例歌曲86",
+          "album": "示例专辑",
+          "copyrightId": "6005400000086",
+          "contentId": "6009020000000000086",
+          "duration": 240,
+          "img3": "https://img.example/86.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070087,
+          "songName": "示例歌曲87",
+          "album": "示例专辑",
+          "copyrightId": "6005400000087",
+          "contentId": "6009020000000000087",
+          "duration": 240,
+          "img3": "https://img.example/87.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070088,
+          "songName": "示例歌曲88",
+          "album": "示例专辑",
+          "copyrightId": "6005400000088",
+          "contentId": "6009020000000000088",
+          "duration": 240,
+          "img3": "https://img.example/88.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070089,
+          "songName": "示例歌曲89",
+          "album": "示例专辑",
+          "copyrightId": "6005400000089",
+          "contentId": "6009020000000000089",
+          "duration": 240,
+          "img3": "https://img.example/89.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070090,
+          "songName": "示例歌曲90",
+          "album": "示例专辑",
+          "copyrightId": "6005400000090",
+          "contentId": "6009020000000000090",
+          "duration": 240,
+          "img3": "https://img.example/90.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070091,
+          "songName": "示例歌曲91",
+          "album": "示例专辑",
+          "copyrightId": "6005400000091",
+          "contentId": "6009020000000000091",
+          "duration": 240,
+          "img3": "https://img.example/91.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070092,
+          "songName": "示例歌曲92",
+          "album": "示例专辑",
+          "copyrightId": "6005400000092",
+          "contentId": "6009020000000000092",
+          "duration": 240,
+          "img3": "https://img.example/92.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070093,
+          "songName": "示例歌曲93",
+          "album": "示例专辑",
+          "copyrightId": "6005400000093",
+          "contentId": "6009020000000000093",
+          "duration": 240,
+          "img3": "https://img.example/93.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070094,
+          "songName": "示例歌曲94",
+          "album": "示例专辑",
+          "copyrightId": "6005400000094",
+          "contentId": "6009020000000000094",
+          "duration": 240,
+          "img3": "https://img.example/94.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070095,
+          "songName": "示例歌曲95",
+          "album": "示例专辑",
+          "copyrightId": "6005400000095",
+          "contentId": "6009020000000000095",
+          "duration": 240,
+          "img3": "https://img.example/95.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070096,
+          "songName": "示例歌曲96",
+          "album": "示例专辑",
+          "copyrightId": "6005400000096",
+          "contentId": "6009020000000000096",
+          "duration": 240,
+          "img3": "https://img.example/96.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070097,
+          "songName": "示例歌曲97",
+          "album": "示例专辑",
+          "copyrightId": "6005400000097",
+          "contentId": "6009020000000000097",
+          "duration": 240,
+          "img3": "https://img.example/97.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070098,
+          "songName": "示例歌曲98",
+          "album": "示例专辑",
+          "copyrightId": "6005400000098",
+          "contentId": "6009020000000000098",
+          "duration": 240,
+          "img3": "https://img.example/98.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070099,
+          "songName": "示例歌曲99",
+          "album": "示例专辑",
+          "copyrightId": "6005400000099",
+          "contentId": "6009020000000000099",
+          "duration": 240,
+          "img3": "https://img.example/99.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070100,
+          "songName": "示例歌曲100",
+          "album": "示例专辑",
+          "copyrightId": "6005400000100",
+          "contentId": "6009020000000000100",
+          "duration": 240,
+          "img3": "https://img.example/100.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "page_113_3": {
+    "code": "000000",
+    "data": {
+      "name": "示例歌单",
+      "totalCount": 113,
+      "songList": [
+        {
+          "songId": 37900070101,
+          "songName": "示例歌曲101",
+          "album": "示例专辑",
+          "copyrightId": "6005400000101",
+          "contentId": "6009020000000000101",
+          "duration": 240,
+          "img3": "https://img.example/101.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070102,
+          "songName": "示例歌曲102",
+          "album": "示例专辑",
+          "copyrightId": "6005400000102",
+          "contentId": "6009020000000000102",
+          "duration": 240,
+          "img3": "https://img.example/102.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070103,
+          "songName": "示例歌曲103",
+          "album": "示例专辑",
+          "copyrightId": "6005400000103",
+          "contentId": "6009020000000000103",
+          "duration": 240,
+          "img3": "https://img.example/103.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070104,
+          "songName": "示例歌曲104",
+          "album": "示例专辑",
+          "copyrightId": "6005400000104",
+          "contentId": "6009020000000000104",
+          "duration": 240,
+          "img3": "https://img.example/104.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070105,
+          "songName": "示例歌曲105",
+          "album": "示例专辑",
+          "copyrightId": "6005400000105",
+          "contentId": "6009020000000000105",
+          "duration": 240,
+          "img3": "https://img.example/105.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070106,
+          "songName": "示例歌曲106",
+          "album": "示例专辑",
+          "copyrightId": "6005400000106",
+          "contentId": "6009020000000000106",
+          "duration": 240,
+          "img3": "https://img.example/106.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070107,
+          "songName": "示例歌曲107",
+          "album": "示例专辑",
+          "copyrightId": "6005400000107",
+          "contentId": "6009020000000000107",
+          "duration": 240,
+          "img3": "https://img.example/107.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070108,
+          "songName": "示例歌曲108",
+          "album": "示例专辑",
+          "copyrightId": "6005400000108",
+          "contentId": "6009020000000000108",
+          "duration": 240,
+          "img3": "https://img.example/108.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070109,
+          "songName": "示例歌曲109",
+          "album": "示例专辑",
+          "copyrightId": "6005400000109",
+          "contentId": "6009020000000000109",
+          "duration": 240,
+          "img3": "https://img.example/109.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070110,
+          "songName": "示例歌曲110",
+          "album": "示例专辑",
+          "copyrightId": "6005400000110",
+          "contentId": "6009020000000000110",
+          "duration": 240,
+          "img3": "https://img.example/110.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070111,
+          "songName": "示例歌曲111",
+          "album": "示例专辑",
+          "copyrightId": "6005400000111",
+          "contentId": "6009020000000000111",
+          "duration": 240,
+          "img3": "https://img.example/111.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070112,
+          "songName": "示例歌曲112",
+          "album": "示例专辑",
+          "copyrightId": "6005400000112",
+          "contentId": "6009020000000000112",
+          "duration": 240,
+          "img3": "https://img.example/112.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        },
+        {
+          "songId": 37900070113,
+          "songName": "示例歌曲113",
+          "album": "示例专辑",
+          "copyrightId": "6005400000113",
+          "contentId": "6009020000000000113",
+          "duration": 240,
+          "img3": "https://img.example/113.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "string_total": {
+    "code": "000000",
+    "data": {
+      "name": "示例歌单",
+      "totalCount": "113",
+      "songList": [
+        {
+          "songId": 37900070001,
+          "songName": "示例歌曲1",
+          "album": "示例专辑",
+          "copyrightId": "6005400000001",
+          "contentId": "6009020000000000001",
+          "duration": 240,
+          "img3": "https://img.example/1.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            },
+            {
+              "name": "客座歌手"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "empty_songlist": {
+    "code": "000000",
+    "data": {
+      "name": "空歌单",
+      "totalCount": 0,
+      "songList": []
+    }
+  },
+  "missing_songlist": {
+    "code": "000000",
+    "data": {
+      "name": "缺列表歌单",
+      "totalCount": 5
+    }
+  },
+  "title_fallback_title": {
+    "code": "000000",
+    "data": {
+      "name": "",
+      "title": "备用标题",
+      "playlistName": "歌单名标题",
+      "songList": [
+        {
+          "songId": 37900070001,
+          "songName": "示例歌曲1",
+          "album": "示例专辑",
+          "copyrightId": "6005400000001",
+          "contentId": "6009020000000000001",
+          "duration": 240,
+          "img3": "https://img.example/1.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            },
+            {
+              "name": "客座歌手"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "title_fallback_playlist_name": {
+    "code": "000000",
+    "data": {
+      "title": "",
+      "playlistName": "歌单名标题",
+      "ownerName": "备用歌主",
+      "picUrl": "https://img.example/cover-fb.jpg",
+      "songList": [
+        {
+          "songId": 37900070001,
+          "songName": "示例歌曲1",
+          "album": "示例专辑",
+          "copyrightId": "6005400000001",
+          "contentId": "6009020000000000001",
+          "duration": 240,
+          "img3": "https://img.example/1.jpg",
+          "audioFormats": [
+            {
+              "formatType": "PQ"
+            },
+            {
+              "formatType": "SQ"
+            }
+          ],
+          "singerList": [
+            {
+              "name": "示例歌手"
+            },
+            {
+              "name": "客座歌手"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "creator_blank_first_hit": {
+    "code": "000000",
+    "data": {
+      "name": "链式怪癖歌单",
+      "userName": "   ",
+      "ownerName": "被空串挡住的歌主",
+      "nickName": "第三链歌主",
+      "picUrl": "",
+      "cover": "https://img.example/cover-blank.jpg",
+      "songList": []
+    }
+  },
+  "code_error": {
+    "code": "40004",
+    "data": {}
+  }
+}

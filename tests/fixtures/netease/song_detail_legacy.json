@@ -1,0 +1,35 @@
+{
+  "code": 200,
+  "songs": [
+    {
+      "id": 789,
+      "name": "老接口",
+      "artists": [
+        {
+          "id": 6452,
+          "name": "周杰伦"
+        },
+        {
+          "id": 2,
+          "name": "费玉清"
+        }
+      ],
+      "album": {
+        "id": 42,
+        "name": "老专辑",
+        "picUrl": "https://p"
+      },
+      "duration": 258000,
+      "h": {
+        "size": 8123456
+      },
+      "sq": {
+        "size": 24567890
+      },
+      "privilege": {
+        "maxBrLevel": "hires",
+        "plLevel": "lossless"
+      }
+    }
+  ]
+}

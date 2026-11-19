@@ -1,0 +1,82 @@
+{
+ "state": true,
+ "errno": 22000,
+ "errmsg": "",
+ "elapsed_time": "0.0379",
+ "ip": "10.16.15.13",
+ "data": [
+  {
+   "artist": [
+    {
+     "artistCode": "A10273267",
+     "gender": "男",
+     "name": "周深",
+     "artistType": 38,
+     "artistTypeName": "歌手",
+     "pic": "https://img01.dmhmusic.com/0206/M00/73/60/ChR461tNCq6ATOwZAAG214sWjCA734.jpg",
+     "region": "内地"
+    }
+   ],
+   "cpId": 23,
+   "pic": "https://img01.dmhmusic.com/0513/M00/99/81/ChAKFGnMhpKAdxeRAA8QjCMTD1I496.jpg",
+   "title": "等晴天",
+   "duration": 268,
+   "assetId": "T10065400429",
+   "genre": "流行",
+   "albumTitle": "等晴天",
+   "id": "T10065400429",
+   "lang": "中文",
+   "afReplayGain": -3.900002,
+   "albumAssetCode": "P10004348672",
+   "releaseDate": "2026-04-15T00:00:00.000Z",
+   "isrc": "CNZ852500278",
+   "sort": 1,
+   "meanVolume": -11.7,
+   "maxVolume": -0.1,
+   "eq_rate_128": {
+    "path": "/0513/M00/47/95/ChAKB2nLkxqAbOFDAED5u8Z3RFE673.mp3",
+    "size": 4158,
+    "rate": 128,
+    "hashcode": "3b72d50585c39863822b253311e468a2458ce7cd",
+    "format": 1,
+    "filemd5": "87eb343874ece710b4b62eb737f085bf"
+   },
+   "lyric": "https://static-qianqian.taihe.com/0513/M00/49/E2/ChAKB2ne9niABNBLAAAOFkS3olY749.lrc",
+   "pay_model": 3,
+   "TSID": "T10065400429",
+   "allRate": [
+    "3000",
+    "320",
+    "64",
+    "128"
+   ],
+   "pushTime": "2026-04-15T00:00:00+08:00",
+   "downTime": "2037-01-01T00:00:00+08:00",
+   "bizList": [
+    "sdk_cpm"
+   ],
+   "rateFileInfo": {
+    "3000": {
+     "size": 57635329,
+     "format": "flac"
+    },
+    "320": {
+     "size": 10759932,
+     "format": "mp3"
+    },
+    "64": {
+     "size": 2151918,
+     "format": "aac"
+    },
+    "128": {
+     "size": 4304124,
+     "format": "mp3"
+    }
+   },
+   "backing": [],
+   "isFavorite": 0,
+   "isVip": 1,
+   "isPaid": 0
+  }
+ ]
+}

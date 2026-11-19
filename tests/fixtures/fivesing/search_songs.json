@@ -1,0 +1,62 @@
+{
+ "list": [
+  {
+   "createTime": "2016-12-10 19:36:00",
+   "originSinger": "周杰伦",
+   "songName": "<em class=\"keyword\">晴天</em>",
+   "status": 1,
+   "collectCnt": 17191,
+   "style": "流行",
+   "downloadCnt": 23692,
+   "playCnt": 1604367,
+   "singer": "Vk",
+   "postProduction": "",
+   "popularityCnt": 102103036,
+   "songWriter": "",
+   "composer": "",
+   "songId": 15622111,
+   "optComposer": "",
+   "ext": "mp3",
+   "songSize": 10462607,
+   "nickName": "NULL",
+   "singerId": 51628123,
+   "type": 2,
+   "typeName": "翻唱",
+   "songurl": "http://5sing.kugou.com/fc/15622111.html",
+   "downloadurl": "http://5sing.kugou.com/fc/down/15622111",
+   "typeEname": "fc"
+  },
+  {
+   "createTime": "2016-04-10 19:17:00",
+   "originSinger": "周杰伦",
+   "songName": "<em class=\"keyword\">晴天</em>",
+   "status": 1,
+   "collectCnt": 2701,
+   "style": "流行",
+   "downloadCnt": 3576,
+   "playCnt": 270843,
+   "singer": "盒纸",
+   "postProduction": "",
+   "popularityCnt": 15601848,
+   "songWriter": "",
+   "composer": "",
+   "songId": 15089953,
+   "optComposer": "",
+   "ext": "mp3",
+   "songSize": 9339342,
+   "nickName": "NULL",
+   "singerId": 9676905,
+   "type": 2,
+   "typeName": "翻唱",
+   "songurl": "http://5sing.kugou.com/fc/15089953.html",
+   "downloadurl": "http://5sing.kugou.com/fc/down/15089953",
+   "typeEname": "fc"
+  }
+ ],
+ "type": 0,
+ "pageInfo": {
+  "cur": 1,
+  "totalCount": 8364,
+  "totalPages": 837
+ }
+}

@@ -1,0 +1,10 @@
+{
+  "code": 0,
+  "data": {
+    "dash": {
+      "audio": [{ "bandwidth": 64000, "baseUrl": "https://cdn/64" }],
+      "dolby": { "audio": { "bandwidth": 256000, "baseUrl": "https://cdn/dolby" } },
+      "flac": { "audio": [{ "bandwidth": 320000, "base_url": "https://cdn/flac" }] }
+    }
+  }
+}

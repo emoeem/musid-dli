@@ -8,7 +8,9 @@
 //!
 //! Kugou refuses stream URLs to anonymous sessions (verified server-side
 //! behaviour): the stream module reports SKIPPED with that reason instead of
-//! failing. QR login flows are pending; `auth` reports the session status.
+//! failing. `auth` creates the QR login (terminal render plus a `kugou_qr.png`
+//! fallback) and polls every 3s for up to 180s; scan the H5 URL with the
+//! Kugou app while it runs.
 
 #[path = "../src/qr_terminal.rs"]
 mod qr_terminal;

@@ -1,0 +1,23 @@
+{
+  "TOTAL": "12",
+  "SHOW": "10",
+  "abslist": [
+    {
+      "MUSICRID": "MUSIC_228908",
+      "SONGNAME": "晴天",
+      "ARTIST": "周杰伦&费玉清",
+      "ALBUM": "叶惠美",
+      "ALBUMID": "104004",
+      "DURATION": "270",
+      "N_MINFO": "level:bcms,bitrate:22000,format:mgg,size:22.11Mb;level:zply,bitrate:20900,format:mflac,size:178.32Mb;level:high,bitrate:320,format:mp3,size:10.2M;level:standard,bitrate:128,format:mp3,size:4.1M;level:super,bitrate:2000,format:flac,size:30M"
+    },
+    {
+      "MUSICRID": "MUSIC_6550104",
+      "SONGNAME": "  周边曲目  ",
+      "ARTIST": "Alice& &Bob",
+      "DURATION": 232
+    },
+    { "MUSICRID": "", "SONGNAME": "缺rid" },
+    { "MUSICRID": "MUSIC_777", "SONGNAME": "" }
+  ]
+}

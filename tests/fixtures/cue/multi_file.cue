@@ -1,0 +1,16 @@
+TITLE "Two Sides"
+PERFORMER "Various"
+FILE "side-a.wav" WAVE
+  TRACK 01 AUDIO
+    TITLE "A One"
+    INDEX 01 00:00:00
+  TRACK 02 AUDIO
+    TITLE "A Two"
+    INDEX 01 02:30:00
+FILE "side-b.wav" WAVE
+  TRACK 03 AUDIO
+    TITLE "B One"
+    INDEX 01 00:00:10
+  TRACK 04 AUDIO
+    TITLE "B Two"
+    INDEX 01 01:00:37

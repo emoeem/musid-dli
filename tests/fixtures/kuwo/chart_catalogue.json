@@ -1,0 +1,64 @@
+{
+  "url_golden": "http://qukudata.kuwo.cn/q.k?op=query&cont=tree&node=2&pn=0&rn=1000&fmt=json&level=2",
+  "catalogue": {
+    "child": [
+      {
+        "id": "534804",
+        "name": "青少年专属飙升榜",
+        "disname": "飙升榜",
+        "info": "更新于2024-08-15",
+        "source": "1",
+        "sourceid": "340",
+        "pic": "http://img4.kuwo.cn/star/upload/bang/a.jpg",
+        "like": "0",
+        "listen": "0",
+        "tips": "",
+        "isnew": "0",
+        "newcnt": "0",
+        "attribute": "2",
+        "child": []
+      },
+      {
+        "id": "534805",
+        "name": "由你音乐榜",
+        "disname": "由你",
+        "info": "外站榜单",
+        "source": "27",
+        "sourceid": "https://y.tencentmusic.com/rank/example",
+        "child": []
+      },
+      {
+        "id": "534806",
+        "name": "   ",
+        "source": "1",
+        "sourceid": "93",
+        "child": []
+      },
+      {
+        "id": "534807",
+        "name": "酷我热榜",
+        "source": "1",
+        "sourceid": 93,
+        "info": "",
+        "child": []
+      },
+      {
+        "id": "534808",
+        "name": "无sourceid榜",
+        "source": "1",
+        "child": []
+      }
+    ]
+  },
+  "no_child": {},
+  "all_external": {
+    "child": [
+      {
+        "id": "534809",
+        "name": "外链榜",
+        "source": "27",
+        "sourceid": "https://y.tencentmusic.com/rank/only"
+      }
+    ]
+  }
+}

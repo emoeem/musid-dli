@@ -1,0 +1,32 @@
+{
+  "source": "voicefox/source/src/kw/parse.rs:23-32 link-target regexes. The first two positive cases and all rejected cases are the parse.rs:104-125 inline test vectors verbatim (audit 2026-11). Only two link shapes exist upstream; there is no scheme/host validation and the capture is unanchored, so a play_detail/ fragment anywhere in the string matches (documented audit gap, inherited).",
+  "positive": [
+    {
+      "link": "https://www.kuwo.cn/play_detail/123456",
+      "kind": "song",
+      "id": "123456"
+    },
+    {
+      "link": "http://www.kuwo.cn/playlist_detail/1082685103",
+      "kind": "playlist",
+      "id": "1082685103"
+    },
+    {
+      "link": "  https://www.kuwo.cn/playlist_detail/42  ",
+      "kind": "playlist",
+      "id": "42",
+      "note": "the link is trimmed before matching (parse.rs:24)"
+    },
+    {
+      "link": "https://www.kuwo.cn/?x=play_detail/1",
+      "kind": "song",
+      "id": "1",
+      "note": "unanchored capture: no scheme/host validation upstream, a play_detail/ fragment inside a query string also matches"
+    }
+  ],
+  "rejected": [
+    "https://www.kuwo.cn/",
+    "https://www.kuwo.cn/singer_detail/1",
+    "周杰伦"
+  ]
+}
