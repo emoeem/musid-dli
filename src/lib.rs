@@ -67,8 +67,8 @@ pub mod transport;
     feature = "download",
 ))]
 pub use transport::{
-    ClientProfile, Http, HttpMethod, MockTransport, Transport, TransportError, TransportRequest,
-    TransportResponse,
+    ClientProfile, Http, HttpMethod, MockTransport, ReqwestTransport, RetryPolicy, Transport,
+    TransportError, TransportRequest, TransportResponse,
 };
 
 pub use registry::ProviderDescriptor;
