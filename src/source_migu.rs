@@ -127,7 +127,7 @@ impl MiguProvider {
     /// The production constructor is [`MiguProvider::new`]. Test-only so
     /// non-test builds see no dead constructor.
     #[cfg(test)]
-    pub(crate) fn with_transports(http: Http, listen_http: Http) -> Self {
+    pub fn with_transports(http: Http, listen_http: Http) -> Self {
         Self { http, listen_http }
     }
     /// Register all currently implemented Migu capabilities in one step.
@@ -967,23 +967,17 @@ fn mg_link_target(link: &str) -> Result<MgLink> {
     if let Some(content_id) = mg_link_capture(r"music\.migu\.cn/v3/music/song/(\d+)", trimmed) {
         return Ok(MgLink::Song { content_id });
     }
-    for pattern in [
-        r"playlistId=(\d+)",
-        r"musicListId=(\d+)",
-        r"(?:playlist|songlist)/(\d+)",
-    ] {
-        if let Some(id) = mg_link_capture(pattern, trimmed) {
-            return Ok(MgLink::Playlist { id });
-        }
+    if let Some(id) = mg_link_capture(r"playlistId=(\d+)", trimmed)
+        .or_else(|| mg_link_capture(r"musicListId=(\d+)", trimmed))
+        .or_else(|| mg_link_capture(r"(?:playlist|songlist)/(\d+)", trimmed))
+    {
+        return Ok(MgLink::Playlist { id });
     }
-    for pattern in [
-        r"music\.migu\.cn/(?:v3|v5)/music/album/(\d+)",
-        r"albumId=(\d+)",
-        r"resourceId=(\d+)",
-    ] {
-        if let Some(id) = mg_link_capture(pattern, trimmed) {
-            return Ok(MgLink::Album { id });
-        }
+    if let Some(id) = mg_link_capture(r"music\.migu\.cn/(?:v3|v5)/music/album/(\d+)", trimmed)
+        .or_else(|| mg_link_capture(r"albumId=(\d+)", trimmed))
+        .or_else(|| mg_link_capture(r"resourceId=(\d+)", trimmed))
+    {
+        return Ok(MgLink::Album { id });
     }
     // Bare numeric ids ride along: shares commonly carry just the number
     // (mg/parse.rs:48-54), and they always route to Playlist — a bare song
@@ -1001,9 +995,21 @@ fn mg_link_target(link: &str) -> Result<MgLink> {
 
 /// The per-call regex compile mirrors upstream `capture` (mg/parse.rs:58-64);
 /// captures are unanchored (first match anywhere).
-fn mg_link_capture(pattern: &str, value: &str) -> Option<String> {
-    Regex::new(pattern)
-        .ok()?
+fn mg_link_capture(pattern: &'static str, value: &str) -> Option<String> {
+    static CACHE: std::sync::OnceLock<
+        std::sync::Mutex<std::collections::HashMap<&'static str, Regex>>,
+    > = std::sync::OnceLock::new();
+    let cache = CACHE.get_or_init(|| std::sync::Mutex::new(std::collections::HashMap::new()));
+    let mut guard = cache.lock().unwrap_or_else(|e| e.into_inner());
+    let regex = match guard.get(pattern) {
+        Some(regex) => regex,
+        None => {
+            let compiled = Regex::new(pattern).ok()?;
+            guard.insert(pattern, compiled);
+            guard.get(pattern).expect("just inserted")
+        }
+    };
+    regex
         .captures(value)
         .and_then(|captures| captures.get(1))
         .map(|capture| capture.as_str().to_owned())

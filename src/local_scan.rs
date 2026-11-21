@@ -1206,6 +1206,24 @@ fn parse_guarded<T>(
     })
 }
 
+/// Flips `discovery_done` when dropped — including during a panic unwind of
+/// the discovery loop. Without this, a user callback panic (`on_event` /
+/// progress) unwinds the `thread::scope` closure before the explicit
+/// discovery-done block runs, parked workers wait on a discovery that never
+/// completes, and the scope join never returns: the caller hangs forever
+/// instead of seeing the panic. With it, workers wake, drain, exit, the join
+/// completes, and the panic propagates to the caller.
+struct DiscoveryDoneGuard<'a>(&'a (Mutex<QueueState>, Condvar));
+impl Drop for DiscoveryDoneGuard<'_> {
+    fn drop(&mut self) {
+        let cvar = &self.0.1;
+        let mut state = lock_queue(self.0);
+        state.discovery_done = true;
+        drop(state);
+        cvar.notify_all();
+    }
+}
+
 fn scan_parallel(
     root: &Path,
     options: &ScanOptions,
@@ -1235,6 +1253,7 @@ fn scan_parallel(
         // exits, recv() really can return Err, so the channel-closed branches
         // below are a genuine last-resort signal instead of dead code.
         drop(sender);
+        let _discovery_done = DiscoveryDoneGuard(&queue);
         // Discovery stays on the calling thread and lazy: reuse decisions are
         // immediate, parse jobs are queued with paths only.
         for entry in files.by_ref() {
@@ -1284,13 +1303,7 @@ fn scan_parallel(
                 Err(error) => driver.ledger_walk_error(&error, root),
             }
         }
-        {
-            let cvar = &queue.1;
-            let mut state = lock_queue(&queue);
-            state.discovery_done = true;
-            drop(state);
-            cvar.notify_all();
-        }
+        // discovery_done is set by the guard's Drop (normal end or unwind).
         while in_flight > 0 && !channel_closed {
             match receiver.recv() {
                 Ok(outcome) => {
@@ -2570,6 +2583,82 @@ FILE \"scan album.wav\" WAVE\r\n\
             run_scan(&fx.root, &unordered, &ScanState::default());
         assert_eq!(unordered_summary.stats, serial_summary.stats);
         assert_eq!(sorted(unordered_entries), sorted(serial_entries));
+    }
+
+    /// P1 fix round: a user-callback panic (`on_event`) must PROPAGATE out
+    /// of `scan_stream` instead of hanging the `thread::scope` join forever.
+    /// The DiscoveryDoneGuard wakes parked workers on unwind; this test
+    /// completes (a pre-fix tree would deadlock here) and the panic carries.
+    #[test]
+    fn a_user_callback_panic_propagates_instead_of_hanging_the_join() {
+        let fx = ScanFixture::new("panic-propagation");
+        for index in 0..8 {
+            fx.wav(&format!("song{index}.wav"), 100);
+        }
+        let options = ScanOptions {
+            max_parse_workers: 4,
+            ..ScanOptions::default()
+        };
+        let mut control = ScanControl::default();
+        let seen = std::cell::Cell::new(0usize);
+        let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            scan_stream(
+                &fx.root,
+                &options,
+                &ScanState::default(),
+                &mut |event| {
+                    if let ScanEvent::Entry(_) = event
+                        && seen.replace(seen.get() + 1) == 0
+                    {
+                        panic!("callback exploded");
+                    }
+                },
+                &mut control,
+            )
+        }));
+        assert!(
+            result.is_err(),
+            "the callback panic must propagate out of scan_stream"
+        );
+    }
+
+    /// P2-T1: a cancellation issued from inside a parallel scan (workers > 1)
+    /// stops the pipeline cleanly: the summary reports cancelled, the entry
+    /// set is a strict partial product, and no worker hangs.
+    #[test]
+    fn parallel_mid_scan_cancellation_stops_the_pipeline() {
+        let fx = ScanFixture::new("parallel-cancel");
+        for index in 0..40 {
+            fx.wav(&format!("song{index}.wav"), 100);
+        }
+        let options = ScanOptions {
+            max_parse_workers: 4,
+            ..ScanOptions::default()
+        };
+        let cancel = CancelToken::new();
+        // Cancel on the FIRST progress tick: progress fires during discovery,
+        // so the discovery loop stops between files (cancelling from an entry
+        // callback would race the pipeline — 40 small files parse faster than
+        // the first outcome delivers).
+        let mut control = ScanControl {
+            progress: Some(&|_progress| cancel.cancel()),
+            cancel: Some(&cancel),
+        };
+        let summary = scan_stream(
+            &fx.root,
+            &options,
+            &ScanState::default(),
+            &mut |event| {
+                let _ = event;
+            },
+            &mut control,
+        );
+        assert!(summary.cancelled, "mid-scan cancellation must be reported");
+        assert!(
+            summary.stats.discovered < 40,
+            "cancellation stops discovery early: {} of 40",
+            summary.stats.discovered
+        );
     }
 
     /// §6.2 memory shape at scale: 500 files across nested directories drive

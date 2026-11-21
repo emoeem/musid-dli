@@ -85,7 +85,7 @@ impl KugouProvider {
     /// production constructor is [`KugouProvider::new`]. Test-only so
     /// non-test builds see no dead constructor.
     #[cfg(test)]
-    pub(crate) fn with_transport(http: Http) -> Self {
+    pub fn with_transport(http: Http) -> Self {
         Self {
             http,
             sessions: SessionStore::default(),

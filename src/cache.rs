@@ -83,6 +83,14 @@ impl StreamCache {
         quality: StreamQuality,
     ) -> Option<StreamInfo> {
         let key = (namespace.to_owned(), id.clone(), quality);
+        // Double-checked read (see TtlCache::get): hits take the read lock,
+        // only expired hits escalate to the write lock.
+        let entries = self.entries.read().unwrap_or_else(|e| e.into_inner());
+        let entry = entries.get(&key)?;
+        if entry.expires_at > Instant::now() {
+            return Some(entry.value.clone());
+        }
+        drop(entries);
         let mut entries = self.entries.write().unwrap_or_else(|e| e.into_inner());
         match entries.get(&key) {
             Some(entry) if entry.expires_at > Instant::now() => Some(entry.value.clone()),
@@ -232,6 +240,15 @@ where
         }
     }
     pub fn get(&self, key: &K) -> Option<V> {
+        // Double-checked read: the fast path holds only the read lock, so
+        // concurrent cache HITS never serialize against each other; the
+        // write lock is escalated only for the rare expired-hit removal.
+        let entries = self.entries.read().unwrap_or_else(|e| e.into_inner());
+        let entry = entries.get(key)?;
+        if entry.expires_at > Instant::now() {
+            return Some(entry.value.clone());
+        }
+        drop(entries);
         let mut entries = self.entries.write().unwrap_or_else(|e| e.into_inner());
         match entries.get(key) {
             Some(entry) if entry.expires_at > Instant::now() => Some(entry.value.clone()),
@@ -470,6 +487,17 @@ impl NegativeCache {
     /// The live negative entry for `key`, if any. An expired entry is
     /// removed on sight (the StreamCache get rule, cache.rs:29-36).
     pub fn check(&self, key: &NegativeKey) -> Option<NegativeHit> {
+        // Double-checked read (see TtlCache::get): live hits take the read
+        // lock, only expired hits escalate to the write lock.
+        let entries = self.entries.read().unwrap_or_else(|e| e.into_inner());
+        let entry = entries.get(key)?;
+        if entry.expires_at > Instant::now() {
+            return Some(NegativeHit {
+                provider: entry.provider.clone(),
+                category: entry.category,
+            });
+        }
+        drop(entries);
         let mut entries = self.entries.write().unwrap_or_else(|e| e.into_inner());
         match entries.get(key) {
             Some(entry) if entry.expires_at > Instant::now() => Some(NegativeHit {

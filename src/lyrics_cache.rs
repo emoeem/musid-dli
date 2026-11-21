@@ -447,11 +447,13 @@ where
         // Every source participated and succeeded: full-freshness entry,
         // empty results included (a cached absence).
         cache.search_put(&track.id, mode, &results);
-    } else if !results.is_empty() {
+    } else if !results.is_empty() && !windows.is_empty() {
         // Narrowed result set (some source failed or was blocked):
         // provisional entry, expiring together with the shortest window
         // that caused the narrowing so the candidate set never outlives
-        // it.
+        // it. When every failure is non-cacheable (no window), the put is
+        // SKIPPED: a TTL-0 entry would be born expired and occupy a
+        // capacity slot until the next insert.
         let provisional = windows.iter().copied().min().unwrap_or_default();
         cache.search_put_with_ttl(&track.id, mode, &results, provisional);
     }
@@ -497,6 +499,48 @@ pub async fn search_many_cached(
 
 #[cfg(test)]
 mod tests {
+    /// P2-T2: the three domains each honor the same configured capacity (the
+    /// config carries ONE capacity value; each domain owns its own bound).
+    /// Filling the document domain past capacity evicts the oldest; the
+    /// negative domain shares the same bound value on its own entries.
+    #[test]
+    fn each_domain_honors_the_configured_capacity() {
+        let cache = LyricsCache::new(LyricsCacheConfig {
+            capacity: 4,
+            ..LyricsCacheConfig::default()
+        });
+
+        // Document domain: 8 distinct keys, capacity 4 → only the newest
+        // four survive.
+        for index in 0..8 {
+            let provider = format!("provider-{index}");
+            cache.document_put(&provider, "id", None);
+        }
+        assert!(
+            cache.document_get("provider-0", "id").is_none(),
+            "oldest document entry evicted at capacity"
+        );
+        assert!(
+            cache.document_get("provider-7", "id").is_some(),
+            "newest document entry retained"
+        );
+
+        // Negative domain (same bound value, its own entries): 6 distinct
+        // cacheable-category keys, capacity 4 → oldest two gone.
+        for index in 0..6 {
+            let provider = format!("neg-{index}");
+            cache.document_record_negative(&provider, "id", ErrorCategory::NotFound);
+        }
+        assert!(
+            cache.document_check_negative("neg-0", "id").is_none(),
+            "oldest negative evicted at capacity"
+        );
+        assert!(
+            cache.document_check_negative("neg-5", "id").is_some(),
+            "newest negative retained"
+        );
+    }
+
     use super::*;
     use crate::models::{LyricFormat, LyricLine};
 

@@ -133,7 +133,7 @@ impl QqMusicProvider {
     /// carry the redirect policies. Test-only so non-test builds see no dead
     /// constructor.
     #[cfg(test)]
-    pub(crate) fn with_transports(http: Http, login_http: Http) -> Self {
+    pub fn with_transports(http: Http, login_http: Http) -> Self {
         Self {
             http,
             login_http,

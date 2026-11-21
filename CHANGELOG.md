@@ -2,6 +2,34 @@
 
 All notable changes to musid-dli are documented here. Versions follow the crate's Cargo.toml.
 
+## 0.2.1 (2026-11-22)
+
+Optimization release (post-integration-campaign audit round). Everything here is additive hardening; no breaking changes.
+
+### Added: host transport injection
+
+- `transport` is now a public module with root re-exports (`Http`, `Transport`, `ClientProfile`, `TransportRequest`, `TransportResponse`, `TransportError`, `HttpMethod`, `MockTransport`): hosts inject their proxy/timeout/pool budget through a `ClientProfile`, or a fully custom `Transport` implementation via `Http::new`. All eleven native providers expose `pub fn with_transport` (QQ Music and Migu: `with_transports`). `new()` callers are untouched (docs/integration/TRANSPORT_DESIGN.md §3.1).
+
+### Fixed
+
+- `transport::build_client` no longer silently drops a malformed proxy URL or substitutes a default client (losing the configured timeout) on builder failure: both paths warn and keep the configured budget.
+- `local_scan::scan_stream` parallel engine: a user-callback panic (`on_event`/progress) used to deadlock the `thread::scope` join forever (workers parked on a discovery-done flag never set during unwind); a `DiscoveryDoneGuard` now wakes workers on unwind so the panic propagates. Pinned by a should-panic test.
+- `lyrics_cache`: a narrowed-search put with only non-cacheable failures no longer inserts a TTL-0 entry that was born expired and occupied a capacity slot.
+
+### Changed (performance)
+
+- All three cache families (`TtlCache::get`, `StreamCache::get_in`, `NegativeCache::check`) take a READ lock on hits (double-checked: only expired hits escalate to the write lock) — concurrent cache hits no longer serialize.
+- Link-parsing regexes (qianqian/migu/kuwo) compile once per process via a memoized cache instead of per call.
+
+### Tests
+
+- Parallel-scan cancellation from inside a running scan (progress-callback face) and the callback-panic propagation path; `LyricsCache` per-domain capacity eviction.
+
+### Docs
+
+- README: JOOX is shipped (was listed deferred), `source-joox` feature bullet, eleven-provider count, stale "download not exposed" bullet removed, transport-injection note.
+- transport.rs module docs: twelve-feature count, host-injection sketch; TRANSPORT_DESIGN.md §3.1.
+
 ## 0.2.0 (2026-11-20)
 
 Second release: the full integration campaign (M0-M6) plus the remaining tasks.md schedule. The crate grows from a NetEase-only adapter to an 11-provider aggregation library with a unified network/error/session core, a download engine and a local-library stack.
@@ -13,7 +41,7 @@ Second release: the full integration campaign (M0-M6) plus the remaining tasks.m
 
 ### Added: infrastructure
 
-- Unified transport layer (src/transport.rs): injectable transport seam, per-provider client profiles, centralized retry policy reusing the pure classifier; 10 provider migrations verified.
+- Unified transport layer (src/transport.rs): injectable transport seam, per-provider client profiles, centralized retry policy reusing the pure classifier; 11 provider migrations verified.
 - Unified error semantics: category() classification, structured metadata (provider, retryability, user hint), no credentials in errors; all providers categorized.
 - Authentication: seven-state AuthState, provider+account session isolation, session file atomic writes/corruption recovery/redaction; Registry capability query surface with multi-instance keys.
 - Download engine core (src/download.rs, feature download): Range probing, single/multipart/strict-bounded chunked fetch, per-piece retry, candidate CDN fallback with NetEase node rewrite, atomic .part staging, size/MD5 integrity, tag/lyric finish.

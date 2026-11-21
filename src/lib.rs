@@ -51,7 +51,25 @@ pub mod session_file;
     feature = "source-joox",
     feature = "download",
 ))]
-pub(crate) mod transport;
+pub mod transport;
+#[cfg(any(
+    feature = "source-netease",
+    feature = "source-qqmusic",
+    feature = "source-kugou",
+    feature = "source-kuwo",
+    feature = "source-migu",
+    feature = "source-bilibili",
+    feature = "source-jamendo",
+    feature = "source-apple",
+    feature = "source-fivesing",
+    feature = "source-qianqian",
+    feature = "source-joox",
+    feature = "download",
+))]
+pub use transport::{
+    ClientProfile, Http, HttpMethod, MockTransport, Transport, TransportError, TransportRequest,
+    TransportResponse,
+};
 
 pub use registry::ProviderDescriptor;
 #[cfg(feature = "session-file")]

@@ -134,7 +134,7 @@ impl KuwoProvider {
     /// production constructor is [`KuwoProvider::new`]. Test-only so
     /// non-test builds see no dead constructor.
     #[cfg(test)]
-    pub(crate) fn with_transport(http: Http) -> Self {
+    pub fn with_transport(http: Http) -> Self {
         Self {
             http,
             sessions: SessionStore::default(),
@@ -1600,9 +1600,21 @@ fn kw_link_target(link: &str) -> Result<KwLink> {
 
 /// The per-call regex compile mirrors upstream `capture` (kw/parse.rs:34-40);
 /// captures are unanchored (first match anywhere).
-fn kw_capture(pattern: &str, value: &str) -> Option<String> {
-    Regex::new(pattern)
-        .ok()?
+fn kw_capture(pattern: &'static str, value: &str) -> Option<String> {
+    static CACHE: std::sync::OnceLock<
+        std::sync::Mutex<std::collections::HashMap<&'static str, Regex>>,
+    > = std::sync::OnceLock::new();
+    let cache = CACHE.get_or_init(|| std::sync::Mutex::new(std::collections::HashMap::new()));
+    let mut guard = cache.lock().unwrap_or_else(|e| e.into_inner());
+    let regex = match guard.get(pattern) {
+        Some(regex) => regex,
+        None => {
+            let compiled = Regex::new(pattern).ok()?;
+            guard.insert(pattern, compiled);
+            guard.get(pattern).expect("just inserted")
+        }
+    };
+    regex
         .captures(value)
         .and_then(|captures| captures.get(1))
         .map(|capture| capture.as_str().to_owned())

@@ -149,6 +149,19 @@ does NOT use `tracing`: the provider wrappers keep their existing
 `source_qqmusic.rs:197` and the other five loops) so no feature loses a dep it
 does not already carry through its own row.
 
+## 3.1 Host transport injection (0.2.1)
+
+The seam went public in 0.2.1: `pub mod transport` plus root re-exports
+(`Http`, `Transport`, `ClientProfile`, `TransportRequest/Response/Error`,
+`HttpMethod`, `MockTransport`) and eleven `pub fn with_transport(s)`
+provider constructors. Hosts inject their proxy/timeout/pool budget through
+a `ClientProfile` (`XxxProvider::with_transport(Http::from_profile(&profile))`)
+or ride a fully custom transport via `Http::new(my_transport)`. Existing
+`new()` callers and the `SessionStore` builders are untouched; the change is
+purely additive (supersedes the §4 note that the constructors are
+crate-private, and closes the VoiceFox adapter doc §4 gap: joox/qianqian
+primary adapters can now carry the host's real network budget).
+
 ## 4. Public API of `src/transport.rs`
 
 All items are `pub(crate)`. Signatures as implemented in this slice:

@@ -102,7 +102,7 @@ impl QianqianProvider {
     /// production constructor is [`QianqianProvider::new`]. Test-only so
     /// non-test builds see no dead constructor.
     #[cfg(test)]
-    pub(crate) fn with_transport(http: Http) -> Self {
+    pub fn with_transport(http: Http) -> Self {
         Self { http }
     }
     /// Register all currently implemented qianqian capabilities in one step.
@@ -679,13 +679,11 @@ fn qq_link_target(link: &str) -> Option<(String, String)> {
     if let Some(tsid) = capture(r"music\.91q\.com/song/([A-Za-z0-9]+)", trimmed) {
         return Some(("song".into(), tsid));
     }
-    for pattern in ["songlist", "tracklist", "playlist"] {
-        if let Some(id) = capture(
-            &format!(r"music\.91q\.com/{pattern}/([A-Za-z0-9]+)"),
-            trimmed,
-        ) {
-            return Some(("playlist".into(), id));
-        }
+    if let Some(id) = capture(r"music\.91q\.com/songlist/([A-Za-z0-9]+)", trimmed)
+        .or_else(|| capture(r"music\.91q\.com/tracklist/([A-Za-z0-9]+)", trimmed))
+        .or_else(|| capture(r"music\.91q\.com/playlist/([A-Za-z0-9]+)", trimmed))
+    {
+        return Some(("playlist".into(), id));
     }
     if let Some(id) = capture(r"music\.91q\.com/album/([A-Za-z0-9]+)", trimmed) {
         return Some(("album".into(), id));
@@ -696,10 +694,11 @@ fn qq_link_target(link: &str) -> Option<(String, String)> {
     if let Some(id) = capture(r"albumid=(\d+)", trimmed) {
         return Some(("album".into(), id));
     }
-    for key in ["songlistid", "tracklistid", "playlistid"] {
-        if let Some(id) = capture(&format!(r"{key}=([A-Za-z0-9]+)"), trimmed) {
-            return Some(("playlist".into(), id));
-        }
+    if let Some(id) = capture(r"songlistid=([A-Za-z0-9]+)", trimmed)
+        .or_else(|| capture(r"tracklistid=([A-Za-z0-9]+)", trimmed))
+        .or_else(|| capture(r"playlistid=([A-Za-z0-9]+)", trimmed))
+    {
+        return Some(("playlist".into(), id));
     }
     // Bare alphanumeric share id (common in share texts) is a playlist
     // (upstream parse.rs:50-60, music-lib parity).
@@ -714,9 +713,21 @@ fn qq_link_target(link: &str) -> Option<(String, String)> {
     None
 }
 
-fn capture(pattern: &str, value: &str) -> Option<String> {
-    regex::Regex::new(pattern)
-        .ok()?
+fn capture(pattern: &'static str, value: &str) -> Option<String> {
+    static CACHE: std::sync::OnceLock<
+        std::sync::Mutex<std::collections::HashMap<&'static str, regex::Regex>>,
+    > = std::sync::OnceLock::new();
+    let cache = CACHE.get_or_init(|| std::sync::Mutex::new(std::collections::HashMap::new()));
+    let mut guard = cache.lock().unwrap_or_else(|e| e.into_inner());
+    let regex = match guard.get(pattern) {
+        Some(regex) => regex,
+        None => {
+            let compiled = regex::Regex::new(pattern).ok()?;
+            guard.insert(pattern, compiled);
+            guard.get(pattern).expect("just inserted")
+        }
+    };
+    regex
         .captures(value)
         .and_then(|captures| captures.get(1))
         .map(|matched| matched.as_str().to_string())

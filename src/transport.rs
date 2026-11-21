@@ -1,6 +1,6 @@
 //! Unified transport layer for the reqwest-bearing features.
 //!
-//! Compiled only under the ten reqwest-carrying features (see the `mod
+//! Compiled only under the twelve reqwest-carrying features (see the `mod
 //! transport` gate in `lib.rs`), so `--no-default-features` stays reqwest-free.
 //! Three pieces live here:
 //!
@@ -22,8 +22,32 @@
 #![allow(dead_code)]
 //!
 //! The allow above mirrors `retry.rs`: the module lands before its consumers
-//! (the nine provider migration slices), so some helpers are unused until
+//! (the eleven provider migration slices), so some helpers are unused until
 //! those slices switch their request faces over.
+//!
+//! ## Host transport injection (0.2.1)
+//!
+//! The seam is public: hosts that want their own proxy/timeout budget (or an
+//! entirely custom transport) construct a provider through its
+//! `with_transport` constructor instead of `new()`:
+//!
+//! ```ignore
+//! // (feature-gated providers: compile this under source-netease)
+//! use musid_dli::{ClientProfile, Http, source_netease::NeteaseProvider};
+//!
+//! let profile = ClientProfile {
+//!     proxy: Some("http://127.0.0.1:7890".into()),
+//!     timeout: Some(std::time::Duration::from_secs(20)),
+//!     ..ClientProfile::provider_default()
+//! };
+//! let provider = NeteaseProvider::with_transport(Http::from_profile(&profile));
+//! ```
+//!
+//! `Http` is a cloneable handle over any [`Transport`] implementation —
+//! `Http::new(my_transport)` rides a fully custom stack (a shared client
+//! pool, a gRPC sidecar, a test mock). QQ Music and Migu additionally take a
+//! second handle through `with_transports` (their login/listen faces ride a
+//! separate client).
 
 use std::{
     collections::VecDeque,
@@ -615,13 +639,40 @@ fn build_client(profile: &ClientProfile) -> reqwest::Client {
         .as_deref()
         .map(str::trim)
         .filter(|p| !p.is_empty())
-        && let Ok(proxy) = reqwest::Proxy::all(proxy)
     {
-        builder = builder.proxy(proxy);
+        match reqwest::Proxy::all(proxy) {
+            Ok(proxy) => builder = builder.proxy(proxy),
+            // A malformed proxy URL used to be dropped silently: the host
+            // believed it was proxied while every request went out direct.
+            // Warn loudly and keep going direct (the request itself is still
+            // well-formed), so the misconfiguration is visible in logs.
+            Err(error) => {
+                tracing::warn!(
+                    "ignoring malformed proxy URL {:?}: {} (requests will go out direct)",
+                    proxy,
+                    error
+                );
+            }
+        }
     }
-    // Same fallback shape as download.rs:265; with rustls-tls the build
-    // effectively cannot fail.
-    builder.build().unwrap_or_default()
+    // With rustls-tls the build effectively cannot fail, but a failure used
+    // to substitute a DEFAULT client silently - losing the configured
+    // timeout/pool/proxy budget. Fall back to a minimal client that keeps
+    // the timeout and warn.
+    match builder.build() {
+        Ok(client) => client,
+        Err(error) => {
+            tracing::warn!(
+                "client builder failed ({}); falling back to a minimal client with the configured timeout",
+                error
+            );
+            let mut fallback = reqwest::Client::builder();
+            if let Some(timeout) = profile.timeout {
+                fallback = fallback.timeout(timeout);
+            }
+            fallback.build().unwrap_or_default()
+        }
+    }
 }
 
 #[async_trait]
