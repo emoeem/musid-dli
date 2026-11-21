@@ -163,3 +163,20 @@ Updated: 2026-11-20
 - M7 release record (2026-11-20, follow-up to the prep entry): (1) First CI run failed on Docs (deny warnings): 17 intra-doc links on public items pointed at private items, fixed by converting them to plain code spans; second run failed on runner-side clippy (newer stable lint needless_bool on a test helper), fixed by collapsing the guard. (2) Third CI run 44638096513 ALL GREEN (Format, Clippy all-features -D warnings, Tests default/all/no-default, Feature matrix isolated checks, MSRV, ubuntu/windows/macos builds, docs -D warnings, dependency integrity, gate). (3) crates.io publish executed with retries: "Published musid-dli v0.2.0" (attempt 1; later retries correctly answered already-exists). (4) GitHub release v0.2.0 created with campaign release notes: https://github.com/emoeem/musid-dli/releases/tag/v0.2.0. The crates.io publish is irreversible; 0.2.0 is live and immutable.
 
 No Git repository initialization, commit, push, reset, cleanup or history rewrite was performed.
+
+## Integration campaign closeout (2026-11-22, F0)
+
+The musid-dli + VoiceFox integration campaign is COMPLETE through F0. Phases and evidence:
+
+| Phase | State | Evidence |
+|---|---|---|
+| M0-M7 (musid-dli) | DONE, v0.2.0 released | CI 44638096513 / 44639207004 / 44912919271 all green; crates.io 0.2.0; GitHub release v0.2.0 |
+| V0 adapter | DONE | voicefox CI 44760036549; docs/MUSID_DLI_ADAPTER.md (voicefox) §1-§8 |
+| V1 dual-stack | DONE | voicefox CI 44858909406; opt-in routing + shadow-by-default |
+| V2 per-source migration | DONE | slices 1-11 (jamendo/fivesing/apple/bilibili/migu/kuwo/kugou/qqmusic/netease/qianqian/joox) data faces; voicefox CI 44914042424 |
+| V3 local/lyrics-cache/cover | DONE | three slices behind musid-dli-adapter-local / -lyrics-cache / -artwork-local; parity suite musid_local_parity.rs 11 tests + cover parity 5 tests; voicefox CI 44929545640 |
+| V4 legacy deletion | DONE (2 of 12 sources) | joox (8 faces) + qianqian (10 faces) legacy deleted, adapters promoted to sole implementations + lx-source default; per-source deletion ledger with the remaining 10 sources' blockers in MUSID_DLI_ADAPTER.md §14.0; CI 44932665600 (caught the stale zero-musid tree gate, fixed), 44932996496 / 44933775046 (final) |
+| V5 CI hardening | DONE | rust-cache on all five jobs + adapter-feature clippy step + MINGW64 deprecation suppression (UCRT64 migration deferred, honest record §15) |
+| F0 acceptance | DONE | /media/emo/code/FINAL_ACCEPTANCE_REPORT.md (per-checklist evidence, known limitations, human-required items, follow-ups) |
+
+Remaining known gaps (honest ledger): 9 voicefox legacy sources stay (musid-dli 0.2.0 lacks collection endpoints for jamendo/fivesing/apple and login faces for wy/kg/tx/bili/migu; kw/mg need face-by-face stub verification); Transport injection gap (voicefox proxy/timeout do not reach musid providers, adapter doc §4); parity counters silent for the two promoted sources. Next campaign: optimization round per the handoff (shortcomings ledger, dual-track).
