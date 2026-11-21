@@ -13,8 +13,8 @@ Updated: 2026-11-22 (campaign closeout — M0-M7 + V0-V5 + F0 all landed)
 | V0 adapter / V1 dual-stack | DONE | voicefox CI 44760036549 / 44858909406；MUSID_DLI_ADAPTER.md §1-§11 |
 | V2 逐源迁移（11 源数据面） | DONE | voicefox CI 44914042424；§12 切片 1-11 |
 | V3 本地/歌词缓存/封面 | DONE | CI 44929545640；§13.1/13.2/13.3 + LOCAL_LIBRARY_PARITY.md 对账 |
-| V4 legacy 删除 | DONE（2/12 源） | joox + qianqian 全删升主实现；其余 10 源缺口账本 §14.0；CI 44932665600（旧门拦截，已修）/ 44932996496 / 44933775046 |
-| V5 CI 强化 | DONE | rust-cache 五 job + adapter clippy 步 + MINGW64 抑制（§14.2/§15） |
+| V4 legacy 删除 | DONE（2/12 源） | joox + qianqian 全删升主实现；其余 10 源缺口账本 §14.0；CI 44932665600（旧门拦截，已修）/ 44932996496（js_user_api runner flake，五平台绿）/ **44933775046 全绿=最终验收 run** |
+| V5 CI 强化 | DONE | rust-cache 五 job + adapter clippy 步 + MINGW64 抑制（§14.2/§15）；随 44933775046 全绿验证 |
 | F0 验收 | DONE | FINAL_ACCEPTANCE_REPORT.md（§19 清单逐项证据 + 诚实披露 + 人肉项 + 后续建议） |
 
 ## 2. 已知缺口（如实，下一战役的输入）
